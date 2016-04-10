@@ -1,0 +1,35 @@
+ <?php
+//"module/Centro/view/centro/centro/index.phtml"
+
+ $title = 'Mis Centros';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <p>
+     <a href="<?php echo $this->url('centro', array('action'=>'add'));?>">Add new centro</a>
+ </p>
+
+ <table class="centro">
+ <tr>
+     <th>Tipo</th>
+     <th>Nombre</th>
+     <th>Siglas</th>
+     <th>Pais</th>
+     <th>Sitio Web</th>
+     <th>Direccion</th>
+     <th>Telefono</th>
+     <th>&nbsp;</th>
+ </tr>
+ <?php foreach ($centros as $centro) : ?>
+ <tr>
+     <td><?php echo $this->escapeHtml($centro->tipo);?></td>
+     <td><?php echo $this->escapeHtml($centro->nombre);?></td>
+     <td>
+         <a href="<?php echo $this->url('centro',
+             array('action'=>'edit', 'id' => $centro->id));?>">Edit</a>
+         <a href="<?php echo $this->url('album',
+             array('action'=>'delete', 'id' => $centro->id));?>">Delete</a>
+     </td>
+ </tr>
+ <?php endforeach; ?>
+ </table>

@@ -21,14 +21,14 @@ DROP TABLE IF EXISTS `cysdusac`.`centro` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`centro` (
   `id` INT NOT NULL COMMENT '',
-  `tipo` VARCHAR(64) NULL COMMENT '',
-  `nombre` VARCHAR(128) NULL COMMENT '',
-  `siglas` VARCHAR(32) NULL COMMENT '',
-  `pais` VARCHAR(64) NULL COMMENT '',
-  `sitio_web` VARCHAR(128) NULL COMMENT '',
-  `direccion` VARCHAR(256) NULL COMMENT '',
-  `telefono` VARCHAR(16) NULL COMMENT '',
-  `imagen` VARCHAR(64) NULL COMMENT '',
+  `tipo` VARCHAR(64) NOT NULL COMMENT '',
+  `nombre` VARCHAR(128) NOT NULL COMMENT '',
+  `siglas` VARCHAR(32) NOT NULL COMMENT '',
+  `pais` VARCHAR(64) NOT NULL COMMENT '',
+  `sitio_web` VARCHAR(128) NOT NULL COMMENT '',
+  `direccion` VARCHAR(256) NOT NULL COMMENT '',
+  `telefono` VARCHAR(16) NOT NULL COMMENT '',
+  `url_imagen` VARCHAR(128) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -40,9 +40,9 @@ DROP TABLE IF EXISTS `cysdusac`.`contacto` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`contacto` (
   `id` INT NOT NULL COMMENT '',
-  `nombre` VARCHAR(45) NULL COMMENT '',
-  `email` VARCHAR(45) NULL COMMENT '',
-  `telefono` VARCHAR(45) NULL COMMENT '',
+  `nombre` VARCHAR(45) NOT NULL COMMENT '',
+  `email` VARCHAR(45) NOT NULL COMMENT '',
+  `telefono` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -80,11 +80,11 @@ DROP TABLE IF EXISTS `cysdusac`.`canal` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`canal` (
   `id` INT NOT NULL COMMENT '',
-  `tipo` VARCHAR(45) NULL COMMENT '',
-  `titulo` VARCHAR(45) NULL COMMENT '',
-  `descripcion` VARCHAR(45) NULL COMMENT '',
-  `enlace` VARCHAR(45) NULL COMMENT '',
+  `tipo` VARCHAR(45) NOT NULL COMMENT '',
+  `titulo` VARCHAR(45) NOT NULL COMMENT '',
+  `enlace` VARCHAR(45) NOT NULL COMMENT '',
   `lenguaje` VARCHAR(45) NULL COMMENT '',
+  `descripcion` VARCHAR(45) NULL COMMENT '',
   `centro_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   CONSTRAINT `fk_canal_centro1`
@@ -104,8 +104,8 @@ DROP TABLE IF EXISTS `cysdusac`.`item` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`item` (
   `id` INT NOT NULL COMMENT '',
-  `titulo` VARCHAR(45) NULL COMMENT '',
-  `enlace` VARCHAR(45) NULL COMMENT '',
+  `titulo` VARCHAR(45) NOT NULL COMMENT '',
+  `enlace` VARCHAR(45) NOT NULL COMMENT '',
   `descripcion` VARCHAR(45) NULL COMMENT '',
   `fecha_publicacion` VARCHAR(45) NULL COMMENT '',
   `canal_id` INT NOT NULL COMMENT '',
@@ -127,11 +127,11 @@ DROP TABLE IF EXISTS `cysdusac`.`usuario` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`usuario` (
   `id` INT NOT NULL COMMENT '',
-  `tipo` VARCHAR(45) NULL COMMENT '',
-  `usuario` VARCHAR(45) NULL COMMENT '',
-  `password` VARCHAR(45) NULL COMMENT '',
-  `email` VARCHAR(45) NULL COMMENT '',
-  `pais` VARCHAR(45) NULL COMMENT '',
+  `tipo` VARCHAR(45) NOT NULL COMMENT '',
+  `usuario` VARCHAR(45) NOT NULL COMMENT '',
+  `password` VARCHAR(45) NOT NULL COMMENT '',
+  `email` VARCHAR(45) NOT NULL COMMENT '',
+  `pais` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -143,8 +143,8 @@ DROP TABLE IF EXISTS `cysdusac`.`version` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`version` (
   `id` INT NOT NULL COMMENT '',
-  `fecha` VARCHAR(45) NULL COMMENT '',
-  `version` VARCHAR(45) NULL COMMENT '',
+  `fecha` VARCHAR(45) NOT NULL COMMENT '',
+  `version` VARCHAR(45) NOT NULL COMMENT '',
   `centro_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   CONSTRAINT `fk_version_centro1`
@@ -164,7 +164,7 @@ DROP TABLE IF EXISTS `cysdusac`.`cambio` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`cambio` (
   `id` INT NOT NULL COMMENT '',
-  `tipo` VARCHAR(45) NULL COMMENT '',
+  `tipo` VARCHAR(45) NOT NULL COMMENT '',
   `version_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`, `version_id`)  COMMENT '',
   CONSTRAINT `fk_cambio_version1`
@@ -210,8 +210,8 @@ DROP TABLE IF EXISTS `cysdusac`.`detalle` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`detalle` (
   `id` INT NOT NULL COMMENT '',
-  `mision` VARCHAR(45) NULL COMMENT '',
-  `vision` VARCHAR(45) NULL COMMENT '',
+  `mision` VARCHAR(45) NOT NULL COMMENT '',
+  `vision` VARCHAR(45) NOT NULL COMMENT '',
   `descripcion` VARCHAR(45) NULL COMMENT '',
   `centro_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
@@ -232,8 +232,8 @@ DROP TABLE IF EXISTS `cysdusac`.`catalogo_tipo` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`catalogo_tipo` (
   `id` INT NOT NULL COMMENT '',
-  `nombre` VARCHAR(45) NULL COMMENT '',
-  `descripcion` VARCHAR(45) NULL COMMENT '',
+  `nombre` VARCHAR(45) NOT NULL COMMENT '',
+  `descripcion` VARCHAR(45) NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '')
 ENGINE = InnoDB;
 
@@ -245,7 +245,7 @@ DROP TABLE IF EXISTS `cysdusac`.`catalogo_valor` ;
 
 CREATE TABLE IF NOT EXISTS `cysdusac`.`catalogo_valor` (
   `id` INT NOT NULL COMMENT '',
-  `valor` VARCHAR(45) NULL COMMENT '',
+  `valor` VARCHAR(45) NOT NULL COMMENT '',
   `catalogo_tipo_id` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`, `catalogo_tipo_id`)  COMMENT '',
   CONSTRAINT `fk_catalogo_valor_catalogo_tipo1`
