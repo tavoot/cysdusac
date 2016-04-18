@@ -41,7 +41,7 @@ class CentroTable{
     {
      
          $data = array(
-             'tipo' => $centro->artist,
+             'tipo' => $centro->tipo,
              'nombre'  => $centro->nombre,
              'siglas' => $centro->siglas,
              'pais'  => $centro->pais,
