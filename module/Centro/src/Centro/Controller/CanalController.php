@@ -18,13 +18,14 @@ class CanalController extends AbstractActionController {
 
     protected $canalTable;
 
-    public function indexAction() {
+    public function indexAction(){
         return new ViewModel(array(
             'canales' => $this->getCanalTable()->fetchAll(),
         ));
     }
+    
 
-    public function getCanalTable() {
+    public function getCanalTable(){
         if (!$this->canalTable) {
             $sm = $this->getServiceLocator();
             $this->canalTable = $sm->get('Centro\Model\Logic\CanalTable');

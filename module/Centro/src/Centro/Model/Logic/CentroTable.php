@@ -49,6 +49,9 @@ class CentroTable{
              'direccion'  => $centro->direccion,
              'telefono' => $centro->telefono,
              'url_imagen'  => $centro->url_imagen,
+             'mision' => $centro->mision,
+             'vision' => $centro->vision,
+             'descripcion'=> $centro->descripcion
          );
 
          $id = (int) $centro->id;

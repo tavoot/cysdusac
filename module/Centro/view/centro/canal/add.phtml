@@ -1,0 +1,23 @@
+
+
+ <?php
+ $title = 'Añadir Nuevo Canal';
+ $this->headTitle($title);
+ ?>
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+ </div>
+ <?php
+ $form->setAttribute('action', $this->url('canal', array('action' => 'add')));
+ $form->prepare();
+
+echo $this->form()->openTag($form);
+echo $this->formHidden($form->get('id'));
+echo $this->formRow($form->get('tipo')) . "<br>";
+echo $this->formRow($form->get('titulo')). "<br>";
+echo $this->formRow($form->get('enlace')). "<br>";
+echo $this->formRow($form->get('descripcion')). "<br>"; 
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();

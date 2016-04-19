@@ -22,6 +22,9 @@ class Centro implements InputFilterAwareInterface
      public $direccion;
      public $telefono;
      public $url_imagen;
+     public $mision;
+     public $vision;
+     public $descripcion;
      
      protected $inputFilter;  
      
@@ -38,6 +41,9 @@ class Centro implements InputFilterAwareInterface
          $this->telefono  = (!empty($data['telefono'])) ? $data['telefono'] : null;
          $this->url_imagen  = (!empty($data['url_imagen'])) ? $data['url_imagen'] : null;
          
+         $this->mision = (!empty($data['mision'])) ? $data['mision'] : null;
+         $this->vision = (!empty($data['vision'])) ? $data['vision'] : null;
+         $this->descripcion = (!empty($data['descripcion'])) ? $data['descripcion'] : null;
      }    
      
      

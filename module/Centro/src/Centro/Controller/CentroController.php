@@ -10,7 +10,6 @@ namespace Centro\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
 use Centro\Model\Data\Centro;
 use Centro\Form\CentroForm;
 
@@ -22,6 +21,26 @@ class CentroController extends AbstractActionController {
         return new ViewModel(array(
             'centros' => $this->getCentroTable()->fetchAll(),
         ));
+    }
+
+    public function findAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'find'
+            ));
+        }
+
+        try {
+            $centro = $this->getCentroTable()->get($id);
+            return new ViewModel(array(
+                'centro' => $centro,
+            ));
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'index'
+            ));
+        }
     }
 
     public function getCentroTable() {
@@ -38,7 +57,7 @@ class CentroController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $centro= new Centro();
+            $centro = new Centro();
             $form->setInputFilter($centro->getInputFilter());
             $form->setData($request->getPost());
 
@@ -52,76 +71,71 @@ class CentroController extends AbstractActionController {
         }
         return array('form' => $form);
     }
-    
-    
-     public function editAction()
-     {
-         $id = (int) $this->params()->fromRoute('id', 0);
-         if (!$id) {
-             return $this->redirect()->toRoute('centro', array(
-                 'action' => 'add'
-             ));
-         }
 
-         // Get the Album with the specified id.  An exception is thrown
-         // if it cannot be found, in which case go to the index page.
-         try {
-             $centro = $this->getCentroTable()->get($id);
-         }
-         catch (\Exception $ex) {
-             return $this->redirect()->toRoute('centro', array(
-                 'action' => 'index'
-             ));
-         }
+    public function editAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'add'
+            ));
+        }
 
-         $form  = new CentroForm();
-         $form->bind($centro);
-         $form->get('submit')->setAttribute('value', 'Edit');
+        // Get the Album with the specified id.  An exception is thrown
+        // if it cannot be found, in which case go to the index page.
+        try {
+            $centro = $this->getCentroTable()->get($id);
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'index'
+            ));
+        }
 
-         $request = $this->getRequest();
-         if ($request->isPost()) {
-             $form->setInputFilter($centro->getInputFilter());
-             $form->setData($request->getPost());
+        $form = new CentroForm();
+        $form->bind($centro);
+        $form->get('submit')->setAttribute('value', 'Edit');
 
-             if ($form->isValid()) {
-                 $this->getCentroTable()->save($centro);
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter($centro->getInputFilter());
+            $form->setData($request->getPost());
 
-                 // Redirect to list of albums
-                 return $this->redirect()->toRoute('centro');
-             }
-         }
+            if ($form->isValid()) {
+                $this->getCentroTable()->save($centro);
 
-         return array(
-             'id' => $id,
-             'form' => $form,
-         );
-     }
-     
-     
-     public function deleteAction()
-     {
-         $id = (int) $this->params()->fromRoute('id', 0);
-         if (!$id) {
-             return $this->redirect()->toRoute('centro');
-         }
+                // Redirect to list of albums
+                return $this->redirect()->toRoute('centro');
+            }
+        }
 
-         $request = $this->getRequest();
-         if ($request->isPost()) {
-             $del = $request->getPost('del', 'No');
+        return array(
+            'id' => $id,
+            'form' => $form,
+        );
+    }
 
-             if ($del == 'Yes') {
-                 $id = (int) $request->getPost('id');
-                 $this->getCentroTable()->delete($id);
-             }
+    public function deleteAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('centro');
+        }
 
-             // Redirect to list of albums
-             return $this->redirect()->toRoute('centro');
-         }
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'No');
 
-         return array(
-             'id'    => $id,
-             'centro' => $this->getCentroTable()->get($id)
-         );
-     }
+            if ($del == 'Yes') {
+                $id = (int) $request->getPost('id');
+                $this->getCentroTable()->delete($id);
+            }
+
+            // Redirect to list of albums
+            return $this->redirect()->toRoute('centro');
+        }
+
+        return array(
+            'id' => $id,
+            'centro' => $this->getCentroTable()->get($id)
+        );
+    }
 
 }
