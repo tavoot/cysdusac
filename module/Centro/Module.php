@@ -2,13 +2,16 @@
 
 namespace Centro;
 
-use Centro\Model\Data\Centro;
 use Centro\Model\Data\Usuario;
-use Centro\Model\Data\Canal;
-use Centro\Model\Logic\CentroTable;
-use Centro\Model\Logic\CanalTable;
 use Centro\Model\Logic\UsuarioTable;
 use Centro\Adapter\UsuarioAdapter;
+use Centro\Model\Data\Centro;
+use Centro\Model\Logic\CentroTable;
+use Centro\Model\Data\Canal;
+use Centro\Model\Logic\CanalTable;
+use Centro\Model\Data\Contacto;
+use Centro\Model\Logic\ContactoTable;
+
 use Zend\Authentication\AuthenticationService;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -37,19 +40,7 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
     public function getServiceConfig() {
         return array(
             'factories' => array(
-                /*centros*/
-                'Centro\Model\Logic\CentroTable' => function($sm) {
-                    $tableGateway = $sm->get('CentroTableGateway');
-                    $table = new CentroTable($tableGateway);
-                    return $table;
-                },
-                'CentroTableGateway' => function ($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Centro());
-                    return new TableGateway('centro', $dbAdapter, null, $resultSetPrototype);
-                },
-                        
+                         
                  /*usuarios*/
                 'Centro\Model\Logic\UsuarioTable' => function($sm) {
                     $tableGateway = $sm->get('UsuarioTableGateway');
@@ -62,7 +53,32 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype->setArrayObjectPrototype(new Usuario());
                     return new TableGateway('usuario', $dbAdapter, null, $resultSetPrototype);
                 },
-                      
+                
+                        
+                /*adapters*/
+                'Centro\Adapter\UsuarioAdapter' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $usuarioAdapter = new UsuarioAdapter($dbAdapter);
+                    $authService = new AuthenticationService();
+                    $authService->setAdapter($usuarioAdapter);
+                    return $authService;
+                },
+                        
+                        
+                /*centros*/
+                'Centro\Model\Logic\CentroTable' => function($sm) {
+                    $tableGateway = $sm->get('CentroTableGateway');
+                    $table = new CentroTable($tableGateway);
+                    return $table;
+                },
+                'CentroTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Centro());
+                    return new TableGateway('centro', $dbAdapter, null, $resultSetPrototype);
+                },
+               
+                        
                 /*canales*/
                 'Centro\Model\Logic\CanalTable' => function($sm) {
                     $tableGateway = $sm->get('CanalTableGateway');
@@ -76,14 +92,20 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     return new TableGateway('canal', $dbAdapter, null, $resultSetPrototype);
                 },
                         
-                /*adapters*/
-                'Centro\Adapter\UsuarioAdapter' => function($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $usuarioAdapter = new UsuarioAdapter($dbAdapter);
-                    $authService = new AuthenticationService();
-                    $authService->setAdapter($usuarioAdapter);
-                    return $authService;
+                /*contactos*/
+                'Centro\Model\Logic\ContactoTable' => function($sm) {
+                    $tableGateway = $sm->get('ContactoTableGateway');
+                    $table = new ContactoTable($tableGateway);
+                    return $table;
                 },
+                'ContactoTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Contacto());
+                    return new TableGateway('contacto', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
+                
             ),
         );
     }

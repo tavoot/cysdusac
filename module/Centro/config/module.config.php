@@ -9,9 +9,10 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'Centro\Controller\Centro' => 'Centro\Controller\CentroController',
             'Centro\Controller\Usuario' => 'Centro\Controller\UsuarioController',
+            'Centro\Controller\Centro' => 'Centro\Controller\CentroController',
             'Centro\Controller\Canal' => 'Centro\Controller\CanalController',
+            'Centro\Controller\Contacto' => 'Centro\Controller\ContactoController',
         ),
     ),
     // The following section is new and should be added to your file
@@ -31,23 +32,8 @@ return array(
                     ),
                 ),
             ),
-            'canal' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/canal[/:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Centro\Controller\Canal',
-                        'action' => 'index',
-                    ),
-                ),
-            ),
             
-            
-            // The following section is new and should be added to your file
+              // The following section is new and should be added to your file
             'usuario' => array(
                 'type' => 'Literal',
                 'options' => array(
@@ -75,13 +61,46 @@ return array(
                     ),
                 ),
             ),
+            'canal' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/canal[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Centro\Controller\Canal',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            
+            'contacto' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/contacto[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Centro\Controller\Contacto',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            
+            
+          
         ),
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'centro' => __DIR__ . '/../view',
             'usuario' => __DIR__ . '/../view',
+            'centro' => __DIR__ . '/../view',
             'canal' => __DIR__ . '/../view',
+            'contacto' => __DIR__ . '/../view',
         ),
     ),
 );
