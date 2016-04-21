@@ -10,6 +10,7 @@ return array(
      'controllers' => array(
          'invokables' => array(
              'Centro\Controller\Centro' => 'Centro\Controller\CentroController',
+             'Centro\Controller\Usuario' => 'Centro\Controller\UsuarioController',
          ),
      ),
 
@@ -17,7 +18,7 @@ return array(
      'router' => array(
          'routes' => array(
              'centro' => array(
-                 'type'    => 'segment',
+                 'type'    => 'Segment',
                  'options' => array(
                      'route'    => '/centro[/:action][/:id]',
                      'constraints' => array(
@@ -27,6 +28,33 @@ return array(
                      'defaults' => array(
                          'controller' => 'Centro\Controller\Centro',
                          'action'     => 'index',
+                     ),
+                 ),
+             ),
+             'usuario' => array(
+                 'type'    => 'Literal',
+                 'options' => array(
+                     'route'    => '/usuario',
+                     'defaults' => array(
+                         'controller' => 'Centro\Controller\Usuario',
+                         'action'     => 'index',
+                     ),
+                 ),
+                 'may_terminate' => true,
+                 'child_routes' => array(
+                     'default' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/[:action][/:id]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'     => '[0-9]+',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Centro\Controller\Usuario',
+                                'action'     => 'index',
+                            ),
+                        ),
                      ),
                  ),
              ),

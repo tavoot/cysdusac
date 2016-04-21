@@ -4,10 +4,12 @@ namespace Centro;
 
 use Centro\Model\Data\Centro;
 use Centro\Model\Logic\CentroTable;
+use Centro\Adapter\UsuarioAdapter;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\Authentication\AuthenticationService;
 
 class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
 
@@ -41,6 +43,13 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Centro());
                     return new TableGateway('centro', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Centro\Adapter\UsuarioAdapter' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $usuarioAdapter = new UsuarioAdapter($dbAdapter);
+                    $authService = new AuthenticationService();
+                    $authService->setAdapter($usuarioAdapter);
+                    return $authService;
                 },
             ),
         );

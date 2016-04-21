@@ -1,0 +1,29 @@
+<?php
+
+$title = 'Ingreso';
+$this->headTitle($title);
+
+?>
+
+<?php echo $this->form()->openTag($form); ?>
+
+<div class="center-block text-left">
+    <span class="h2 text-left text-primary"><?php echo $this->escapeHTML($title); ?></span>
+</div>
+
+<?php foreach($form as $element): ?>
+<div class="form-group">
+    <label class="control-label"><?php echo $element->getLabel() ?></label>
+    <?php
+        echo $this->formElement($element);
+        if($this->formElementErrors($element)){
+            echo $this->formElementErrors()
+                    ->setMessageOpenFormat('<p class="help-block">')
+                    ->setMessageSeparatorString('</p><p class="help-block">')
+                    ->setMessageCloseString('</p>')
+                    ->render($element);
+        }
+    ?>
+</div>
+<?php endforeach; ?>
+<?php echo $this->form()->closeTag(); ?>
