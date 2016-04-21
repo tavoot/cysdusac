@@ -8,6 +8,8 @@ use Centro\Model\Data\Canal;
 use Centro\Model\Logic\CentroTable;
 use Centro\Model\Logic\CanalTable;
 use Centro\Model\Logic\UsuarioTable;
+use Centro\Adapter\UsuarioAdapter;
+use Zend\Authentication\AuthenticationService;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -72,6 +74,15 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Canal());
                     return new TableGateway('canal', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
+                /*adapters*/
+                'Centro\Adapter\UsuarioAdapter' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $usuarioAdapter = new UsuarioAdapter($dbAdapter);
+                    $authService = new AuthenticationService();
+                    $authService->setAdapter($usuarioAdapter);
+                    return $authService;
                 },
             ),
         );
