@@ -39,7 +39,7 @@ class LoginInputFilter implements InputFilterAwareInterface {
                     array(
                         'name' => 'NotEmpty',
                         'options' => array(
-                            'setMessagess' => array(
+                            'setMessages' => array(
                                 NotEmpty::IS_EMPTY => 'Campo obligatorio',
                             ),
                         ),

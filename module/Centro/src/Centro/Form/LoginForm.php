@@ -25,7 +25,7 @@ class LoginForm extends Form{
         $this->setInputFilter($inputFilter);
         
         $this->setAttribute("action", "login");
-        $this->setAttribute("class", "col-md-4");
+        $this->setAttribute("class", "col-md-12");
         
         $this->add(array(
             'name' => 'usuario',

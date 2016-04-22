@@ -21,7 +21,8 @@ class UsuarioController extends AbstractActionController
     protected $authAdapter;
     
     public function indexAction() {
-        return new ViewModel();
+        //return new ViewModel();
+        return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
     }
     
     public function loginAction() {
@@ -32,7 +33,7 @@ class UsuarioController extends AbstractActionController
         $authService = $this->getAuthService();
         
         if($authService->hasIdentity()) {
-            $this->redirect()->toRoute('usuario');
+            $this->redirect()->toRoute('centro');
         }
         
         if($request->isPost()){
@@ -54,13 +55,17 @@ class UsuarioController extends AbstractActionController
                 $authService->authenticate();
                 
                 if($authService->hasIdentity()){
-                    
-                    $this->flashMessenger()->addSuccessMessage('Credenciales correctas');
-                    return $this->redirect()->toRoute('usuario');
+                    $this->flashMessenger()->addSuccessMessage('Bienvenido');
+                    return $this->redirect()->toRoute('centro');
+                } else {
+                    $this->flashMessenger()->addErrorMessage('Usuario/Password incorrecto');
+                    return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
                 }
             }
         }
         
+        //Cambio de layout para el controller
+        $this->layout('layout/loginlayout');
         
         return array('form' => $loginForm);
     }
