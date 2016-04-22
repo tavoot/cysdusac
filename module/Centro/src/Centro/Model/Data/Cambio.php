@@ -6,7 +6,6 @@
  * and open the template in the editor.
  */
 
-
 namespace Centro\Model\Data;
 
 class Cambio

@@ -2,9 +2,17 @@
 
 namespace Centro;
 
+use Centro\Model\Data\Usuario;
+use Centro\Model\Logic\UsuarioTable;
+use Centro\Adapter\UsuarioAdapter;
 use Centro\Model\Data\Centro;
 use Centro\Model\Logic\CentroTable;
-use Centro\Adapter\UsuarioAdapter;
+use Centro\Model\Data\Canal;
+use Centro\Model\Logic\CanalTable;
+use Centro\Model\Data\Contacto;
+use Centro\Model\Logic\ContactoTable;
+
+use Zend\Authentication\AuthenticationService;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
@@ -33,6 +41,32 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
     public function getServiceConfig() {
         return array(
             'factories' => array(
+                         
+                 /*usuarios*/
+                'Centro\Model\Logic\UsuarioTable' => function($sm) {
+                    $tableGateway = $sm->get('UsuarioTableGateway');
+                    $table = new UsuarioTable($tableGateway);
+                    return $table;
+                },
+                'UsuarioTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Usuario());
+                    return new TableGateway('usuario', $dbAdapter, null, $resultSetPrototype);
+                },
+                
+                        
+                /*adapters*/
+                'Centro\Adapter\UsuarioAdapter' => function($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $usuarioAdapter = new UsuarioAdapter($dbAdapter);
+                    $authService = new AuthenticationService();
+                    $authService->setAdapter($usuarioAdapter);
+                    return $authService;
+                },
+                        
+                        
+                /*centros*/
                 'Centro\Model\Logic\CentroTable' => function($sm) {
                     $tableGateway = $sm->get('CentroTableGateway');
                     $table = new CentroTable($tableGateway);
@@ -44,13 +78,35 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype->setArrayObjectPrototype(new Centro());
                     return new TableGateway('centro', $dbAdapter, null, $resultSetPrototype);
                 },
-                'Centro\Adapter\UsuarioAdapter' => function($sm) {
-                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
-                    $usuarioAdapter = new UsuarioAdapter($dbAdapter);
-                    $authService = new AuthenticationService();
-                    $authService->setAdapter($usuarioAdapter);
-                    return $authService;
+               
+                        
+                /*canales*/
+                'Centro\Model\Logic\CanalTable' => function($sm) {
+                    $tableGateway = $sm->get('CanalTableGateway');
+                    $table = new CanalTable($tableGateway);
+                    return $table;
                 },
+                'CanalTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Canal());
+                    return new TableGateway('canal', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
+                /*contactos*/
+                'Centro\Model\Logic\ContactoTable' => function($sm) {
+                    $tableGateway = $sm->get('ContactoTableGateway');
+                    $table = new ContactoTable($tableGateway);
+                    return $table;
+                },
+                'ContactoTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Contacto());
+                    return new TableGateway('contacto', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
+                
             ),
         );
     }

@@ -1,0 +1,32 @@
+ <?php
+//"module/Centro/view/centro/centro/index.phtml"
+
+ $title = "INFORMACIÓN GENERAL - $centro->siglas";
+ $this->headTitle($title);
+ ?>
+<h1><span class="label label-default"><?php echo $this->escapeHtml($title); ?></span></h1>
+ <table class="table table-striped">
+ <tr>
+     <th>ID</th>
+     <th>Siglas</th>
+     <th>Mision</th>
+     <th>Vision</th>
+     <th>Descripcion</th>
+     <th>&nbsp;</th>
+ </tr>
+ 
+ <?php $this->placeholder('foo')->bar[$centro->id] = $centro->siglas ?>
+ <tr>
+     <td><?php echo $this->escapeHtml($centro->id);?></td>
+     <td><?php echo $this->escapeHtml($centro->siglas);?></td>
+     <td><?php echo $this->escapeHtml($centro->mision);?></td>
+     <td><?php echo $this->escapeHtml($centro->vision);?></td>
+     <td><?php echo $this->escapeHtml($centro->descripcion);?></td>
+     <td>
+         <a href="<?php echo $this->url('centro',
+             array('action'=>'edit', 'id' => $centro->id));?>">Editar</a>
+         <a href="<?php echo $this->url('centro',
+             array('action'=>'delete', 'id' => $centro->id));?>">Eliminar</a>
+     </td>
+ </tr>
+ </table>

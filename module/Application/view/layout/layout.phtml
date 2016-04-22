@@ -72,10 +72,16 @@
                             <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administraci&oacute;n<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="#">Administrar Centros</a>
+                                    <!-- /.nav-third-level -->
+                                        <a href="/centro">Administrar Centros <span class="fa arrow"></span></a>
+                                        
+                                         <?php /*foreach($this->placeholder('foo')['bar'] as $sigla): ?>
+                                         <li><a href="/centro/edit"><?php echo $sigla;?></a></li>
+                                          <?php endforeach;*/ ?>
+                                    <!-- /.nav-third-level -->
                                 </li>
                                 <li>
-                                    <a href="#">Administrar Usuarios</a>
+                                    <a href="/usuario">Administrar Usuarios</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -84,7 +90,7 @@
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Relaciger<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="flot.html">Informaci&oacute;n General</a>
+                                    <a href="/centro/find/1">Informaci&oacute;n General</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -146,7 +152,7 @@
             <div class="container-fluid">
                 <br>
                 <!-- contenido -->
-                <?php echo $this->content; ?>
+                <?php echo $this->layout()->content; ?>
             </div>
             <!-- /.container-fluid -->
         </div>

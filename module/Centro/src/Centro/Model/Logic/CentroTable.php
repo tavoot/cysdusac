@@ -41,7 +41,7 @@ class CentroTable{
     {
      
          $data = array(
-             'tipo' => $centro->artist,
+             'tipo' => $centro->tipo,
              'nombre'  => $centro->nombre,
              'siglas' => $centro->siglas,
              'pais'  => $centro->pais,
@@ -49,6 +49,9 @@ class CentroTable{
              'direccion'  => $centro->direccion,
              'telefono' => $centro->telefono,
              'url_imagen'  => $centro->url_imagen,
+             'mision' => $centro->mision,
+             'vision' => $centro->vision,
+             'descripcion'=> $centro->descripcion
          );
 
          $id = (int) $centro->id;

@@ -8,8 +8,12 @@
 
 namespace Centro\Model\Data;
 
-class Canal
-{
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
+
+class Canal implements InputFilterAwareInterface {
+
      public $id;
      public $tipo;
      public $titulo;
@@ -18,6 +22,7 @@ class Canal
      public $lenguaje;
      public $centro_id;
      
+     protected $inputFilter;
      
 
      public function exchangeArray($data)
@@ -30,4 +35,32 @@ class Canal
          $this->lenguaje  = (!empty($data['lenguaje'])) ? $data['lenguaje'] : null;
          $this->centro_id  = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
      }
+     
+     
+     public function getArrayCopy() {
+        return get_object_vars($this);
+    }
+
+    public function setInputFilter(InputFilterInterface $inputFilter) {
+        throw new \Exception("Not used");
+    }
+
+    public function getInputFilter() {
+        if (!$this->inputFilter) {
+            $inputFilter = new InputFilter();
+
+            $inputFilter->add(array(
+                'name' => 'id',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'Int'),
+                ),
+            ));
+
+            
+
+            $this->inputFilter = $inputFilter;
+        }
+        return $this->inputFilter;
+    }
  }

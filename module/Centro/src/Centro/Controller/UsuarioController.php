@@ -1,11 +1,9 @@
 <?php
-
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 namespace Centro\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -14,6 +12,12 @@ use Centro\Form\LoginForm;
 use Centro\Form\InputFilter\LoginInputFilter;
 use Centro\Util\UtilUsuario;
 use Centro\Adapter\UsuarioAdapter;
+
+/**
+ * Description of UsuarioController
+ *
+ * @author nando
+ */
 
 
 class UsuarioController extends AbstractActionController

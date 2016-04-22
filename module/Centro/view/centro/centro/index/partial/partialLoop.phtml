@@ -1,0 +1,17 @@
+<tr>
+     <td><?php echo $this->escapeHtml($this->id);?></td>
+     <td><?php echo $this->escapeHtml($this->tipo);?></td>
+     <td><?php echo $this->escapeHtml($this->nombre);?></td>
+     <td><?php echo $this->escapeHtml($this->siglas);?></td>
+     <td><?php echo $this->escapeHtml($this->pais);?></td>
+     <td><?php echo $this->escapeHtml($this->sitio_web);?></td>
+     <td><?php echo $this->escapeHtml($this->direccion);?></td>
+     <td><?php echo $this->escapeHtml($this->telefono);?></td>
+     <td><?php echo $this->escapeHtml($this->url_imagen);?></td>
+     <td>
+         <a href="<?php echo $this->url('centro',
+             array('action'=>'edit', 'id' => $this->id));?>">Editar</a>
+         <a href="<?php echo $this->url('centro',
+             array('action'=>'delete', 'id' => $this->id));?>">Eliminar</a>
+     </td>
+ </tr>
