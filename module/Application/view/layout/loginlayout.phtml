@@ -1,0 +1,43 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle($this->translate('CISDUSAC'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink()
+                        ->prependStylesheet($this->basePath('components/font-awesome/css/font-awesome.min.css'))
+                        ->prependStylesheet($this->basePath('dist/css/sb-admin-2.css'))
+                        ->prependStylesheet($this->basePath('components/metisMenu/dist/metisMenu.min.css'))
+                        ->prependStylesheet($this->basePath('css/bootstrap.min.css')) 
+        ; ?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath('dist/js/sb-admin-2.js'))
+            ->prependFile($this->basePath('components/metisMenu/dist/metisMenu.min.js'))
+            ->prependFile($this->basePath('js/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery.min.js'))
+            
+            ->prependFile($this->basePath('js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
+        ; ?>
+
+    </head>
+    
+    <body>
+    <div class="container">
+        <div class="row">
+            <!-- contenido -->
+            <?php echo $this->content; ?>
+        </div>
+    </div>
+
+    </body>
+</html>
+
