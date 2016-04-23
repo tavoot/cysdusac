@@ -59,6 +59,15 @@ class UsuarioController extends AbstractActionController
                 $authService->authenticate();
                 
                 if($authService->hasIdentity()){
+                    //Datos a omitir 
+                    $omitirColumna = array('password','pais');
+                    
+                    //Obtengo los datos que se almacenaran en la sesion
+                    $usuario = $authService->getAdapter()->getResultRowObject(null, $omitirColumna);
+                    
+                    //Almaceno los datos de la sesion
+                    $authService->getStorage()->write($usuario);
+                    
                     $this->flashMessenger()->addSuccessMessage('Bienvenido');
                     return $this->redirect()->toRoute('centro');
                 } else {
