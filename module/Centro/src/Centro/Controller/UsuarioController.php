@@ -60,27 +60,18 @@ class UsuarioController extends AbstractActionController
                 $authService->authenticate();
                 
                 if($authService->hasIdentity()){
+
+                    //Datos a omitir 
+                    $omitirColumna = array('password','pais');
                     
-                            /*$no_almacenar = 'pin';
-
-
-
-                            $usuario = $this->getAuthService()
-                           ->getAdapter()
-                           ->getResultRowObject(null, $no_almacenar);
-
-
-                            $this->getAuthService()
-                           ->getStorage()
-                           ->write($usuario);
-
-                            $usuario = $this->getAuthService()
-                           ->getStorage()
-                           ->read();*/
-                    //var_dump($authService);
-                     
+                    //Obtengo los datos que se almacenaran en la sesion
+                    $usuario = $authService->getAdapter()->getResultRowObject(null, $omitirColumna);
                     
-                    $this->flashMessenger()->addSuccessMessage('Bienvenido!!!!');
+                    //Almaceno los datos de la sesion
+                    $authService->getStorage()->write($usuario);
+                    
+                    $this->flashMessenger()->addSuccessMessage('Bienvenido');
+
                     return $this->redirect()->toRoute('centro');
                 } else {
                     $this->flashMessenger()->addErrorMessage('Usuario/Password incorrecto');
