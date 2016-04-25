@@ -1,0 +1,36 @@
+ <?php
+ 
+ 
+//"module/Centro/view/centro/centro/index.phtml"
+//var_dump($_SESSION);
+ $title = 'UsuariosCentros';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <p>
+     <a href="<?php echo $this->url('item', array('action'=>'add'));?>">Agregar Nuevo Usuario Centro</a>
+ </p>
+
+ <table class="table table-striped">
+ <tr>
+     <th>Id</th>
+     <th>Usuario Id </th>
+     <th>Centro Id</th>
+     <th>Fecha</th>
+     <th>&nbsp;</th>
+ </tr>
+ <?php foreach ($usuarioscentros as $usuariocentro) : ?>
+ <tr>
+     <td><?php echo $this->escapeHtml($usuariocentro->id);?></td>
+     <td><?php echo $this->escapeHtml($usuariocentro->usuario_id);?></td>
+     <td><?php echo $this->escapeHtml($usuariocentro->centro_id);?></td>
+        <td><?php echo $this->escapeHtml($usuariocentro->fecha);?></td>
+     <td>
+         <a href="<?php echo $this->url('usuariocentro',
+             array('action'=>'edit', 'id' => $usuariocentro->id));?>">Editar</a>
+         <a href="<?php echo $this->url('usuariocentro',
+             array('action'=>'delete', 'id' => $usuariocentro->id));?>">Eliminar</a>
+     </td>
+ </tr>
+ <?php endforeach; ?>
+ </table>

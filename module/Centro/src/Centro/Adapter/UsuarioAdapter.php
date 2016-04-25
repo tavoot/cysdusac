@@ -19,6 +19,7 @@ use Zend\Db\Adapter\Adapter as DbAdapter;
 class UsuarioAdapter extends AuthAdapter {
     //put your code here
     
+   
     protected $tablaNombre = 'usuario';
     protected $columnaUsuario = 'usuario';
     protected $columnaPassword = 'password';

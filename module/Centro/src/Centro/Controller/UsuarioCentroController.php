@@ -10,72 +10,39 @@ namespace Centro\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Centro\Model\Data\Centro;
-use Centro\Model\Data\Usuario;
-use Centro\Form\CentroForm;
-use Centro\Util\Session;
+use Centro\Model\Data\UsuarioCentro;
+use Centro\Form\UsuarioCentroForm;
 
+class UsuarioCentroController extends AbstractActionController {
 
-class CentroController extends AbstractActionController {
-
-    protected $centroTable;
-    protected $usuario;
     
+    protected $usuariocentroTable;
 
     public function indexAction() {
+        //var_dump($usuariocentro);
+        //var_dump($this->getUsuarioCentroTable()->getCentrosPorUsuario(1));
         
-        /*if (!$this->centroTable) {
+        return new ViewModel(array(
+            'usuarioscentros' => $this->getUsuarioCentroTable()->getCentrosPorUsuario(1)
+        ));
+        
+    }
+
+
+    public function getUsuarioCentroTable() {
+        if (!$this->usuariocentroTable) {
             $sm = $this->getServiceLocator();
-            
-            $usuario = new Usuario();
-            $usuario->id = Session::getUsuario($sm)->id;
-            $usuario->usuario = Session::getUsuario($sm)->usuario;
-            
-            
-            
-            $usuario->getUsuarioCentroTable()->getCentrosPorUsuario($usuario->id);
-            
-        }*/
-        
-        
-        
-        /*return new ViewModel(array(
-            'centros' => $this->getCentroTable()->fetchAll(),
-        ));*/
-        
-        
-    }
-
-    public function findAction() {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('centro', array(
-                        'action' => 'find'
-            ));
+            $this->usuariocentroTable = $sm->get('Centro\Model\Logic\UsuarioCentroTable');
         }
-
-        try {
-            $centro = $this->getCentroTable()->get($id);
-            return new ViewModel(array(
-                'centro' => $centro,
-            ));
-        } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('centro', array(
-                        'action' => 'index'
-            ));
-        }
+        return $this->usuariocentroTable;
     }
-
-    public function getCentroTable() {
-        if (!$this->centroTable) {
-            $sm = $this->getServiceLocator();
-            $this->centroTable = $sm->get('Centro\Model\Logic\CentroTable');
-        }
-        return $this->centroTable;
-    }
-
+    
+    
+   
+    
+    
     public function addAction() {
-        $form = new CentroForm();
+        $form = new UsarioCentroForm();
         $form->get('submit')->setValue('Agregar');
 
         $request = $this->getRequest();

@@ -10,10 +10,10 @@
 namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
-use Centro\Model\Data\DetalleCentro;
+use Centro\Model\Data\UsuarioCentro;
 
 
-class DetalleCentroTable{
+class UsuarioCentroTable{
     
     protected $tableGateway;
 
@@ -38,17 +38,31 @@ class DetalleCentroTable{
          }
          return $row;
      }
+     
+     
+     public function getCentrosPorUsuario($usuario_id)
+     {
+         $usuario_id  = (int)$usuario_id;
+         $rowset = $this->tableGateway->select(array('usuario_id' =>$usuario_id));
+         //$row = $rowset->current();
+         if (!$rowset) {
+             throw new \Exception("Registro no encontrado $id");
+         }
+         return $rowset;
+     }
 
-    public function save(DetalleCentro $detalleCentro)
+     
+     
+     
+    public function save(UsuarioCentro $usuarioCentro)
     {
         
         $data = array(
-            'mision'=>$detalleCentro->mision,
-            'vision'=>$detalleCentro->vision, 
-            'descripcion'=>$detalleCentro->descripcion,
-            'centro_id'=>$detalleCentro->centro_id);
+            'usuario_id'=>$usuarioCentro->usuario_id,
+            'centro_id'=>$usuarioCentro->centro_id,
+            'fecha'=>$usuarioCentro->fecha);
 
-         $id = (int) $detalleCentro->id;
+         $id = (int) $usuarioCentro->id;
          if ($id == 0) {
              $this->tableGateway->insert($data);
          } else {

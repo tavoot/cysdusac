@@ -11,6 +11,10 @@ use Centro\Model\Data\Canal;
 use Centro\Model\Logic\CanalTable;
 use Centro\Model\Data\Contacto;
 use Centro\Model\Logic\ContactoTable;
+use Centro\Model\Data\Item;
+use Centro\Model\Logic\ItemTable;
+use Centro\Model\Data\UsuarioCentro;
+use Centro\Model\Logic\UsuarioCentroTable;
 
 use Zend\Authentication\AuthenticationService;
 use Zend\Db\ResultSet\ResultSet;
@@ -104,6 +108,35 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype->setArrayObjectPrototype(new Contacto());
                     return new TableGateway('contacto', $dbAdapter, null, $resultSetPrototype);
                 },
+                        
+                 /*items*/
+                'Centro\Model\Logic\ItemTable' => function($sm) {
+                    $tableGateway = $sm->get('ItemTableGateway');
+                    $table = new ItemTable($tableGateway);
+                    return $table;
+                },
+                        
+                'ItemTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Item());
+                    return new TableGateway('item', $dbAdapter, null, $resultSetPrototype);
+                },
+                
+                /*UsuarioCentros*/
+                'Centro\Model\Logic\UsuarioCentroTable' => function($sm) {
+                    $tableGateway = $sm->get('UsuarioCentroTableGateway');
+                    $table = new UsuarioCentroTable($tableGateway);
+                    return $table;
+                },
+                        
+                'UsuarioCentroTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new UsuarioCentro());
+                    return new TableGateway('usuario_centro', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
                         
                 
             ),

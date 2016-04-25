@@ -13,6 +13,9 @@ return array(
             'Centro\Controller\Centro' => 'Centro\Controller\CentroController',
             'Centro\Controller\Canal' => 'Centro\Controller\CanalController',
             'Centro\Controller\Contacto' => 'Centro\Controller\ContactoController',
+            'Centro\Controller\Item' => 'Centro\Controller\ItemController',
+            'Centro\Controller\UsuarioCentro' => 'Centro\Controller\UsuarioCentroController',
+
         ),
     ),
     // The following section is new and should be added to your file
@@ -91,16 +94,46 @@ return array(
                 ),
             ),
             
+             'item' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/item[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Centro\Controller\Item',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
             
+            'usuariocentro' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/usuariocentro[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Centro\Controller\UsuarioCentro',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
           
-        ),
-    ),
+        ),//cierre de routes
+    ),//cierre de router
     'view_manager' => array(
         'template_path_stack' => array(
             'usuario' => __DIR__ . '/../view',
             'centro' => __DIR__ . '/../view',
             'canal' => __DIR__ . '/../view',
             'contacto' => __DIR__ . '/../view',
+            'item' => __DIR__ . '/../view',
+            'usuariocentro' => __DIR__ . '/../view',
         ),
     ),
 );

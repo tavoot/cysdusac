@@ -55,11 +55,32 @@ class UsuarioController extends AbstractActionController
                 //Nombre de usuario ingresado
                 $usuario = $dataUser['usuario'];
                 
+                
                 $authService->getAdapter()->setDatos($usuario, $password_cifrado);
                 $authService->authenticate();
                 
                 if($authService->hasIdentity()){
-                    $this->flashMessenger()->addSuccessMessage('Bienvenido');
+                    
+                            /*$no_almacenar = 'pin';
+
+
+
+                            $usuario = $this->getAuthService()
+                           ->getAdapter()
+                           ->getResultRowObject(null, $no_almacenar);
+
+
+                            $this->getAuthService()
+                           ->getStorage()
+                           ->write($usuario);
+
+                            $usuario = $this->getAuthService()
+                           ->getStorage()
+                           ->read();*/
+                    //var_dump($authService);
+                     
+                    
+                    $this->flashMessenger()->addSuccessMessage('Bienvenido!!!!');
                     return $this->redirect()->toRoute('centro');
                 } else {
                     $this->flashMessenger()->addErrorMessage('Usuario/Password incorrecto');
