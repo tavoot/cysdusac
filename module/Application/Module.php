@@ -27,10 +27,6 @@ class Module
             //$routeMatch = $e->getRouteMatch();
             
             $auth = $e->getApplication()->getServiceManager()->get('Zend\Authentication\AuthenticationService');
-            $config = $e->getApplication()->getServiceManager()->get('Config');
-            
-            //$controller = $routeMatch->getParam('controller');
-            //$action = $routeMatch->getParam('action');
             
             $controller = $e->getRouteMatch()->getParam('controller');
             $action = $e->getRouteMatch()->getParam('action');
@@ -41,8 +37,6 @@ class Module
                 'Centro\Controller\Usuario-login',
                 'Centro\Controller\Usuario-index',
             );
-            
-            echo in_array($requestedResource,$whiteList) . "<br>\n";
             
             if (!$auth->hasIdentity() && !in_array($requestedResource,$whiteList)){
                 $url = $e->getRouter()->assemble(array(), array('name' => 'usuario/default'));
