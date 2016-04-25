@@ -35,7 +35,7 @@ return array(
             
               // The following section is new and should be added to your file
             'usuario' => array(
-                'type' => 'Literal',
+                'type' => 'literal',
                 'options' => array(
                     'route' => '/usuario',
                     'defaults' => array(
@@ -55,7 +55,7 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Centro\Controller\Usuario',
-                                'action' => 'index',
+                                'action' => 'login',
                             ),
                         ),
                     ),
