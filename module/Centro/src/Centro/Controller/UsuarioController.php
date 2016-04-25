@@ -55,10 +55,12 @@ class UsuarioController extends AbstractActionController
                 //Nombre de usuario ingresado
                 $usuario = $dataUser['usuario'];
                 
+                
                 $authService->getAdapter()->setDatos($usuario, $password_cifrado);
                 $authService->authenticate();
                 
                 if($authService->hasIdentity()){
+
                     //Datos a omitir 
                     $omitirColumna = array('password','pais');
                     
@@ -69,6 +71,7 @@ class UsuarioController extends AbstractActionController
                     $authService->getStorage()->write($usuario);
                     
                     $this->flashMessenger()->addSuccessMessage('Bienvenido');
+
                     return $this->redirect()->toRoute('centro');
                 } else {
                     $this->flashMessenger()->addErrorMessage('Usuario/Password incorrecto');

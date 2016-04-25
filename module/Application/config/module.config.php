@@ -104,6 +104,15 @@ return array(
             'routes' => array(),
         ),
     ),
+   
+    
+    'view_helpers' => array(
+        'invokables' => array(
+            'specialpurpose' => 'Application\Helper\SpecialPurpose',
+            'usuariocentrohelper' => 'Application\Helper\UsuarioCentroHelper',
+        ),
+    ),
+    
     'view_helper_config' => array(
         'flashmessenger' => array(
             'message_open_format' => '<div%s><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><ul><li>',
