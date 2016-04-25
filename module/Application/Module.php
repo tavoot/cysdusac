@@ -4,8 +4,6 @@ namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
-use Application\Acl\AppAcl as Acl;
-use Application\Util\Util as AppUtil;
 
 
 class Module{
@@ -14,74 +12,34 @@ class Module{
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-
-
-        //administracion de Acl
-           $eventManager->attach('route', function($e) {
-            $application = $e->getApplication();
-            $routeMatch = $e->getRouteMatch();
-            $sm = $application->getServiceManager();
-
-
-
-            $auth = $sm->get('Zend\Authentication\AuthenticationService');
-            /*$config = $sm->get('Config');
-            $acl = new Acl($config);
-
-            $role = Acl::DEFAULT_ROL;
-
+        
+        $eventManager->attach(MvcEvent::EVENT_DISPATCH, function($e){
+            //$routeMatch = $e->getRouteMatch();
             
-            $controller = $routeMatch->getParam('controller');
-            $action = $routeMatch->getParam('action');*/
+            $auth = $e->getApplication()->getServiceManager()->get('Zend\Authentication\AuthenticationService');
             
+            $controller = $e->getRouteMatch()->getParam('controller');
+            $action = $e->getRouteMatch()->getParam('action');
             
-            if ($auth->hasIdentity()) {
-                $usr = $auth->getIdentity();
-                //var_dump($usr);
-                //var_dump($usr);
-                // TODO we don't need that if the names of the roles are comming from the DB
-                //$role = AppUtil::getRole(6);
-                
-                /*$log=$_SERVER['REMOTE_ADDR'] . '|' . $usr->codigo. '|'. $controller.'|'.$action;
-                $sm->get('Zend\Log\Logger\Request')->crit($log);*/
-
-            }
-
+            $requestedResource = $controller . '-' . $action;
             
-
-            /*if (!$acl->hasResource($controller)) {
-                throw new \Exception('Resource ' . $controller . ' not defined');
-            }
-
-
-            if (!$acl->isAllowed($role, $controller, $action)) {
-                $url = $e->getRouter()->assemble(array(), array('name' => 'home'));
+            $whiteList = array(
+                'Centro\Controller\Usuario-login',
+                'Centro\Controller\Usuario-index',
+            );
+            
+            if (!$auth->hasIdentity() && !in_array($requestedResource,$whiteList)){
+                $url = $e->getRouter()->assemble(array(), array('name' => 'usuario/default'));
                 $response = $e->getResponse();
-
-                $response->getHeaders()->addHeaderLine('Location', $url);
-                // The HTTP response status code 302 Found is a common way of performing a redirection.
-                // http://en.wikipedia.org/wiki/HTTP_302
+                $response->setHeaders($response->getHeaders()->addHeaderLine('Location', $url));
                 $response->setStatusCode(302);
                 $response->sendHeaders();
                 exit;
-            }*/
-        }, -100);
-           
-            
-
-        //loggeo de sucesos
-        //requests
-        //errores
-        $application = $e->getApplication();
-        $sm = $application->getServiceManager();
-        $sharedManager = $application->getEventManager()->getSharedManager();
-
-        $sharedManager->attach('Zend\Mvc\Application', 'dispatch.error', function($e) use ($sm) {
-            if ($e->getParam('exception')) {
-                $sm->get('Zend\Log\Logger\Error')->crit($_SERVER['REMOTE_ADDR'] . '|' . $e->getParam('exception'));
             }
+            
         }
-        );
+        , 100);
+
     }
 
 
