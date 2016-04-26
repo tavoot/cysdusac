@@ -25,29 +25,25 @@ class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareI
     
     public function __invoke()
     {
-        $this->getUsuarioFromSession();
+        $this->usuario = $this->getUsuarioFromSession();
         
-        $usuarioscentros = $this->getUsuarioCentroTable()->getCentrosPorUsuario(2);
-        $output ="<ul class='nav nav-third-level'>";
-        foreach($usuarioscentros as $usuariocentro){
-        $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
-            
-            if($centro){
-                $output = $output . "<li><a href='/centro/find/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+        if($this->usuario){
+            $usuarioscentros = $this->getUsuarioCentroTable()->getCentrosPorUsuario($this->usuario->id);
+            $output ="<ul class='nav nav-third-level'>";
+            foreach($usuarioscentros as $usuariocentro){
+            $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
+
+                if($centro){
+                    $output = $output . "<li><a href='/centro/find/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+                }
+
             }
-                                        
+        }else{
+            return $output='no hay usuarios asociados a la session';
         }
-        /*$this->usuario = $this->getUsuarioFromSession();
-        $output = $this->usuario . ":)";*/
-        
-        
-        //$this->count++;
-        //$this->getUsuarioCentroTable()->getCentrosPorUsuario(1);
-        
-        //$output = sprintf("I have seen 'The Jerk' %d time(s).", $this->count);
+      
         $output = $output . "</ul>";
         return $output;
-        //return htmlspecialchars($output, ENT_QUOTES, 'UTF-8');
     }
     
     public function setServiceLocator(ServiceLocatorInterface $serviceLocator)

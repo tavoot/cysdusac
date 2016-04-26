@@ -24,24 +24,11 @@ class CentroController extends AbstractActionController {
 
     public function indexAction() {
         
-        /*if (!$this->centroTable) {
-            $sm = $this->getServiceLocator();
-            
-            $usuario = new Usuario();
-            $usuario->id = Session::getUsuario($sm)->id;
-            $usuario->usuario = Session::getUsuario($sm)->usuario;
-            
-            
-            
-            $usuario->getUsuarioCentroTable()->getCentrosPorUsuario($usuario->id);
-            
-        }*/
+        //$usuario->getUsuarioCentroTable()->getCentrosPorUsuario($usuario->id);
         
-        
-        
-        /*return new ViewModel(array(
+        return new ViewModel(array(
             'centros' => $this->getCentroTable()->fetchAll(),
-        ));*/
+        ));
         
         
     }

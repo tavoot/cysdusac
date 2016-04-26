@@ -16,7 +16,7 @@ use Centro\Form\UsuarioForm;
 
 
 
-class UsuarioController extends AbstractActionController {
+class UserController extends AbstractActionController {
 
     protected $usuarioTable;
 
@@ -49,7 +49,7 @@ class UsuarioController extends AbstractActionController {
                 $this->getUsuarioTable()->save($usuario);
 
                 // Redireccionar a la lista de usuarios
-                return $this->redirect()->toRoute('usuario');
+                return $this->redirect()->toRoute('user');
             }
         }
         return array('form' => $form);
@@ -60,7 +60,7 @@ class UsuarioController extends AbstractActionController {
      {
          $id = (int) $this->params()->fromRoute('id', 0);
          if (!$id) {
-             return $this->redirect()->toRoute('usuario', array(
+             return $this->redirect()->toRoute('user', array(
                  'action' => 'add'
              ));
          }
@@ -71,7 +71,7 @@ class UsuarioController extends AbstractActionController {
              $usuario = $this->getUsuarioTable()->get($id);
          }
          catch (\Exception $ex) {
-             return $this->redirect()->toRoute('usuario', array(
+             return $this->redirect()->toRoute('user', array(
                  'action' => 'index'
              ));
          }
@@ -89,7 +89,7 @@ class UsuarioController extends AbstractActionController {
                  $this->getUsuarioTable()->save($usuario);
 
                  // Redirect to list of albums
-                 return $this->redirect()->toRoute('usuario');
+                 return $this->redirect()->toRoute('user');
              }
          }
 
@@ -104,7 +104,7 @@ class UsuarioController extends AbstractActionController {
      {
          $id = (int) $this->params()->fromRoute('id', 0);
          if (!$id) {
-             return $this->redirect()->toRoute('usuario');
+             return $this->redirect()->toRoute('user');
          }
 
          $request = $this->getRequest();
@@ -117,7 +117,7 @@ class UsuarioController extends AbstractActionController {
              }
 
              // Redirect to list of albums
-             return $this->redirect()->toRoute('usuario');
+             return $this->redirect()->toRoute('user');
          }
 
          return array(

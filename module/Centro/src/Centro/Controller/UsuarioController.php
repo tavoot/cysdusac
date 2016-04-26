@@ -13,6 +13,7 @@ use Centro\Form\InputFilter\LoginInputFilter;
 use Centro\Util\UtilUsuario;
 use Centro\Adapter\UsuarioAdapter;
 
+
 /**
  * Description of UsuarioController
  *
@@ -20,12 +21,14 @@ use Centro\Adapter\UsuarioAdapter;
  */
 
 
+
+
 class UsuarioController extends AbstractActionController
 {
     protected $authAdapter;
     
+
     public function indexAction() {
-        //return new ViewModel();
         return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
     }
     
@@ -104,5 +107,4 @@ class UsuarioController extends AbstractActionController
         $config = $this->getServiceLocator()->get('Config');
         return $config[$configName];
     }
-    
 }

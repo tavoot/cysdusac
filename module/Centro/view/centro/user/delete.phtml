@@ -1,0 +1,24 @@
+<?php
+
+ $title = 'Delete Usuario';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+ <p>Esta seguro de que desea eliminar un Usuario?
+     '<?php echo $this->escapeHtml($usuario->tipo); ?>' by
+     '<?php echo $this->escapeHtml($usuario->usuario); ?>'?
+ </p>
+ <?php
+ $url = $this->url('user', array(
+     'action' => 'delete',
+     'id'     => $this->id,
+ ));
+ ?>
+ <form action="<?php echo $url; ?>" method="post">
+ <div>
+     <input type="hidden" name="id" value="<?php echo (int) $usuario->id; ?>" />
+     <input type="submit" name="del" value="Yes" />
+     <input type="submit" name="del" value="No" />
+ </div>
+ </form>

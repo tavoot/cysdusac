@@ -15,6 +15,7 @@ return array(
             'Centro\Controller\Contacto' => 'Centro\Controller\ContactoController',
             'Centro\Controller\Item' => 'Centro\Controller\ItemController',
             'Centro\Controller\UsuarioCentro' => 'Centro\Controller\UsuarioCentroController',
+            'Centro\Controller\User' => 'Centro\Controller\UserController',
 
         ),
     ),
@@ -119,6 +120,21 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'Centro\Controller\UsuarioCentro',
+                        'action' => 'index',
+                    ),
+                ),
+            ),
+            
+            'user' => array(
+                'type' => 'segment',
+                'options' => array(
+                    'route' => '/user[/:action][/:id]',
+                    'constraints' => array(
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'Centro\Controller\User',
                         'action' => 'index',
                     ),
                 ),

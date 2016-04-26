@@ -1,11 +1,5 @@
-
 <?php 
-//"module/Cent
-//}ro/view/centro/centro/index.phtml"
-
-
-
- $title = 'Mis Centros';
+$title = 'Mis Centros';
  $this->headTitle($title);
  ?>
  <h1><?php echo $this->escapeHtml($title); ?></h1>
@@ -27,9 +21,7 @@
      <th>&nbsp;</th>
  </tr>
  
- <?php foreach ($centros as $key=>$centro) : ?>
-  <?php $this->placeholder('foo')->bar[$key]['id'] = $centro->id ?>
- <?php $this->placeholder('foo')->bar[$key]['siglas'] = $centro->siglas ?>
+ <?php foreach ($centros as $centro) : ?>
  <tr>
      <td><?php echo $this->escapeHtml($centro->id);?></td>
      <td><?php echo $this->escapeHtml($centro->tipo);?></td>

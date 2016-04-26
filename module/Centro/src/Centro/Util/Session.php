@@ -23,21 +23,9 @@ class Session {
 
             if ($auth->hasIdentity()) {
                 //obtiene el codigo del usuario logeado
-                $usuario = $auth->getIdentity();                
+                //$usuario = $auth->getIdentity();                
                 
                 $datos_usuario = $auth->getStorage()->read();
-                
-                var_dump($datos_usuario); 
-                /*$usuario_estudiante_table = $table_provider->getTable(TableProvider::USUARIO_ESTUDIANTE_TABLE);
-
-                //obtiene el usuario_estudiante asociado al usuario
-                $usuario_estudiante = $usuario_estudiante_table->get($usuario_estudiante);
-
-                //obtiene al estudiante asociado al usuario
-                $estudiante = $table_provider
-                        ->getTable(TableProvider::USUARIO_TABLE)
-                        ->get($usuario_estudiante->estudiante);*/
-
                 return $datos_usuario;
             } else {
                 return NULL;
