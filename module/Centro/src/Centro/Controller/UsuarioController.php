@@ -41,13 +41,6 @@ class UsuarioController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            var_dump($request->getPost());
-            var_dump("pruebas");
-            var_dump($form->get('tipo')->getOptions());
-            var_dump($form->get('tipo')->getOptions());
-            var_dump($form->get('tipo')->getAttributes());
-            var_dump($form->get('submit')->getName());
-
             $usuario = new Usuario();
             $form->setInputFilter($usuario->getInputFilter());
             $form->setData($request->getPost());
