@@ -16,7 +16,7 @@ return array(
                     'route' => '/',
                     'defaults' => array(
                         //'__NAMESPACE__' => 'Application\Controller',
-                        'controller' => 'Centro\Controller\Usuario',
+                        'controller' => 'Centro\Controller\Acceso',
                         'action' => 'index',
                     ),
                 ),

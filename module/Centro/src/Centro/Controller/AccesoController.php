@@ -1,9 +1,11 @@
 <?php
-/* 
+
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 namespace Centro\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -13,28 +15,26 @@ use Centro\Form\InputFilter\LoginInputFilter;
 use Centro\Util\UtilUsuario;
 use Centro\Adapter\UsuarioAdapter;
 
-
 /**
- * Description of UsuarioController
+ * Description of UserAccountController
  *
  * @author nando
  */
-
-
-
-
-class UsuarioController extends AbstractActionController
-{
+class AccesoController extends AbstractActionController {
+    //put your code here
+    
     protected $authAdapter;
     
-
-    public function indexAction() {
-        return new ViewModel();
-        //return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
+    public function indexAction(){
+        return $this->redirect()->toRoute('acceso/default', array('action' => 'login'));
     }
     
+    /**
+     * action que maneja el login de usuarios al sistema
+     * @return LoginForm
+     */
     public function loginAction() {
-        /*$loginInputFilter = new LoginInputFilter();
+        $loginInputFilter = new LoginInputFilter();
         $loginForm = new LoginForm($loginInputFilter->getInputFilter());
         
         $request = $this->getRequest();
@@ -74,12 +74,12 @@ class UsuarioController extends AbstractActionController
                     //Almaceno los datos de la sesion
                     $authService->getStorage()->write($usuario);
                     
-                    $this->flashMessenger()->addSuccessMessage('Bienvenido');
+                    $this->flashMessenger()->addSuccessMessage('Bienvenido al sistema');
 
                     return $this->redirect()->toRoute('centro');
                 } else {
-                    $this->flashMessenger()->addErrorMessage('Usuario/Password incorrecto');
-                    return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
+                    $this->flashMessenger()->addErrorMessage('Usuario/Password ingresado es incorrecto');
+                    return $this->redirect()->toRoute('acceso/default', array('action' => 'login'));
                 }
             }
         }
@@ -87,14 +87,23 @@ class UsuarioController extends AbstractActionController
         //Cambio de layout para el controller
         $this->layout('layout/loginlayout');
         
-        return array('form' => $loginForm);*/
+        return array('form' => $loginForm);
     }
     
+    /**
+     * action que maneja el logout de usuarios al sistema
+     * @return Route
+     */
     public function logoutAction() {
-        /*$this->getAuthService()->getStorage()->clear();
-        return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));*/
+        $this->getAuthService()->getStorage()->clear();
+        return $this->redirect()->toRoute('acceso/default', array('action' => 'login'));
     }
     
+    /**
+     * retorna una instancia de UsuarioAdapter para la autenticacion
+     * de usuarios al sistema
+     * @return UsuarioAdapter
+     */
     public function getAuthService() {
         if(!$this->authAdapter){
             $sm = $this->getServiceLocator();
@@ -104,8 +113,15 @@ class UsuarioController extends AbstractActionController
         return $this->authAdapter;
     }
     
+    /**
+     * 
+     * @param String $configName
+     * @return Config
+     */
     public function getConfig($configName){
         $config = $this->getServiceLocator()->get('Config');
         return $config[$configName];
     }
+    
+    
 }
