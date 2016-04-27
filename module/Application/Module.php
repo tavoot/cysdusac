@@ -24,12 +24,12 @@ class Module{
             $requestedResource = $controller . '-' . $action;
             
             $whiteList = array(
-                'Centro\Controller\Usuario-login',
-                'Centro\Controller\Usuario-index',
+                'Centro\Controller\Acceso-index',
+                'Centro\Controller\Acceso-login',
             );
             
             if (!$auth->hasIdentity() && !in_array($requestedResource,$whiteList)){
-                $url = $e->getRouter()->assemble(array(), array('name' => 'usuario/default'));
+                $url = $e->getRouter()->assemble(array(), array('name' => 'home'));
                 $response = $e->getResponse();
                 $response->setHeaders($response->getHeaders()->addHeaderLine('Location', $url));
                 $response->setStatusCode(302);

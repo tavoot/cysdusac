@@ -16,7 +16,7 @@ return array(
             'Centro\Controller\Item' => 'Centro\Controller\ItemController',
             'Centro\Controller\UsuarioCentro' => 'Centro\Controller\UsuarioCentroController',
             'Centro\Controller\User' => 'Centro\Controller\UserController',
-
+            'Centro\Controller\Acceso' => 'Centro\Controller\AccesoController',
         ),
     ),
     // The following section is new and should be added to your file
@@ -58,8 +58,8 @@ return array(
                                 'id' => '[0-9]+',
                             ),
                             'defaults' => array(
-                                'controller' => 'Centro\Controller\Usuario',
-                                'action' => 'login',
+                                //'controller' => 'Centro\Controller\Usuario',
+                                //'action' => 'login',
                             ),
                         ),
                     ),
@@ -136,6 +136,33 @@ return array(
                     'defaults' => array(
                         'controller' => 'Centro\Controller\User',
                         'action' => 'index',
+                    ),
+                ),
+            ),
+            
+            'acceso' => array(
+                'type' => 'literal',
+                'options' => array(
+                    'route' => '/acceso',
+                    'defaults' => array(
+                        'controller' => 'Centro\Controller\Acceso',
+                        'action' => 'index',
+                    ),
+                ),
+                'may_terminate' => true,
+                'child_routes' => array(
+                    'default' => array(
+                        'type' => 'Segment',
+                        'options' => array(
+                            'route' => '/[:action]',
+                            'constraints' => array(
+                                'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Centro\Controller\Acceso',
+                                'action' => 'index',
+                            ),
+                        ),
                     ),
                 ),
             ),
