@@ -9,6 +9,7 @@
 namespace Centro\Form;
 
 use Zend\Form\Form;
+use Zend\Form\Element;
 
  class UsuarioForm extends Form
  {
@@ -22,13 +23,14 @@ use Zend\Form\Form;
              'type' => 'Hidden',
          ));
          
-         $this->add(array(
+
+          $this->add(array(
              'name' => 'tipo',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Tipo',
-             ),
+             'type' => 'Zend\Form\Element\Select',
+             'label' => 'Seleccionar Tipo de Usuario',
          ));
+         
+         
          $this->add(array(
              'name' => 'usuario',
              'type' => 'Text',
@@ -43,13 +45,7 @@ use Zend\Form\Form;
                  'label' => 'Passowd',
              ),
          ));
-         $this->add(array(
-             'name' => 'tipo',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Tipo',
-             ),
-         ));
+        
          $this->add(array(
              'name' => 'email',
              'type' => 'Text',

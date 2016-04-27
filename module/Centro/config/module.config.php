@@ -125,16 +125,16 @@ return array(
                 ),
             ),
             
-            'user' => array(
+            'usuario' => array(
                 'type' => 'segment',
                 'options' => array(
-                    'route' => '/user[/:action][/:id]',
+                    'route' => '/usuario[/:action][/:id]',
                     'constraints' => array(
                         'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id' => '[0-9]+',
                     ),
                     'defaults' => array(
-                        'controller' => 'Centro\Controller\User',
+                        'controller' => 'Centro\Controller\Usuario',
                         'action' => 'index',
                     ),
                 ),

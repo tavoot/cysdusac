@@ -16,6 +16,11 @@ use Centro\Model\Logic\ItemTable;
 use Centro\Model\Data\UsuarioCentro;
 use Centro\Model\Logic\UsuarioCentroTable;
 
+use Centro\Model\Data\CatalogoTipo;
+use Centro\Model\Logic\CatalogoTipoTable;
+use Centro\Model\Data\CatalogoValor;
+use Centro\Model\Logic\CatalogoValorTable;
+
 use Zend\Authentication\AuthenticationService;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -136,6 +141,34 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype->setArrayObjectPrototype(new UsuarioCentro());
                     return new TableGateway('usuario_centro', $dbAdapter, null, $resultSetPrototype);
                 },
+                        
+                /*CartalogoTipos*/
+                'Centro\Model\Logic\CatalogoTipoTable' => function($sm) {
+                    $tableGateway = $sm->get('CatalogoTipoTableGateway');
+                    $table = new CatalogoTipoTable($tableGateway);
+                    return $table;
+                },
+                        
+                'CatalogoTipoTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CatalogoTipo());
+                    return new TableGateway('catalogo_tipo', $dbAdapter, null, $resultSetPrototype);
+                },      
+                 
+                /*CartalogoValores*/
+                'Centro\Model\Logic\CatalogoValorTable' => function($sm) {
+                    $tableGateway = $sm->get('CatalogoValorTableGateway');
+                    $table = new CatalogoValorTable($tableGateway);
+                    return $table;
+                },
+                        
+                'CatalogoValorTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new CatalogoValor());
+                    return new TableGateway('catalogo_valor', $dbAdapter, null, $resultSetPrototype);
+                },      
                         
                         
                 

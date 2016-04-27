@@ -12,10 +12,6 @@ namespace Application\Helper;
 use Zend\View\Helper\AbstractHelper;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
-
-use Centro\Model\Logic\UsuarioCentroTable;
-use Centro\Model\Data\UsuarioCentro;
-
 use Centro\Util\Session;
 
 class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareInterface{
@@ -64,8 +60,6 @@ class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareI
         if ($this->usuario) {
             return $this->usuario;
         } else {
-            //$sm = $application->getServiceManager();
-            //$serviceLocator = $this->getServiceLocator();
             $sm = $this->getServiceLocator()->getServiceLocator();
             return Session::getUsuario($sm);
         }

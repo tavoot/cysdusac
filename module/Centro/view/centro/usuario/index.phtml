@@ -1,14 +1,41 @@
-<?php
-use Zend\Mvc\Controller\Plugin\FlashMessenger;
+ <?php
+//"module/Centro/view/centro/centro/index.phtml"
 
-$title = 'Inicio';
-$this->headTitle($title);
-
-?>
-
-<div class="row">
-    <?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, array('alert','alert-success')); ?>
-    <h1 class="text-primary"><?php echo $this->escapeHtml($title); ?></h1>
-    <p>P&aacute;gina principal del sistema de noticias</p>
-</div>
-
+ $title = 'Administración de Usuarios';
+ $this->headTitle($title);
+ ?>
+ <div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+ </div>
+ 
+ 
+ <p>
+     <a href="<?php echo $this->url('usuario', array('action'=>'add'));?>">Agregar Nuevo Usuario</a>
+ </p>
+ 
+ <table class="table table-striped">
+ <tr>
+     <th>Usuario</th>
+     <th>Tipo</th>
+     <th colspan='2'>Acciones</th>
+ </tr>
+ <?php foreach ($usuarios as $usuario):   ?>
+ <tr>
+     <td><?php echo $this->escapeHtml($usuario->usuario);?></td>
+     <td><?php echo $this->escapeHtml($usuario->tipo_valor);?></td>
+     <td>
+         <form action="<?php echo $this->url('usuario', array('action'=>'edit', 'id' => $usuario->id));?>" method="POST">
+             <input class="btn btn-lg btn-warning" type="submit" value="Editar" />
+          </form>
+     </td>
+     <td>
+         <form action="<?php echo $this->url('usuario', array('action'=>'delete', 'id' => $usuario->id));?>" method="POST">
+             <input class="btn btn-lg btn-danger" type="submit" value="Eliminar" />
+          </form>
+     </td>
+  
+ </tr>
+ <?php endforeach; ?>
+ </table>

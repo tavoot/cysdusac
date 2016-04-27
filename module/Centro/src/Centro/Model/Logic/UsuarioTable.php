@@ -9,6 +9,7 @@
 namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
+use \Zend\Db\Sql\Select;
 use Centro\Model\Data\Usuario;
 
 
@@ -23,8 +24,13 @@ class UsuarioTable{
      
      public function fetchAll()
      {
-         $resultSet = $this->tableGateway->select();
-         return $resultSet;
+        $select = new Select();
+        $select->from('usuario');
+        $select->join('catalogo_valor', 'usuario.tipo=catalogo_valor.id', array('valor'), 'INNER');
+        $select->where('catalogo_tipo_id = 1');
+         
+        $resultSet= $this->tableGateway->selectWith($select);
+        return $resultSet;
      }
 
      public function get($id)

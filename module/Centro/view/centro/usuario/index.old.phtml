@@ -1,36 +1,14 @@
- <?php
-//"module/Centro/view/centro/centro/index.phtml"
+<?php
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
- $title = 'Usuarios';
- $this->headTitle($title);
- ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
- <p>
-     <a href="<?php echo $this->url('usuario', array('action'=>'add'));?>">Agregar Nuevo Usuario</a>
- </p>
- 
- <table class="table table-striped">
- <tr>
-     <th>Id</th>
-     <th>Tipo</th>
-     <th>Usuario</th>
-     <th>Password</th>
-     <th>Pais</th>
-     <th>&nbsp;</th>
- </tr>
- <?php foreach ($usuarios as $usuario) : ?>
- <tr>
-     <td><?php echo $this->escapeHtml($usuario->id);?></td>
-     <td><?php echo $this->escapeHtml($usuario->tipo);?></td>
-     <td><?php echo $this->escapeHtml($usuario->usuario);?></td>
-     <td><?php echo $this->escapeHtml($usuario->password);?></td>
-     <td><?php echo $this->escapeHtml($usuario->pais);?></td>
-     <td>
-         <a href="<?php echo $this->url('usuario',
-             array('action'=>'edit', 'id' => $usuario->id));?>">Editar</a>
-         <a href="<?php echo $this->url('usuario',
-             array('action'=>'delete', 'id' => $usuario->id));?>">Eliminar</a>
-     </td>
- </tr>
- <?php endforeach; ?>
- </table>
+$title = 'Inicio';
+$this->headTitle($title);
+
+?>
+
+<div class="row">
+    <?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, array('alert','alert-success')); ?>
+    <h1 class="text-primary"><?php echo $this->escapeHtml($title); ?></h1>
+    <p>P&aacute;gina principal del sistema de noticias</p>
+</div>
+

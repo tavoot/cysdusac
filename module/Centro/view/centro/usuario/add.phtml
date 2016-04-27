@@ -1,24 +1,25 @@
 
 
- <?php
- $title = 'Añadir Nuevo Usuario';
- $this->headTitle($title);
- ?>
+<?php
+$title = 'Añadir Nuevo Usuario';
+$this->headTitle($title);
+?>
 <div class='panel panel-primary'>
     <div class='panel-heading'>
         <h1><?php echo $this->escapeHtml($title); ?></h1>
     </div>
- </div>
- <?php
- $form->setAttribute('action', $this->url('usuario', array('action' => 'add')));
- $form->prepare();
+</div>
+<?php
+
+$form->setAttribute('action', $this->url('usuario', array('action' => 'add')));
+$form->prepare();
 
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('tipo')) . "<br>";
-echo $this->formRow($form->get('usuario')). "<br>";
-echo $this->formRow($form->get('password')). "<br>";
-echo $this->formRow($form->get('email')). "<br>"; 
-echo $this->formRow($form->get('pais')). "<br>"; 
+echo $this->formSelect($form->get('tipo')) . "<br>";
+echo $this->formRow($form->get('usuario')) . "<br>";
+echo $this->formRow($form->get('password')) . "<br>";
+echo $this->formRow($form->get('email')) . "<br>";
+echo $this->formRow($form->get('pais')) . "<br>";
 echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();

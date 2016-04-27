@@ -1,111 +1,164 @@
 <?php
-/* 
+
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 namespace Centro\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Centro\Form\LoginForm;
-use Centro\Form\InputFilter\LoginInputFilter;
-use Centro\Util\UtilUsuario;
-use Centro\Adapter\UsuarioAdapter;
+use Centro\Model\Data\Usuario;
+use Centro\Util\CatalogoTipo;
+use Centro\Form\UsuarioForm;
 
+class UsuarioController extends AbstractActionController {
 
-/**
- * Description of UsuarioController
- *
- * @author nando
- */
-
-
-
-
-class UsuarioController extends AbstractActionController
-{
-    protected $authAdapter;
-    
+    protected $usuarioTable;
+    protected $catalogovalorTable;
 
     public function indexAction() {
-        return new ViewModel();
-        //return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
+
+        return new ViewModel(array(
+            'usuarios' => $this->getUsuarioTable()->fetchAll(),
+        ));
     }
-    
-    public function loginAction() {
-        /*$loginInputFilter = new LoginInputFilter();
-        $loginForm = new LoginForm($loginInputFilter->getInputFilter());
-        
-        $request = $this->getRequest();
-        $authService = $this->getAuthService();
-        
-        if($authService->hasIdentity()) {
-            $this->redirect()->toRoute('centro');
+
+    private function getUsuarioTable() {
+        if (!$this->usuarioTable) {
+            $sm = $this->getServiceLocator();
+            $this->usuarioTable = $sm->get('Centro\Model\Logic\UsuarioTable');
         }
-        
-        if($request->isPost()){
-            $loginForm->setData($request->getPost());
-            
-            if($loginForm->isValid()){
-                $dataUser = $request->getPost();
-                
-                $config = $this->getConfig('encrypt');
-                $usrUtil = new UtilUsuario($config);
-                
-                //Password ingresado por el usuario
-                $password = $dataUser['password'];
-                $password_cifrado = $usrUtil->cifrar($password);
-                //Nombre de usuario ingresado
-                $usuario = $dataUser['usuario'];
-                
-                
-                $authService->getAdapter()->setDatos($usuario, $password_cifrado);
-                $authService->authenticate();
-                
-                if($authService->hasIdentity()){
+        return $this->usuarioTable;
+    }
 
-                    //Datos a omitir 
-                    $omitirColumna = array('password','pais');
-                    
-                    //Obtengo los datos que se almacenaran en la sesion
-                    $usuario = $authService->getAdapter()->getResultRowObject(null, $omitirColumna);
-                    
-                    //Almaceno los datos de la sesion
-                    $authService->getStorage()->write($usuario);
-                    
-                    $this->flashMessenger()->addSuccessMessage('Bienvenido');
+    public function addAction() {
+        $form = new UsuarioForm();
+        $this->getCatalogoUsuarios($form);
+        $form->get('submit')->setValue('Agregar');
 
-                    return $this->redirect()->toRoute('centro');
-                } else {
-                    $this->flashMessenger()->addErrorMessage('Usuario/Password incorrecto');
-                    return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));
-                }
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            var_dump($request->getPost());
+            var_dump("pruebas");
+            var_dump($form->get('tipo')->getOptions());
+            var_dump($form->get('tipo')->getOptions());
+            var_dump($form->get('tipo')->getAttributes());
+            var_dump($form->get('submit')->getName());
+
+            $usuario = new Usuario();
+            $form->setInputFilter($usuario->getInputFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $usuario->exchangeArray($form->getData());
+                $this->getUsuarioTable()->save($usuario);
+
+                // Redireccionar a la lista de usuarios
+                return $this->redirect()->toRoute('usuario');
             }
         }
-        
-        //Cambio de layout para el controller
-        $this->layout('layout/loginlayout');
-        
-        return array('form' => $loginForm);*/
+        ;
+        return array('form' => $form);
     }
-    
-    public function logoutAction() {
-        /*$this->getAuthService()->getStorage()->clear();
-        return $this->redirect()->toRoute('usuario/default', array('action' => 'login'));*/
-    }
-    
-    public function getAuthService() {
-        if(!$this->authAdapter){
-            $sm = $this->getServiceLocator();
-            $this->authAdapter = $sm->get('Centro\Adapter\UsuarioAdapter');
+
+    public function editAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('usuario', array(
+                        'action' => 'add'
+            ));
         }
-        
-        return $this->authAdapter;
+
+        try {
+            $usuario = $this->getUsuarioTable()->get($id);
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('usuario', array(
+                        'action' => 'index'
+            ));
+        }
+
+        $form = new UsuarioForm();
+        $this->getCatalogoUsuarios($form);
+
+
+        $form->bind($usuario);
+        $form->get('submit')->setAttribute('value', 'Edit');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter($usuario->getInputFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $this->getUsuarioTable()->save($usuario);
+
+                // Redirect to list of albums
+                return $this->redirect()->toRoute('usuario');
+            }
+        }
+
+        return array(
+            'id' => $id,
+            'form' => $form,
+        );
     }
-    
-    public function getConfig($configName){
-        $config = $this->getServiceLocator()->get('Config');
-        return $config[$configName];
+
+    public function deleteAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('usuario');
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'No');
+
+            if ($del == 'Yes') {
+                $id = (int) $request->getPost('id');
+                $this->getUsuarioTable()->delete($id);
+            }
+
+            // Redirect to list of albums
+            return $this->redirect()->toRoute('usuario');
+        }
+
+        return array(
+            'id' => $id,
+            'usuario' => $this->getUsuarioTable()->get($id)
+        );
     }
+
+    private function getCatalogoValorTable() {
+        if (!$this->catalogovalorTable) {
+            $sm = $this->getServiceLocator();
+            $this->catalogovalorTable = $sm->get('Centro\Model\Logic\CatalogoValorTable');
+        }
+        return $this->catalogovalorTable;
+    }
+
+    private function getCatalogoUsuarios($form) {
+        if (!$this->catalogovalorTable) {
+            $this->catalogovalorTable = $this->getCatalogoValorTable()->get(CatalogoTipo::USUARIO);
+        }
+
+        $keys = array();
+        $values = array();
+
+        if ($this->catalogovalorTable) {
+            foreach ($this->catalogovalorTable as $catalogovalor) {
+                array_push($keys, $catalogovalor->id);
+                array_push($values, $catalogovalor->valor);
+            }
+        } else {
+            return "error en la carga de catalogos para los usuarios";
+        }
+
+        $form->get('tipo')->setValueOptions(array(
+            'catalogo_usuario' => array('options' => array_combine($keys, $values))
+        ));
+    }
+
 }
