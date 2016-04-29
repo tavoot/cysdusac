@@ -4,6 +4,7 @@ namespace Application;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Centro\Util\CatalogoValor;
 
 
 class Module{
@@ -35,6 +36,15 @@ class Module{
                 $response->setStatusCode(302);
                 $response->sendHeaders();
                 exit;
+            }
+            
+            //Cambia de layout cuando es usuario estandar ya que el usuario de admin
+            //es el default
+            if($auth->hasIdentity()){
+                $usuario = $auth->getStorage()->read();
+                if($usuario->tipo == CatalogoValor::ESTANDAR){
+                    $e->getViewModel()->setTemplate('layout/layout_standard');
+                }
             }
             
         }
