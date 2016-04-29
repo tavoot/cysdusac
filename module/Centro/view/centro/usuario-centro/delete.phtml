@@ -17,7 +17,8 @@
  ?>
  <form action="<?php echo $url; ?>" method="post">
  <div>
-     <input type="hidden" name="id" value="<?php echo (int) $usuariocentro->id; ?>" />
+     <input type="hidden" name="centro_id" value="<?php echo (int)$usuariocentro->centro_id; ?>" />
+     <input type="hidden" name="id" value="<?php echo (int)$usuariocentro->id; ?>" />
      <input class="btn btn-lg btn-success" type="submit" name="del" value="Yes" />
      <input class="btn btn-lg btn-danger" type="submit" name="del" value="No" />
  </div>

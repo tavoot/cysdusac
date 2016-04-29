@@ -14,6 +14,7 @@ use Centro\Model\Data\UsuarioCentro;
 
 class UsuarioCentroController extends AbstractActionController {
 
+    protected $centro;
     protected $centroTable;
     protected $usuarioTable;
     protected $usuariocentroTable;
@@ -68,7 +69,8 @@ class UsuarioCentroController extends AbstractActionController {
 
         try { 
             
-            $centro = $this->getCentroTable()->get($id);
+            //variable global
+            $this->centro = $this->getCentroTable()->get($id);
             $usuarios = $this->getUsuarioTable()->fetchAll();
             $usuarioscentros = $this->getUsuarioCentroTable()->getByCentro($id);
             
@@ -99,66 +101,54 @@ class UsuarioCentroController extends AbstractActionController {
                     $usuariocentro = new UsuarioCentro();
                     $usuario_id = $request->getPost()->selectusuario;
                 
-                    $usuariocentro->exchangeArray(array('usuario_id'=>$usuario_id, 'centro_id'=>$centro->id));
+                    $usuariocentro->exchangeArray(array('usuario_id'=>$usuario_id, 'centro_id'=>$this->centro->id));
                     $this->getUsuarioCentroTable()->save($usuariocentro);
                     
                     // Redireccionar a la lista de centros
-                    return $this->redirect()->toRoute('usuariocentro', array(
-                        'action' => 'find'
+                    return $this->redirect()->toRoute('usuariocentro', 
+                        array(
+                        'action' => 'find',
+                        'id' => $this->centro->id
                     ));
                 }
             
             
            
             return new ViewModel(array(
-                'usuarioscentros' => $usuarioscentros, 'centro'=>$centro, 'usuarios' => $usuarios
+                'usuarioscentros' => $usuarioscentros, 'centro'=>$this->centro, 'usuarios' => $usuarios
             ));
         } catch (\Exception $ex) {
             return $this->redirect()->toRoute('usuariocentro', array(
-                        'action' => 'find'
+                        'action' => 'find',
             ));
         }
     }
 
-
-    public function addAction() {
-        $form = new UsarioCentroForm();
-        $form->get('submit')->setValue('Agregar');
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $centro = new Centro();
-            $form->setInputFilter($centro->getInputFilter());
-            $form->setData($request->getPost());
-
-            if ($form->isValid()) {
-                $centro->exchangeArray($form->getData());
-                $this->getCentroTable()->save($centro);
-
-                // Redireccionar a la lista de centros
-                return $this->redirect()->toRoute('centro');
-            }
-        }
-        return array('form' => $form);
-    }
-
-
+    
     public function deleteAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('usuariocentro');
+             return $this->redirect()->toRoute('usuariocentro', 
+                        array(
+                        'action' => 'find',
+                        'id' => $id,
+                    ));
         }
 
         $request = $this->getRequest();
         if ($request->isPost()) {
+            $usuariocentro = $this->getUsuarioCentroTable()->get($id);
             $del = $request->getPost('del', 'No');
-
-            if ($del == 'Yes') {
+            if ($del == 'Yes'){
                 $id = (int) $request->getPost('id');
                 $this->getUsuarioCentroTable()->delete($id);
             }
-
-            return $this->redirect()->toRoute('usuariocentro');
+            
+            return $this->redirect()->toRoute('usuariocentro', 
+                        array(
+                        'action' => 'find',
+                        'id' => $usuariocentro->centro_id,
+                    ));
         }
 
         return array(
