@@ -71,7 +71,7 @@ class UsuarioCentroController extends AbstractActionController {
             
             //variable global
             $this->centro = $this->getCentroTable()->get($id);
-            $usuarios = $this->getUsuarioTable()->fetchAll();
+            $usuarios = $this->getUsuarioTable()->fetchAllByCentro($this->centro->id);
             $usuarioscentros = $this->getUsuarioCentroTable()->getByCentro($id);
             
             /*$listausuarios=array();
