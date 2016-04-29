@@ -11,23 +11,12 @@ namespace Centro\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Centro\Model\Data\UsuarioCentro;
-use Centro\Form\UsuarioCentroForm;
 
 class UsuarioCentroController extends AbstractActionController {
 
-    
+    protected $centroTable;
+    protected $usuarioTable;
     protected $usuariocentroTable;
-
-    public function indexAction() {
-        //var_dump($usuariocentro);
-        //var_dump($this->getUsuarioCentroTable()->getCentrosPorUsuario(1));
-        
-        return new ViewModel(array(
-            'usuarioscentros' => $this->getUsuarioCentroTable()->getCentrosPorUsuario(1)
-        ));
-        
-    }
-
 
     public function getUsuarioCentroTable() {
         if (!$this->usuariocentroTable) {
@@ -37,10 +26,101 @@ class UsuarioCentroController extends AbstractActionController {
         return $this->usuariocentroTable;
     }
     
+    public function getCentroTable() {
+        if (!$this->centroTable) {
+            $sm = $this->getServiceLocator();
+            $this->centroTable = $sm->get('Centro\Model\Logic\CentroTable');
+        }
+        return $this->centroTable;
+    }
     
-   
+    public function getUsuarioTable() {
+        if (!$this->usuarioTable) {
+            $sm = $this->getServiceLocator();
+            $this->usuarioTable = $sm->get('Centro\Model\Logic\UsuarioTable');
+        }
+        return $this->usuarioTable;
+    }
     
     
+    
+    public function indexAction() {
+        //var_dump($usuariocentro);
+        //var_dump($this->getUsuarioCentroTable()->getCentrosPorUsuario(1));
+        
+        return new ViewModel(array(
+            'usuarioscentros' => $this->getUsuarioCentroTable()->getByCentro(2),
+        ));
+        
+    }
+    
+    public function add(){
+        
+    }
+    
+     public function findAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('usuariocentro', array(
+                        'action' => 'find'
+            ));
+        }
+
+        try { 
+            
+            $centro = $this->getCentroTable()->get($id);
+            $usuarios = $this->getUsuarioTable()->fetchAll();
+            $usuarioscentros = $this->getUsuarioCentroTable()->getByCentro($id);
+            
+            /*$listausuarios=array();
+            foreach($usuarioscentros as $usuariocentro){
+                foreach($usuarios as $usuario){
+                    if($usuariocentro->usuario_id==$usuario->id){
+                        echo "XD";
+                        //array_push($listausuarios, array('key'=>$usuario->id, 'value'=>$usuario->valor));
+                    }else{
+                        echo ":S";
+                    }
+                }
+            }*/
+            //var_dump($usuarios);
+            //$usuariosnoasignados=array();
+            
+            
+             
+                
+            /*foreach($usuarios as $usuario){
+                
+            }*/
+            //var_dump($usuariosnoasignados);
+            
+                $request = $this->getRequest();
+                if ($request->isPost()){
+                    $usuariocentro = new UsuarioCentro();
+                    $usuario_id = $request->getPost()->selectusuario;
+                
+                    $usuariocentro->exchangeArray(array('usuario_id'=>$usuario_id, 'centro_id'=>$centro->id));
+                    $this->getUsuarioCentroTable()->save($usuariocentro);
+                    
+                    // Redireccionar a la lista de centros
+                    return $this->redirect()->toRoute('usuariocentro', array(
+                        'action' => 'find'
+                    ));
+                }
+            
+            
+           
+            return new ViewModel(array(
+                'usuarioscentros' => $usuarioscentros, 'centro'=>$centro, 'usuarios' => $usuarios
+            ));
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('usuariocentro', array(
+                        'action' => 'find'
+            ));
+        }
+    }
+
+
     public function addAction() {
         $form = new UsarioCentroForm();
         $form->get('submit')->setValue('Agregar');
@@ -62,51 +142,11 @@ class UsuarioCentroController extends AbstractActionController {
         return array('form' => $form);
     }
 
-    public function editAction() {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('centro', array(
-                        'action' => 'add'
-            ));
-        }
-
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
-        try {
-            $centro = $this->getCentroTable()->get($id);
-        } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('centro', array(
-                        'action' => 'index'
-            ));
-        }
-
-        $form = new CentroForm();
-        $form->bind($centro);
-        $form->get('submit')->setAttribute('value', 'Edit');
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $form->setInputFilter($centro->getInputFilter());
-            $form->setData($request->getPost());
-
-            if ($form->isValid()) {
-                $this->getCentroTable()->save($centro);
-
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('centro');
-            }
-        }
-
-        return array(
-            'id' => $id,
-            'form' => $form,
-        );
-    }
 
     public function deleteAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('centro');
+            return $this->redirect()->toRoute('usuariocentro');
         }
 
         $request = $this->getRequest();
@@ -115,16 +155,15 @@ class UsuarioCentroController extends AbstractActionController {
 
             if ($del == 'Yes') {
                 $id = (int) $request->getPost('id');
-                $this->getCentroTable()->delete($id);
+                $this->getUsuarioCentroTable()->delete($id);
             }
 
-            // Redirect to list of albums
-            return $this->redirect()->toRoute('centro');
+            return $this->redirect()->toRoute('usuariocentro');
         }
 
         return array(
             'id' => $id,
-            'centro' => $this->getCentroTable()->get($id)
+            'usuariocentro' => $this->getUsuarioCentroTable()->get($id)
         );
     }
 

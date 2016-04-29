@@ -147,5 +147,25 @@ class CentroController extends AbstractActionController {
             'centro' => $this->getCentroTable()->get($id)
         );
     }
+    
+    public function relacigerAction(){
+        $form = new CentroForm();
+        $form->get('submit')->setValue('Agregar');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $centro = new Centro();
+            $form->setInputFilter($centro->getInputFilter());
+            $form->setData($request->getPost());
+
+            if ($form->isValid()) {
+                $centro->exchangeArray($form->getData());
+                $this->getCentroTable()->save($centro);
+
+                // Redireccionar a la lista de centros
+                return $this->redirect()->toRoute('centro');
+            }
+        }
+        return array('form' => $form);    }
 
 }

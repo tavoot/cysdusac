@@ -15,6 +15,9 @@ class UsuarioCentro
      public $centro_id;
      public $usuario_id;
      public $fecha;
+     
+     public $centro_valor;
+     public $usuario_valor;
 
      public function exchangeArray($data)
      {
@@ -22,5 +25,8 @@ class UsuarioCentro
          $this->centro_id  = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
          $this->usuario_id  = (!empty($data['usuario_id'])) ? $data['usuario_id'] : null;
          $this->fecha  = (!empty($data['fecha'])) ? $data['fecha'] : null;
+         
+         $this->usuario_valor  = (!empty($data['usuario'])) ? $data['usuario'] : null;
+         $this->centro_valor  = (!empty($data['siglas'])) ? $data['siglas'] : null;
      }
  }

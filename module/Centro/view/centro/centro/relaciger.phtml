@@ -1,7 +1,7 @@
 
 
  <?php
- $title = 'Añadir Nuevo Centro';
+ $title = 'informacion General';
  $this->headTitle($title);
  ?>
 <div class='panel panel-primary'>
@@ -15,12 +15,8 @@
 
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('siglas')). "<br>";
-echo $this->formRow($form->get('nombre')) . "<br>";
-echo $this->formRow($form->get('tipo')) . "<br>";
-echo $this->formRow($form->get('pais')). "<br>";
-echo $this->formRow($form->get('telefono')). "<br>"; 
-echo $this->formRow($form->get('direccion')). "<br>"; 
-echo $this->formRow($form->get('sitio_web')). "<br>"; 
+echo $this->formRow($form->get('mision')). "<br>"; 
+echo $this->formRow($form->get('vision')). "<br>"; 
+echo $this->formRow($form->get('descripcion')). "<br>"; 
 echo $this->formSubmit($form->get('submit'));
 echo $this->form()->closeTag();

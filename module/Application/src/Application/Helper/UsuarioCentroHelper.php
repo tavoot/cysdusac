@@ -19,26 +19,23 @@ class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareI
     protected $usuariocentrotable;
     protected $centrotable;
     
-    public function __invoke()
+    public function __invoke($url)
     {
         $this->usuario = $this->getUsuarioFromSession();
         
         if($this->usuario){
-            $usuarioscentros = $this->getUsuarioCentroTable()->getCentrosPorUsuario($this->usuario->id);
-            $output ="<ul class='nav nav-third-level'>";
+            $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($this->usuario->id);
+            $output='';
             foreach($usuarioscentros as $usuariocentro){
             $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
-
                 if($centro){
-                    $output = $output . "<li><a href='/centro/find/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+                    $output = $output . "<li><a href='$url$usuariocentro->centro_id'>$centro->siglas</a></li>";
                 }
 
             }
         }else{
             return $output='no hay usuarios asociados a la session';
         }
-      
-        $output = $output . "</ul>";
         return $output;
     }
     
@@ -54,8 +51,6 @@ class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareI
     }
     
    
-    
-    
     private function getUsuarioFromSession() {
         if ($this->usuario) {
             return $this->usuario;

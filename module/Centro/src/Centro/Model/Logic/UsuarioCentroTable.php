@@ -11,7 +11,7 @@ namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\UsuarioCentro;
-
+use \Zend\Db\Sql\Select;
 
 class UsuarioCentroTable{
     
@@ -30,8 +30,19 @@ class UsuarioCentroTable{
 
      public function get($id)
      {
-         $id  = (int) $id;
-         $rowset = $this->tableGateway->select(array('id' => $id));
+         /*$id  = (int) $id;
+         $rowset = $this->tableGateway->select(array('id' => $id));*/
+         
+        $id  = (int) $id;
+        $select = new Select();
+        $select->from('usuario_centro');
+        $select->join('usuario', 'usuario.id=usuario_centro.usuario_id', array('usuario'), 'INNER');
+        $select->join('centro', 'centro.id=usuario_centro.centro_id', array('siglas'), 'INNER');
+        $select->where(array('usuario_centro.id' => $id));
+         
+        $rowset = $this->tableGateway->selectWith($select); 
+         
+         
          $row = $rowset->current();
          if (!$row) {
              throw new \Exception("Registro no encontrado $id");
@@ -39,11 +50,27 @@ class UsuarioCentroTable{
          return $row;
      }
      
-     
-     public function getCentrosPorUsuario($usuario_id)
+     public function getByCentro($id)
      {
-         $usuario_id  = (int)$usuario_id;
-         $rowset = $this->tableGateway->select(array('usuario_id' =>$usuario_id));
+        $id  = (int) $id;
+        $select = new Select();
+        $select->from('usuario_centro');
+        $select->join('usuario', 'usuario.id=usuario_centro.usuario_id', array('usuario'), 'INNER');
+        $select->join('centro', 'centro.id=usuario_centro.centro_id', array('siglas'), 'INNER');
+        $select->where(array('centro_id' => $id));
+         
+        $rowset = $this->tableGateway->selectWith($select); 
+         if (!$rowset) {
+             throw new \Exception("Registro no encontrado $id");
+         }
+         return $rowset;
+     }
+     
+     
+     public function getByUsuario($id)
+     {
+         $id  = (int)$id;
+         $rowset = $this->tableGateway->select(array('usuario_id' =>$id, 'centro_id > 1'));
          //$row = $rowset->current();
          if (!$rowset) {
              throw new \Exception("Registro no encontrado $id");
@@ -51,8 +78,6 @@ class UsuarioCentroTable{
          return $rowset;
      }
 
-     
-     
      
     public function save(UsuarioCentro $usuarioCentro)
     {

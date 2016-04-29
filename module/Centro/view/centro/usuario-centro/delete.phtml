@@ -1,0 +1,24 @@
+<?php
+
+ $title = 'Eliminar Asignacion de Usuario';
+ $this->headTitle($title);
+ ?>
+ <h1><?php echo $this->escapeHtml($title); ?></h1>
+
+ <p>Esta seguro de que desea eliminar la asignacion del usuario?
+     <strong> '<?php echo $this->escapeHtml($usuariocentro->usuario_valor); ?>' </strong> con el centro 
+     <strong> '<?php echo $this->escapeHtml($usuariocentro->centro_valor); ?>' </strong>?
+ </p>
+ <?php
+ $url = $this->url('usuariocentro', array(
+     'action' => 'delete',
+     'id'     => $this->id,
+ ));
+ ?>
+ <form action="<?php echo $url; ?>" method="post">
+ <div>
+     <input type="hidden" name="id" value="<?php echo (int) $usuariocentro->id; ?>" />
+     <input class="btn btn-lg btn-success" type="submit" name="del" value="Yes" />
+     <input class="btn btn-lg btn-danger" type="submit" name="del" value="No" />
+ </div>
+ </form>

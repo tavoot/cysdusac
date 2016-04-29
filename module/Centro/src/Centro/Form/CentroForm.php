@@ -8,6 +8,7 @@
 
 namespace Centro\Form;
 
+use Zend\Form\Element;
 use Zend\Form\Form;
 
  class CentroForm extends Form
@@ -21,6 +22,8 @@ use Zend\Form\Form;
              'name' => 'id',
              'type' => 'Hidden',
          ));
+         
+       
          $this->add(array(
              'name' => 'nombre',
              'type' => 'Text',
@@ -28,6 +31,16 @@ use Zend\Form\Form;
                  'label' => 'Nombre',
              ),
          ));
+         
+         $this->add(array(
+             'name' => 'tipo',
+             'type' => 'Text',
+             'options' => array(
+                 'label' => 'Tipo',
+             ),
+         ));
+         
+         
          $this->add(array(
              'name' => 'pais',
              'type' => 'Text',
@@ -42,13 +55,7 @@ use Zend\Form\Form;
                  'label' => 'Siglas',
              ),
          ));
-         $this->add(array(
-             'name' => 'tipo',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Tipo',
-             ),
-         ));
+         
          $this->add(array(
              'name' => 'sitio_web',
              'type' => 'Text',
@@ -79,6 +86,33 @@ use Zend\Form\Form;
                  'label' => 'URL Imagen',
              ),
          ));
+         
+         
+         /*campos para relaciger*/
+         $this->add(array(
+             'name' => 'mision',
+             'type' => 'Zend\Form\Element\Textarea',
+             'options' => array(
+                 'label' => 'Mision',
+             ),
+         ));
+         
+         $this->add(array(
+             'name' => 'vision',
+             'type' => 'Zend\Form\Element\Textarea',
+             'options' => array(
+                 'label' => 'Vision',
+             ),
+         ));
+         
+         $this->add(array(
+             'name' => 'descripcion',
+             'type' => 'Zend\Form\Element\Textarea',
+             'options' => array(
+                 'label' => 'Descripcion',
+             ),
+         ));
+         
          
          $this->add(array(
              'name' => 'submit',

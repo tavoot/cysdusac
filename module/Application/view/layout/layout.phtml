@@ -73,8 +73,11 @@
                             <ul class="nav nav-second-level">
                                 <li>
                                     <!-- /.nav-third-level -->
-                                        <a href="/usuario">Administrar Centros <span class="fa arrow"></span></a>
-                                         <?php echo $this->usuariocentrohelper(); ?>
+                                    <a href="/centro">Administrar Centros</a>
+                                    <ul class="nav nav-third-level">
+                                        
+                                         <?php echo $this->usuariocentrohelper('/usuariocentro/find/'); ?>
+                                    </ul>
                                        
                                     <!-- /.nav-third-level -->
                                 </li>
@@ -88,13 +91,16 @@
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Relaciger<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/centro/find/1">Informaci&oacute;n General</a>
+                                    <a href="/centro/relaciger">Informaci&oacute;n General</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
                         <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Centros</a>
+                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> <span class="fa arrow"></span>Centros</a>
+                            <ul class="nav nav-second-level">
+                                <?php echo $this->usuariocentrohelper('/centro/find/'); ?>
+                            </ul>
                         </li>
                         <li>
                             <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>

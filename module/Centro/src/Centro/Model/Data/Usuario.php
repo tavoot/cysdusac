@@ -20,7 +20,9 @@ class Usuario implements InputFilterAwareInterface {
     public $password;
     public $email;
     public $pais;
+    
     public $tipo_valor;
+    public $ucusuario_id; //usuariocentrousuario__id
     protected $inputFilter;
 
     public function exchangeArray($data) {
@@ -30,7 +32,9 @@ class Usuario implements InputFilterAwareInterface {
         $this->password = (!empty($data['password'])) ? $data['password'] : null;
         $this->email = (!empty($data['email'])) ? $data['email'] : null;
         $this->pais = (!empty($data['pais'])) ? $data['pais'] : null;
+        
         $this->tipo_valor = (!empty($data['valor'])) ? $data['valor'] : null;
+        $this->ucusuario_id = (!empty($data['usuario_id'])) ? $data['usuario_id'] : null;
     }
 
     public function getArrayCopy() {

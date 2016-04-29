@@ -1,0 +1,43 @@
+<?php
+$title = $centro->siglas;
+$this->headTitle($title);
+?>
+
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+</div>
+
+
+
+<form method="POST" action="<?php echo $this->url('usuariocentro', array('action' => 'find', 'id' => $centro->id)) ?>"
+    <div>
+      <select class='btn btn-lg btn-default' name="selectusuario">
+              <?php foreach ($usuarios as $usuario): ?>
+            <option value = '<?php echo $this->escapeHtml($usuario->id); ?>'><?php echo $this->escapeHtml($usuario->usuario); ?> </option>
+        <?php endforeach; ?>
+    </select>
+    <input class = 'btn btn-lg btn-success' type='submit' value='Agregar'>
+    </div>
+</form>
+
+
+<br>
+<table class="table table-striped">
+    <tr>
+        <th>Usuario Permitidos </th>
+        <th>Centro</th>
+        <th>Acciones</th>
+    </tr>
+    <?php foreach ($usuarioscentros as $usuariocentro) : ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($usuariocentro->usuario_valor); ?></td>
+            <td><?php echo $this->escapeHtml($usuariocentro->centro_valor); ?></td>
+            <td>
+                <a class="btn btn-lg btn-danger" href="<?php echo $this->url('usuariocentro', array('action' => 'delete', 'id' => $usuariocentro->id));
+        ?>">Eliminar</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

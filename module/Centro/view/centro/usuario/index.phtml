@@ -26,14 +26,10 @@
      <td><?php echo $this->escapeHtml($usuario->usuario);?></td>
      <td><?php echo $this->escapeHtml($usuario->tipo_valor);?></td>
      <td>
-         <form action="<?php echo $this->url('usuario', array('action'=>'edit', 'id' => $usuario->id));?>" method="POST">
-             <input class="btn btn-lg btn-warning" type="submit" value="Editar" />
-          </form>
-     </td>
-     <td>
-         <form action="<?php echo $this->url('usuario', array('action'=>'delete', 'id' => $usuario->id));?>" method="POST">
-             <input class="btn btn-lg btn-danger" type="submit" value="Eliminar" />
-          </form>
+         <a class="btn btn-lg btn-warning" href="<?php echo $this->url('usuario',
+             array('action'=>'edit', 'id' => $usuario->id));?>">Editar</a>
+         <a class="btn btn-lg btn-danger" ref="<?php echo $this->url('usuario',
+             array('action'=>'delete', 'id' => $usuario->id));?>">Eliminar</a>
      </td>
   
  </tr>

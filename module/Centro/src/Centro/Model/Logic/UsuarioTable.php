@@ -32,6 +32,24 @@ class UsuarioTable{
         $resultSet= $this->tableGateway->selectWith($select);
         return $resultSet;
      }
+     
+     
+     public function fetchAllByCentro($centro)
+     {
+        $select = new Select();
+        $select->from('usuario');
+        $select->join('usuario_centro', 'usuario.id = usuario_centro.usuario_id', array('usuario_id'), 'LEFT');
+        $select->where(array('usuario_id is NULL'));
+        /*$select->where('not exists (select 1 from usuario_centro ac where ac.usuario_id=u.id and ac.centro_id=)', $centro);*/
+        
+        var_dump($select->getSqlString());
+         
+        $resultSet= $this->tableGateway->selectWith($select);
+        return $resultSet;
+     }
+     
+     
+     
 
      public function get($id)
      {
@@ -43,7 +61,8 @@ class UsuarioTable{
          }
          return $row;
      }
-
+    
+     
     public function save(Usuario $usuario)
     {
         
