@@ -4,7 +4,11 @@
  $title = 'Editar Usuario';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <div class='panel panel-warning'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
 
  <?php
  $form = $this->form;
@@ -16,13 +20,24 @@
      )
  ));
  $form->prepare();
+?>
 
- echo $this->form()->openTag($form);
- echo $this->formHidden($form->get('id'));
- echo $this->formRow($form->get('tipo'));
- echo $this->formRow($form->get('usuario'));
- echo $this->formRow($form->get('password'));
- echo $this->formRow($form->get('email'));
- echo $this->formRow($form->get('pais'));
- echo $this->formSubmit($form->get('submit'));
- echo $this->form()->closeTag();
+<div class="row">
+<?php echo $this->form()->openTag($form); ?>
+<?php foreach($form as $element): ?>
+    <div class="form-group">
+        <label class="control-label"><?php echo $element->getLabel() ?></label>
+        <?php
+            echo $this->formElement($element);
+            if($this->formElementErrors($element)){
+                echo $this->formElementErrors()
+                        ->setMessageOpenFormat('<p class="help-block">')
+                        ->setMessageSeparatorString('</p><p class="help-block">')
+                        ->setMessageCloseString('</p>')
+                        ->render($element);
+            }
+        ?>
+    </div>
+<?php endforeach; ?>
+<?php echo $this->form()->closeTag(); ?>
+</div>
