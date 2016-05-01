@@ -10,6 +10,8 @@ namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\Canal;
+use \Zend\Db\Sql\Select;
+use Centro\Util\CatalogoTipo as Catalogo;
 
 class CanalTable{
     
@@ -35,6 +37,22 @@ class CanalTable{
              throw new \Exception("Registro no encontrado $id");
          }
          return $row;
+     }
+     
+     
+   
+     public function getByCentroCanal($centro_id, $tipo_canal)
+     {
+        $centro_id  = (int) $centro_id;
+        $select = new Select();
+        $select->from('canal');
+        $select->join('catalogo_valor', 'canal.tipo=catalogo_valor.id', array('valor'), 'INNER');
+        $select->where(array('catalogo_tipo_id'=> Catalogo::CANAL, 'centro_id'=>$centro_id, 'tipo'=>$tipo_canal));
+        $rowset = $this->tableGateway->selectWith($select);
+         if (!$rowset) {
+             throw new \Exception("Registro no encontrado $centro_id");
+         }
+         return $rowset;
      }
 
     public function save(Canal $canal)

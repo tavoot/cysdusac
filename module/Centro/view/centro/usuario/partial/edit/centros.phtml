@@ -1,0 +1,21 @@
+ <?php
+ $title = 'Administracion de Centros';
+ $this->headTitle($title);
+ ?> 
+
+<div class='panel panel-warning'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
+
+
+<div>
+    <?php
+        foreach($this->centros as $centro):
+    ?>
+    <a class="btn btn-lg btn-primary" href="<?php echo $this->url('centro', array('action'=>'edit', 'id' => $centro->id));?>"><?php echo $centro->siglas ?></a>
+    <?php endforeach; ?>
+</div>
+
+<br>

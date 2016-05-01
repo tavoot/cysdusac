@@ -1,5 +1,7 @@
  <?php
  // module/Album/view/album/album/edit.phtml:
+use Centro\Util\CatalogoValor as Catalogo;
+
 
  $title = 'Editar Usuario';
  $this->headTitle($title);
@@ -23,12 +25,31 @@
 ?>
 
 <div class="row">
-<?php echo $this->form()->openTag($form); ?>
+<?php echo $this->form()->openTag($form); $usuarioestandar = false; ?>
 <?php foreach($form as $element): ?>
+    <?php 
+            if($element->getValue() == Catalogo::ESTANDAR){
+                $usuarioestandar = true;
+                continue;
+                //$element->setAttributes(array('disabled' => 'disabled'));
+            }
+            
+            if($usuarioestandar){
+                switch ($element->getName()){
+                    case "usuario":
+                    $element->setAttributes(array('disabled' => 'disabled'));
+                    break;
+                    case "pais":
+                    $element->setAttributes(array('disabled' => 'disabled'));
+                    break;
+                }
+            }
+            
+    ?>
     <div class="form-group">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
         <?php
-            echo $this->formElement($element);
+            echo $this->formElement($element);  
             if($this->formElementErrors($element)){
                 echo $this->formElementErrors()
                         ->setMessageOpenFormat('<p class="help-block">')
@@ -40,4 +61,12 @@
     </div>
 <?php endforeach; ?>
 <?php echo $this->form()->closeTag(); ?>
+</div>
+
+<div>
+    <?php
+        if($usuarioestandar){
+            echo $this->partial("partial/edit/centros.phtml", array('centros'=>$this->centros));
+        }
+    ?>
 </div>

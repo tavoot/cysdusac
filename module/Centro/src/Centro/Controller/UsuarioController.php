@@ -19,12 +19,31 @@ class UsuarioController extends AbstractActionController {
 
     protected $usuarioTable;
     protected $catalogovalorTable;
+    protected $usuariocentroTable;
+    protected $centroTable;
+    
 
     public function indexAction() {
 
         return new ViewModel(array(
             'usuarios' => $this->getUsuarioTable()->fetchAll(),
         ));
+    }
+    
+    public function getCentroTable() {
+        if (!$this->centroTable) {
+            $sm = $this->getServiceLocator();
+            $this->centroTable = $sm->get('Centro\Model\Logic\CentroTable');
+        }
+        return $this->centroTable;
+    }
+    
+    private function getUsuarioCentroTable() {
+        if (!$this->usuariocentroTable) {
+            $sm = $this->getServiceLocator();
+            $this->usuariocentroTable = $sm->get('Centro\Model\Logic\UsuarioCentroTable');
+        }
+        return $this->usuariocentroTable;
     }
 
     private function getUsuarioTable() {
@@ -108,10 +127,19 @@ class UsuarioController extends AbstractActionController {
                 return $this->redirect()->toRoute('usuario');
             }
         }
+        
+        
+        $centros = array();
+        $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($id);
+            foreach($usuarioscentros as $usuariocentro){
+            $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
+                array_push($centros, $centro);
+            }
 
         return array(
             'id' => $id,
             'form' => $form,
+            'centros'=>$centros,
         );
     }
 

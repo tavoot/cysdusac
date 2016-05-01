@@ -109,8 +109,9 @@ return array(
     
     'view_helpers' => array(
         'invokables' => array(
-            'specialpurpose' => 'Application\Helper\SpecialPurpose',
             'usuariocentrohelper' => 'Application\Helper\UsuarioCentroHelper',
+            'canalcentrohelper' => 'Application\Helper\CanalCentroHelper',
+            ''
         ),
     ),
     

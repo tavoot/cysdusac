@@ -30,9 +30,6 @@ class UsuarioCentroTable{
 
      public function get($id)
      {
-         /*$id  = (int) $id;
-         $rowset = $this->tableGateway->select(array('id' => $id));*/
-         
         $id  = (int) $id;
         $select = new Select();
         $select->from('usuario_centro');
@@ -41,12 +38,10 @@ class UsuarioCentroTable{
         $select->where(array('usuario_centro.id' => $id));
          
         $rowset = $this->tableGateway->selectWith($select); 
-         
-         
-         $row = $rowset->current();
-         if (!$row) {
+        $row = $rowset->current();
+        if (!$row) {
              throw new \Exception("Registro no encontrado $id");
-         }
+        }
          return $row;
      }
      
