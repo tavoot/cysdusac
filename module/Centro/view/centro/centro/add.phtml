@@ -1,26 +1,39 @@
-
-
  <?php
+ 
  $title = 'Añadir Nuevo Centro';
  $this->headTitle($title);
  ?>
-<div class='panel panel-primary'>
+ <div class='panel panel-info'>
     <div class='panel-heading'>
-        <h1><?php echo $this->escapeHtml($title); ?></h1>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
  </div>
  <?php
  $form->setAttribute('action', $this->url('centro', array('action' => 'add')));
  $form->prepare();
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formRow($form->get('siglas')). "<br>";
-echo $this->formRow($form->get('nombre')) . "<br>";
-echo $this->formRow($form->get('tipo')) . "<br>";
-echo $this->formRow($form->get('pais')). "<br>";
-echo $this->formRow($form->get('telefono')). "<br>"; 
-echo $this->formRow($form->get('direccion')). "<br>"; 
-echo $this->formRow($form->get('sitio_web')). "<br>"; 
-echo $this->formSubmit($form->get('submit'));
-echo $this->form()->closeTag();
+ ?>
+<div class="row">
+<?php echo $this->form()->openTag($form); ?>
+<?php foreach($form as $element): ?>
+    <?php if($element->getName()!= 'mision' && 
+            $element->getName()!= 'vision' && 
+            $element->getName()!= 'descripcion' && 
+            $element->getName()!= 'url_imagen') { ?>
+    <div class="form-group">
+        <label class="control-label"><?php echo $element->getLabel() ?></label>
+        <?php
+            echo $this->formElement($element);
+            if($this->formElementErrors($element)){
+                echo $this->formElementErrors()
+                        ->setMessageOpenFormat('<p class="help-block">')
+                        ->setMessageSeparatorString('</p><p class="help-block">')
+                        ->setMessageCloseString('</p>')
+                        ->render($element);
+            }
+        ?>
+    </div>
+    <?php  } ?>
+<?php endforeach; ?>
+<?php echo $this->form()->closeTag(); ?>
+</div>

@@ -18,6 +18,8 @@ use Zend\Form\Form;
          // we want to ignore the name passed
          parent::__construct('centro');
 
+         $this->setAttribute('class', 'col-md-6');
+         
          $this->add(array(
              'name' => 'id',
              'type' => 'Hidden',
@@ -30,6 +32,9 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Nombre',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
          
          $this->add(array(
@@ -37,6 +42,9 @@ use Zend\Form\Form;
              'type' => 'Text',
              'options' => array(
                  'label' => 'Tipo',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
          
@@ -47,12 +55,19 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Pais',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
+         
          $this->add(array(
              'name' => 'siglas',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Siglas',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
          
@@ -62,6 +77,9 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Sitio Web',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
          
          $this->add(array(
@@ -70,12 +88,19 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Direccion',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
+         
          $this->add(array(
              'name' => 'telefono',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Telefono',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
          
@@ -84,6 +109,9 @@ use Zend\Form\Form;
              'type' => 'Text',
              'options' => array(
                  'label' => 'URL Imagen',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
          
@@ -95,6 +123,9 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Mision',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
          
          $this->add(array(
@@ -102,6 +133,9 @@ use Zend\Form\Form;
              'type' => 'Zend\Form\Element\Textarea',
              'options' => array(
                  'label' => 'Vision',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
          
@@ -111,6 +145,9 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Descripcion',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
          
          
@@ -119,7 +156,7 @@ use Zend\Form\Form;
              'type' => 'Submit',
              'attributes' => array(
                  'class' =>'btn btn-lg btn-success',
-                 'value' => 'Go',
+                 'value' => 'Aplicar',
                  'id' => 'submitbutton',
              ),
          ));
