@@ -3,11 +3,15 @@
  $title = 'Eliminar  Usuario';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <div class='panel panel-danger'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
 
- <p>Esta seguro de que desea eliminar un Usuario?
-     '<?php echo $this->escapeHtml($usuario->tipo); ?>' by
-     '<?php echo $this->escapeHtml($usuario->usuario); ?>'?
+ <p>¿Esta seguro que desea eliminar al Usuario
+     <strong>'<?php echo $this->escapeHtml($usuario->usuario); ?>'</strong>, email 
+     <strong>'<?php echo $this->escapeHtml($usuario->email); ?>'</strong>?
  </p>
  <?php
  $url = $this->url('usuario', array(
@@ -18,7 +22,7 @@
  <form action="<?php echo $url; ?>" method="post">
  <div>
      <input type="hidden" name="id" value="<?php echo (int) $usuario->id; ?>" />
-     <input type="submit" name="del" value="Yes" />
-     <input type="submit" name="del" value="No" />
+     <input class="btn btn-success btn-lg" type="submit" name="del" value="Si" />
+     <input class="btn btn-danger btn-lg" type="submit" name="del" value="No" />
  </div>
  </form>

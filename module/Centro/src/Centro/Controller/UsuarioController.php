@@ -13,6 +13,7 @@ use Zend\View\Model\ViewModel;
 use Centro\Model\Data\Usuario;
 use Centro\Util\CatalogoTipo;
 use Centro\Form\UsuarioForm;
+use Centro\Util\UtilUsuario;
 
 class UsuarioController extends AbstractActionController {
 
@@ -46,14 +47,22 @@ class UsuarioController extends AbstractActionController {
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $config = $this->getConfig('encrypt');
+                $utilUser = new UtilUsuario($config);
+                                
                 $usuario->exchangeArray($form->getData());
+                // cifrado del password antes de almacenarlo
+                $usuario->password = $utilUser->cifrar($usuario->password);
+                
                 $this->getUsuarioTable()->save($usuario);
 
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Usuario agregado satisfactoriamente');
                 // Redireccionar a la lista de usuarios
                 return $this->redirect()->toRoute('usuario');
             }
         }
-        ;
+        
         return array('form' => $form);
     }
 
@@ -72,13 +81,17 @@ class UsuarioController extends AbstractActionController {
                         'action' => 'index'
             ));
         }
+        
+        $config = $this->getConfig('encrypt');
+        $utilUser = new UtilUsuario($config);
 
         $form = new UsuarioForm();
         $this->getCatalogoUsuarios($form);
 
-
+        $usuario->password = $utilUser->decifrar($usuario->password);
+        
         $form->bind($usuario);
-        $form->get('submit')->setAttribute('value', 'Edit');
+        //$form->get('submit')->setAttribute('value', 'Edit');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -86,8 +99,11 @@ class UsuarioController extends AbstractActionController {
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $usuario->password = $utilUser->cifrar($usuario->password);
                 $this->getUsuarioTable()->save($usuario);
 
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Usuario editado satisfactoriamente');
                 // Redirect to list of albums
                 return $this->redirect()->toRoute('usuario');
             }
@@ -109,9 +125,11 @@ class UsuarioController extends AbstractActionController {
         if ($request->isPost()) {
             $del = $request->getPost('del', 'No');
 
-            if ($del == 'Yes') {
+            if ($del == 'Si') {
                 $id = (int) $request->getPost('id');
                 $this->getUsuarioTable()->delete($id);
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Usuario eliminado satisfactoriamente');
             }
 
             // Redirect to list of albums
@@ -152,6 +170,11 @@ class UsuarioController extends AbstractActionController {
         $form->get('tipo')->setValueOptions(array(
             'catalogo_usuario' => array('options' => array_combine($keys, $values))
         ));
+    }
+    
+    public function getConfig($configName){
+        $config = $this->getServiceLocator()->get('Config');
+        return $config[$configName];
     }
 
 }

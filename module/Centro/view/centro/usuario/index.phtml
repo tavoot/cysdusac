@@ -1,10 +1,14 @@
  <?php
 //"module/Centro/view/centro/centro/index.phtml"
-
+ use Zend\Mvc\Controller\Plugin\FlashMessenger;
+ 
  $title = 'Administración de Usuarios';
  $this->headTitle($title);
  ?>
- <div class='panel panel-primary'>
+ 
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); ?>
+
+<div class='panel panel-primary'>
     <div class='panel-heading'>
         <h1><?php echo $this->escapeHtml($title); ?></h1>
     </div>
@@ -12,15 +16,18 @@
  
  
  <p>
-     <a href="<?php echo $this->url('usuario', array('action'=>'add'));?>">Agregar Nuevo Usuario</a>
+     <a class="btn btn-primary" href="<?php echo $this->url('usuario', array('action'=>'add'));?>">Agregar nuevo usuario</a>
  </p>
  
- <table class="table table-striped">
- <tr>
+ <table class="table table-hover">
+ <thead>
+     <tr class="active">
      <th>Usuario</th>
      <th>Tipo</th>
      <th colspan='2'>Acciones</th>
- </tr>
+     </tr>
+ </thead>
+ <tbody>
  <?php foreach ($usuarios as $usuario):   ?>
  <tr>
      <td><?php echo $this->escapeHtml($usuario->usuario);?></td>
@@ -28,10 +35,11 @@
      <td>
          <a class="btn btn-lg btn-warning" href="<?php echo $this->url('usuario',
              array('action'=>'edit', 'id' => $usuario->id));?>">Editar</a>
-         <a class="btn btn-lg btn-danger" ref="<?php echo $this->url('usuario',
+         <a class="btn btn-lg btn-danger" href="<?php echo $this->url('usuario',
              array('action'=>'delete', 'id' => $usuario->id));?>">Eliminar</a>
      </td>
   
  </tr>
  <?php endforeach; ?>
+ </tbody>
  </table>

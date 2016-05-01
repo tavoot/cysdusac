@@ -18,6 +18,8 @@ use Zend\Form\Element;
          // we want to ignore the name passed
          parent::__construct('usuario');
 
+         $this->setAttribute("class", "col-md-6");
+         
          $this->add(array(
              'name' => 'id',
              'type' => 'Hidden',
@@ -27,7 +29,12 @@ use Zend\Form\Element;
           $this->add(array(
              'name' => 'tipo',
              'type' => 'Zend\Form\Element\Select',
-             'label' => 'Seleccionar Tipo de Usuario',
+             'options' => array(
+                 'label' => 'Tipo de Usuario',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ), 
          ));
          
          
@@ -37,12 +44,18 @@ use Zend\Form\Element;
              'options' => array(
                  'label' => 'Usuario',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
          $this->add(array(
              'name' => 'password',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Passowd',
+                 'label' => 'Password',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
         
@@ -52,6 +65,9 @@ use Zend\Form\Element;
              'options' => array(
                  'label' => 'Email',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
          
          $this->add(array(
@@ -59,6 +75,9 @@ use Zend\Form\Element;
              'type' => 'Text',
              'options' => array(
                  'label' => 'Pais',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
 
@@ -68,7 +87,7 @@ use Zend\Form\Element;
              'type' => 'Submit',
              'attributes' => array(
                  'class' =>'btn btn-lg btn-success',
-                 'value' => 'Go',
+                 'value' => 'Aplicar',
                  'id' => 'submitbutton',
              ),
          ));
