@@ -1,0 +1,37 @@
+<?php
+$title = 'CANALES ' . $centro->siglas;
+$this->headTitle($title);
+?>
+
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+</div>
+
+
+<br>
+<table class="table table-striped">
+    <tr>
+        <th>Tipo</th>
+        <th>Titulo</th>
+        <th>Enlace</th>
+        <th>Lenguaje</th>
+        <th>Descripcion</th>
+        <th>Acciones</th>
+    </tr>
+    <?php foreach ($canales as $canal) : ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($canal->tipo_valor); ?></td>
+            <td><?php echo $this->escapeHtml($canal->titulo); ?></td>
+            <td><?php echo $this->escapeHtml($canal->enlace); ?></td>
+            <td><?php echo $this->escapeHtml($canal->lenguaje); ?></td>
+            <td><?php echo $this->escapeHtml($canal->descripcion); ?></td>
+            
+            <td>
+                <a class="btn btn-lg btn-danger" href="<?php echo $this->url('canal', array('action' => 'delete', 'id' => $canal->id));
+        ?>">Eliminar</a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</table>

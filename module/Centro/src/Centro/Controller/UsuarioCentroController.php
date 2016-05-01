@@ -74,27 +74,6 @@ class UsuarioCentroController extends AbstractActionController {
             $usuarios = $this->getUsuarioTable()->fetchAllByCentro($this->centro->id);
             $usuarioscentros = $this->getUsuarioCentroTable()->getByCentro($id);
             
-            /*$listausuarios=array();
-            foreach($usuarioscentros as $usuariocentro){
-                foreach($usuarios as $usuario){
-                    if($usuariocentro->usuario_id==$usuario->id){
-                        echo "XD";
-                        //array_push($listausuarios, array('key'=>$usuario->id, 'value'=>$usuario->valor));
-                    }else{
-                        echo ":S";
-                    }
-                }
-            }*/
-            //var_dump($usuarios);
-            //$usuariosnoasignados=array();
-            
-            
-             
-                
-            /*foreach($usuarios as $usuario){
-                
-            }*/
-            //var_dump($usuariosnoasignados);
             
                 $request = $this->getRequest();
                 if ($request->isPost()){

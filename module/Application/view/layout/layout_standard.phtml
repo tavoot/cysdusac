@@ -69,10 +69,23 @@
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
                         <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Centros<span class="fa arrow"></span></a>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Centros<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <?php echo $this->usuariocentrohelper('/usuariocentro/find/'); ?>
+                                    <?php echo $this->canalcentrohelper(''); ?>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        
+                        <li>
+                            <a href="#"><i class="fa fa-sitemap fa-fw"></i>Usuarios<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/usuario/edit/2">Perfil</a>
+                                </li>
+                                <li>
+                                    <a href="/acceso/logout">Logout</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->

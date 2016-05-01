@@ -14,7 +14,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Centro\Util\Session;
 
-class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareInterface{
+class CanalCentroHelper extends AbstractHelper implements ServiceLocatorAwareInterface{
     protected $usuario;
     protected $usuariocentrotable;
     protected $centrotable;
@@ -29,10 +29,13 @@ class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareI
             foreach($usuarioscentros as $usuariocentro){
             $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
                 if($centro){
-                    $output = $output . "<li><a href='$url/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+                    $output = $output . "<a href='#'>$centro->siglas<span class='fa arrow'></span</a>";
+                    $output = $output . "<ul class='nav nav-third-level'>";
+                    $output = $output . "<li><a href='$url/centro/edit/$usuariocentro->centro_id'>Informacion General</a></li>";
+                    $output = $output . "<li><a href='$url/canal/handler/$usuariocentro->centro_id'>Canales RSS</a></li></ul>";                      
                 }
-
             }
+            
         }else{
             return $output='no hay usuarios asociados a la session';
         }
