@@ -1,7 +1,12 @@
-<?php 
-$title = 'Administración de Centros';
+ <?php
+ use Zend\Mvc\Controller\Plugin\FlashMessenger;
+ 
+ $title = 'Administración de Centros';
  $this->headTitle($title);
  ?>
+ 
+ <?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); ?>
+
  <div class='panel panel-primary'>
     <div class='panel-heading'>
         <h1><?php echo $this->escapeHtml($title); ?></h1>
@@ -9,26 +14,29 @@ $title = 'Administración de Centros';
  </div>
  
  <p>
-     <a href="<?php echo $this->url('centro', array('action'=>'add'));?>">Agregar Nuevo Centro</a>
+     <a class="btn btn-primary" href="<?php echo $this->url('centro', array('action'=>'add'));?>">Agregar Nuevo Centro</a>
  </p>
 
- <table class="table table-striped">
- <tr>
+ <table class="table table-hover">
+ <thead>
+     <tr class="active">
      <th>Siglas</th>
-     <th>&nbsp;</th>
- </tr>
- 
+     <th>Acciones</th>
+     </tr>
+ </thead>
+ <tbody>
  <?php foreach ($centros as $centro) : ?>
  <tr>
      
      <td><?php echo $this->escapeHtml($centro->siglas);?></td>
-
      <td>
          <a class="btn btn-lg btn-warning" href="<?php echo $this->url('centro',
              array('action'=>'edit', 'id' => $centro->id));?>">Editar</a>
-         <a class="btn btn-lg btn-danger" ref="<?php echo $this->url('centro',
+         <a class="btn btn-lg btn-danger" href="<?php echo $this->url('centro',
              array('action'=>'delete', 'id' => $centro->id));?>">Eliminar</a>
      </td>
  </tr>
   <?php endforeach; ?>
+ </tbody>
  </table>
+ 

@@ -75,6 +75,8 @@ class CentroController extends AbstractActionController {
                 $centro->exchangeArray($form->getData());
                 $this->getCentroTable()->save($centro);
 
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
                 // Redireccionar a la lista de centros
                 return $this->redirect()->toRoute('centro');
             }
@@ -102,7 +104,7 @@ class CentroController extends AbstractActionController {
 
         $form = new CentroForm();
         $form->bind($centro);
-        $form->get('submit')->setAttribute('value', 'Edit');
+        $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -112,6 +114,8 @@ class CentroController extends AbstractActionController {
             if ($form->isValid()) {
                 $this->getCentroTable()->save($centro);
 
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Centro editado satisfactoriamente');
                 // Redirect to list of albums
                 return $this->redirect()->toRoute('centro');
             }
@@ -133,9 +137,11 @@ class CentroController extends AbstractActionController {
         if ($request->isPost()) {
             $del = $request->getPost('del', 'No');
 
-            if ($del == 'Yes') {
+            if ($del == 'Si') {
                 $id = (int) $request->getPost('id');
                 $this->getCentroTable()->delete($id);
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Centro eliminado satisfactoriamente');
             }
 
             // Redirect to list of albums

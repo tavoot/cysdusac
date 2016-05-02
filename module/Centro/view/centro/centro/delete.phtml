@@ -1,13 +1,17 @@
 <?php
 
- $title = 'Delete centro';
+ $title = 'Eliminar centro';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <div class='panel panel-danger'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
 
- <p>Esta seguro de que desea eliminar un centro?
-     '<?php echo $this->escapeHtml($centro->tipo); ?>' by
-     '<?php echo $this->escapeHtml($centro->nombre); ?>'?
+ <p>¿Esta seguro de que desea eliminar el centro 
+     <strong>'<?php echo $this->escapeHtml($centro->nombre) . ' (' . $this->escapeHtml($centro->siglas) .')'; ?>'</strong>, tipo 
+     <strong>'<?php echo $this->escapeHtml($centro->tipo); ?>'</strong>?
  </p>
  <?php
  $url = $this->url('centro', array(
@@ -18,7 +22,7 @@
  <form action="<?php echo $url; ?>" method="post">
  <div>
      <input type="hidden" name="id" value="<?php echo (int) $centro->id; ?>" />
-     <input type="submit" name="del" value="Yes" />
-     <input type="submit" name="del" value="No" />
+     <input class="btn btn-success btn-lg" type="submit" name="del" value="Si" />
+     <input class="btn btn-danger btn-lg" type="submit" name="del" value="No" />
  </div>
  </form>
