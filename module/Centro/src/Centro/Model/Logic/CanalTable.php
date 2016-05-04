@@ -59,11 +59,12 @@ class CanalTable{
     {
         
         $data = array(
-            'tipo'=>$canal->fecha,
+            'tipo'=>$canal->tipo,
             'titulo'=>$canal->titulo,
             'enlace'=>$canal->enlace,
-            'lenguaje'=>$canal->fecha,
+            'lenguaje'=>$canal->lenguaje,
             'descripcion'=>$canal->descripcion,
+            'secuencia'=>$canal->secuencia,
             'centro_id'=>$canal->centro_id);
 
          $id = (int) $canal->id;

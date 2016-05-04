@@ -18,6 +18,7 @@ class CanalController extends AbstractActionController {
 
     protected $canalTable;
     protected $centroTable;
+    protected $centro;
 
     public function indexAction() {
         return new ViewModel(array(
@@ -33,31 +34,7 @@ class CanalController extends AbstractActionController {
         return $this->centroTable;
     }
     
-    
-    public function handlerAction() {
-        $centro_id = (int) $this->params()->fromRoute('id', 0);
-        if (!$centro_id) {
-            return $this->redirect()->toRoute('canal', array(
-                        'action' => 'handler'
-            ));
-        }
-               
-
-        try {
-             $centro = $this->getCentroTable()->get($centro_id);
-             $canales = $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
-             
-            return new ViewModel(array(
-                'canales' => $canales, 'centro'=>$centro,
-            ));
-            
-        } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('canal', array(
-                        'action' => 'handler',
-            ));
-        }
-    }
-
+   
     public function getCanalTable() {
         if (!$this->canalTable) {
             $sm = $this->getServiceLocator();
@@ -65,49 +42,112 @@ class CanalController extends AbstractActionController {
         }
         return $this->canalTable;
     }
+    
+    
+     public function listarAction() {
+        
+        //verifica si es un request para eliminar items
+        $request = $this->getRequest();
+        if ($request->isPost()){
+            $canal_id = $this->params()->fromPost('canal');
+            $canal = $this->getCanalTable()->get($canal_id);
+            $this->getCanalTable()->delete($canal_id);
 
+            return $this->redirect()->toRoute('canal', array(
+                        'action' => 'listar',
+                        'id' => $canal->centro_id,
+            ));
+        }
+        
+        
+        $centro_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$centro_id) {
+            return $this->redirect()->toRoute('item', array(
+                        'action' => 'listar',
+                        'id'=>'x'
+            ));
+        }
+        
+
+        try { 
+            //variable global
+            $canales= $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
+            $centro=$this->getCentroTable()->get($centro_id);
+           
+            return new ViewModel(array(
+                'canales'=>$canales,  'centro'=>$centro
+            ));
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('canal', array(
+                        'action' => 'listar',
+                        'id'=>$canal_id,
+            ));
+        }
+    }
+    
+
+ 
     public function addAction() {
+        $centro_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$centro_id) {
+            return $this->redirect()->toRoute('canal', array(
+                        'action' => 'add',
+                        'id' => 'x'
+            ));
+        }
+
         $form = new CanalForm();
         $form->get('submit')->setValue('Agregar');
-
         $request = $this->getRequest();
+        
         if ($request->isPost()) {
-            $canal = new Canal();
+            $canal= new Canal();
             $form->setInputFilter($canal->getInputFilter());
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid()){
                 $canal->exchangeArray($form->getData());
                 $this->getCanalTable()->save($canal);
 
                 // Redireccionar a la lista de canales
-                return $this->redirect()->toRoute('canal');
+                return $this->redirect()->toRoute('canal', array(
+                            'action' => 'listar',
+                            'id' => $centro_id,
+                ));
             }
         }
-        return array('form' => $form);
-    }
 
+        
+        $centro = $this->getCentroTable()->get($centro_id);
+        return array(
+            'form' => $form, 'centro' => $centro
+        );
+    }
+    
+    
     public function editAction() {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
+        $canal_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$canal_id) {
             return $this->redirect()->toRoute('canal', array(
-                        'action' => 'add'
+                        'action' => 'listar',
+                        'id' => 'x'
             ));
         }
-
-        // Get the Album with the specified id.  An exception is thrown
-        // if it cannot be found, in which case go to the index page.
+        
         try {
-            $canal = $this->getCanalTable()->get($id);
+            $canal = $this->getCanalTable()->get($canal_id);
+            $centro = $this->getCentroTable()->get($canal->centro_id);
+            
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('canal', array(
-                        'action' => 'index'
+            return $this->redirect()->toRoute('item', array(
+                        'action' => 'listar'
             ));
         }
 
         $form = new CanalForm();
         $form->bind($canal);
-        $form->get('submit')->setAttribute('value', 'Edit');
+        $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
@@ -117,40 +157,15 @@ class CanalController extends AbstractActionController {
             if ($form->isValid()) {
                 $this->getCanalTable()->save($canal);
 
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('canal');
+                 return $this->redirect()->toRoute('canal', array(
+                        'action' => 'listar',
+                        'id'=>$canal->centro_id,
+                 ));
             }
         }
 
         return array(
-            'id' => $id,
-            'form' => $form,
+            'form' => $form, 'canal' => $canal, 'centro' => $centro 
         );
     }
-
-    public function deleteAction() {
-        $id = (int) $this->params()->fromRoute('id', 0);
-        if (!$id) {
-            return $this->redirect()->toRoute('canal');
-        }
-
-        $request = $this->getRequest();
-        if ($request->isPost()) {
-            $del = $request->getPost('del', 'No');
-
-            if ($del == 'Yes') {
-                $id = (int) $request->getPost('id');
-                $this->getCanalTable()->delete($id);
-            }
-
-            // Redirect to list of albums
-            return $this->redirect()->toRoute('canal');
-        }
-
-        return array(
-            'id' => $id,
-            'canal' => $this->getCanalTable()->get($id)
-        );
-    }
-
 }

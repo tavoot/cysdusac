@@ -1,7 +1,5 @@
 <?php
-use Centro\Util\CatalogoValor as Catalogo;
-
-$title ='Canales - '  . $centro->siglas ;
+$title =$canal->titulo . " - ". $centro->siglas ;
 $this->headTitle($title);
 ?>
 <div class='panel panel-info'>
@@ -11,18 +9,16 @@ $this->headTitle($title);
  </div>
 
  <?php
-$form->setAttribute('action', $this->url('canal', array('action' => 'add', 'id'=>$centro->id)));
+$form->setAttribute('action', $this->url('item', array('action' => 'add', 'id'=>$canal->id)));
 $form->prepare();
 
 echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
-echo $this->formHidden($form->get('tipo')->setValue(Catalogo::EXTERNO));
-echo $this->formHidden($form->get('centro_id')->setValue($centro->id));
+echo $this->formHidden($form->get('canal_id')->setValue($this->canal->id));
 echo $this->formRow($form->get('titulo')). "<br>";
 echo $this->formRow($form->get('enlace')). "<br>";
-echo $this->formRow($form->get('lenguaje')). "<br>";
 echo $this->formRow($form->get('descripcion')). "<br>"; 
-echo $this->formSubmit($form->get('submit')->setValue('Editar'));
+echo $this->formSubmit($form->get('submit')->setValue('Agregar'));
 echo $this->form()->closeTag();
 
 ?>

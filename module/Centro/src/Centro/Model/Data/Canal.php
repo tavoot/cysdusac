@@ -23,6 +23,7 @@ class Canal implements InputFilterAwareInterface {
      public $centro_id;
      
      public $tipo_valor;
+     public $secuencia;
      protected $inputFilter;
      
 
@@ -35,6 +36,7 @@ class Canal implements InputFilterAwareInterface {
          $this->enlace  = (!empty($data['enlace'])) ? $data['enlace'] : null;
          $this->lenguaje  = (!empty($data['lenguaje'])) ? $data['lenguaje'] : null;
          $this->centro_id  = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
+         $this->secuencia = (!empty($data['secuencia'])) ? $data['secuencia'] : null;
          
          $this->tipo_valor = (!empty($data['valor'])) ? $data['valor'] : null;
          
@@ -53,13 +55,13 @@ class Canal implements InputFilterAwareInterface {
         if (!$this->inputFilter) {
             $inputFilter = new InputFilter();
 
-            $inputFilter->add(array(
+            /*$inputFilter->add(array(
                 'name' => 'id',
                 'required' => true,
                 'filters' => array(
                     array('name' => 'Int'),
                 ),
-            ));
+            ));*/
 
             
 

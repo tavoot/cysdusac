@@ -13,11 +13,14 @@ use Zend\View\Helper\AbstractHelper;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Centro\Util\Session;
+use Centro\Util\CatalogoValor as Catalogo;
+use Centro\Model\Data\Canal as Canal;
 
 class CanalCentroHelper extends AbstractHelper implements ServiceLocatorAwareInterface{
     protected $usuario;
     protected $usuariocentrotable;
     protected $centrotable;
+    protected $canalTable;
     
     public function __invoke($url)
     {
@@ -29,10 +32,20 @@ class CanalCentroHelper extends AbstractHelper implements ServiceLocatorAwareInt
             foreach($usuarioscentros as $usuariocentro){
             $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
                 if($centro){
+                    //solo deberia de existir un canal interno para cualquier centro
+                    $canal_id=0;
+                    $canales = $this->getCanalTable()->getByCentroCanal($centro->id, Catalogo::INTERNO);
+                    
+                    foreach($canales as $canal){
+                        $canal_id = $canal->id;
+                    }
+                   
+                    //var_dump($canal_id);
                     $output = $output . "<a href='#'>$centro->siglas<span class='fa arrow'></span</a>";
                     $output = $output . "<ul class='nav nav-third-level'>";
-                    $output = $output . "<li><a href='$url/centro/edit/$usuariocentro->centro_id'>Informacion General</a></li>";
-                    $output = $output . "<li><a href='$url/canal/handler/$usuariocentro->centro_id'>Canales RSS</a></li></ul>";                      
+                    $output = $output . "<li><a href='$url/centro/edit/$centro->id'>Informacion General</a></li>";
+                    $output = $output . "<li><a href='$url/item/listar/$canal_id'>Canale RSS Interno</a></li>";
+                    $output = $output . "<li><a href='$url/canal/listar/$centro->id'>Canales RSS Externo</a></li></ul>";
                 }
             }
             
@@ -77,6 +90,14 @@ class CanalCentroHelper extends AbstractHelper implements ServiceLocatorAwareInt
             $this->centrotable = $sm->get('Centro\Model\Logic\CentroTable');
         }
         return $this->centrotable;
+    }
+    
+    public function getCanalTable() {
+        if (!$this->canalTable) {
+            $sm = $this->getServiceLocator()->getServiceLocator();
+            $this->canalTable = $sm->get('Centro\Model\Logic\CanalTable');
+        }
+        return $this->canalTable;
     }
     
     

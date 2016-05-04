@@ -27,6 +27,17 @@ class ItemTable{
          return $resultSet;
      }
 
+     public function getByCanal($canal_id)
+     {
+         $canal_id  = (int) $canal_id;
+         $rowset = $this->tableGateway->select(array('canal_id' => $canal_id));
+         if (!$rowset) {
+             throw new \Exception("Registro no encontrado $canal_id");
+         }
+         return $rowset;
+     }
+     
+
      public function get($id)
      {
          $id  = (int) $id;
@@ -46,7 +57,7 @@ class ItemTable{
             'enlace'=>$item->enlace,
             'descripcion'=>$item->descripcion,
             'fecha_publicacion'=>$item->fecha_publicacion,
-            'canal_id'=>$item->centro_id);
+            'canal_id'=>$item->canal_id);
 
          $id = (int) $item->id;
          if ($id == 0) {

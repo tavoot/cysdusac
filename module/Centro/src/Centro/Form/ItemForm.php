@@ -10,73 +10,70 @@ namespace Centro\Form;
 
 use Zend\Form\Form;
 
- class CanalForm extends Form
+ class ItemForm extends Form
  {
-     public function __construct($name = null)
+    public function __construct($name = null)
      {
          // we want to ignore the name passed
-         parent::__construct('canal');
+         parent::__construct('item');
 
+         $this->setAttribute("class", "col-md-6");
+         
          $this->add(array(
              'name' => 'id',
              'type' => 'Hidden',
          ));
          
           $this->add(array(
-             'name' => 'secuencia',
+             'name' => 'canal_id',
              'type' => 'Hidden',
          ));
-         
-         $this->add(array(
-             'name' => 'centro_id',
-             'type' => 'Hidden',
-         ));
+
          
          
-          $this->add(array(
-             'name' => 'tipo',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Tipo',
-             ),
-         ));
          $this->add(array(
              'name' => 'titulo',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Nombre',
+                 'label' => 'Titulo',
+             ),
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
-
+         
          $this->add(array(
              'name' => 'enlace',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Enlace',
              ),
-         ));
-         
-         $this->add(array(
-             'name' => 'lenguaje',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Lenguaje',
+             'attributes' => array(
+                'class' => 'form-control',
              ),
          ));
+         
+        
+        
          $this->add(array(
              'name' => 'descripcion',
-             'type' => 'TextArea',
+             'type' => 'Text',
              'options' => array(
                  'label' => 'Descripcion',
              ),
+             'attributes' => array(
+                'class' => 'form-control',
+             ),
          ));
+         
+        
          
          $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
              'attributes' => array(
                  'class' =>'btn btn-lg btn-success',
-                 'value' => 'Go',
+                 'value' => 'Aplicar',
                  'id' => 'submitbutton',
              ),
          ));
