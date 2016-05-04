@@ -18,6 +18,7 @@ echo $this->form()->openTag($form);
 echo $this->formHidden($form->get('id'));
 echo $this->formHidden($form->get('tipo')->setValue(Catalogo::EXTERNO));
 echo $this->formHidden($form->get('centro_id')->setValue($centro->id));
+echo $this->formHidden($form->get('secuencia')->setValue($secuencia));
 echo $this->formRow($form->get('titulo')). "<br>";
 echo $this->formRow($form->get('enlace')). "<br>";
 echo $this->formRow($form->get('lenguaje')). "<br>";

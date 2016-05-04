@@ -1,7 +1,7 @@
  <?php
 //"module/Centro/view/centro/centro/index.phtml"
 
- $title =$centro->siglas ;
+ $title =$centro->siglas . "- Canales Externos" ;
  $this->headTitle($title);
  ?>
 
@@ -12,30 +12,25 @@
 </div>
 
  <p>
-     <a href="<?php echo $this->url('canal', array('action'=>'add', 'id'=>$centro->id));?>">Agregar Nuevo Canal</a>
+     <a href="<?php echo $this->url('canal', array('action'=>'add', 'id'=>$centro->id));?>">Agregar Canal RSS</a>
  </p>
 
  <table class="table table-striped">
  <tr>
      <th>Id</th>
      <th>Secuencia</th>
-     <th>Tipo</th>
      <th>Titulo</th>
      <th>Enlace</th>
-     <th>Lenguaje</th>
-     <th>Descripcion</th>
-     <th>centro_id</th>
      <th>&nbsp;</th>
  </tr>
- <?php foreach ($canales as $canal) : ?>
+ <?php 
+
+ foreach ($canales as $canal) : ?>
  <tr>
      <td><?php echo $this->escapeHtml($canal->id);?></td>
      <td><?php echo $this->escapeHtml($canal->secuencia);?></td>
-     <td><?php echo $this->escapeHtml($canal->tipo);?></td>
      <td><?php echo $this->escapeHtml($canal->titulo);?></td>
      <td><?php echo $this->escapeHtml($canal->enlace);?></td>
-     <td><?php echo $this->escapeHtml($canal->lenguaje);?></td>
-     <td><?php echo $this->escapeHtml($canal->descripcion);?></td>
      <td>
          
          <a class="btn btn-lg btn-warning" href="<?php echo $this->url('canal',

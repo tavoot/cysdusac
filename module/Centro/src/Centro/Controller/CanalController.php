@@ -45,17 +45,29 @@ class CanalController extends AbstractActionController {
     
     
      public function listarAction() {
-        
-        //verifica si es un request para eliminar items
+        //verifica si es un request para eliminar canales
         $request = $this->getRequest();
         if ($request->isPost()){
             $canal_id = $this->params()->fromPost('canal');
-            $canal = $this->getCanalTable()->get($canal_id);
+            $canal_actual = $this->getCanalTable()->get($canal_id);
+            
+            
+            //actualizar los indices de la secuencia para los demas valores
+            $canales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
+            foreach($canales as $canal){
+                if($canal_actual->secuencia < $canal->secuencia){
+                    $canal->secuencia = (int) $canal->secuencia - 1;
+                    $this->getCanalTable()->save($canal);
+                }
+            }
+
+            //elimina un canal de la base de datos
             $this->getCanalTable()->delete($canal_id);
+            
 
             return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar',
-                        'id' => $canal->centro_id,
+                        'id' => $canal_actual->centro_id,
             ));
         }
         
@@ -73,9 +85,9 @@ class CanalController extends AbstractActionController {
             //variable global
             $canales= $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
             $centro=$this->getCentroTable()->get($centro_id);
-           
+            
             return new ViewModel(array(
-                'canales'=>$canales,  'centro'=>$centro
+                'canales'=>$canales,  'centro'=>$centro,
             ));
             
         } catch (\Exception $ex) {
@@ -118,10 +130,12 @@ class CanalController extends AbstractActionController {
             }
         }
 
+        $canales= $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
+        $secuencia = (int) sizeof($canales) +  1;
         
         $centro = $this->getCentroTable()->get($centro_id);
         return array(
-            'form' => $form, 'centro' => $centro
+            'form' => $form, 'centro' => $centro, 'secuencia'=>$secuencia
         );
     }
     
