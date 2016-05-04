@@ -74,7 +74,7 @@ class CanalController extends AbstractActionController {
         
         $centro_id = (int) $this->params()->fromRoute('id', 0);
         if (!$centro_id) {
-            return $this->redirect()->toRoute('item', array(
+            return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar',
                         'id'=>'x'
             ));
@@ -154,7 +154,7 @@ class CanalController extends AbstractActionController {
             $centro = $this->getCentroTable()->get($canal->centro_id);
             
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('item', array(
+            return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar'
             ));
         }

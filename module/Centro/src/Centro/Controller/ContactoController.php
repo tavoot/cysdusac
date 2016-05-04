@@ -19,13 +19,18 @@ use Centro\Form\ContactoForm;
 class ContactoController extends AbstractActionController {
 
     protected $contactoTable;
+    protected $centroTable;
 
-    public function indexAction() {
-        return new ViewModel(array(
-            'contactos' => $this->getContactoTable()->fetchAll(),
-        ));
+ 
+     public function getCentroTable() {
+        if (!$this->centroTable) {
+            $sm = $this->getServiceLocator();
+            $this->centroTable = $sm->get('Centro\Model\Logic\CentroTable');
+        }
+        return $this->centroTable;
     }
-
+    
+   
     public function getContactoTable() {
         if (!$this->contactoTable) {
             $sm = $this->getServiceLocator();
@@ -33,97 +38,115 @@ class ContactoController extends AbstractActionController {
         }
         return $this->contactoTable;
     }
+    
+    
+     public function listarAction() {
+        $centro_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$centro_id) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id'=>'x'
+            ));
+        }
+        
 
+        try { 
+            //variable global
+            $contactos= $this->getContactoTable()->getByCentroContacto($centro_id);
+            $centro=$this->getCentroTable()->get($centro_id);
+            
+            return new ViewModel(array(
+                'contactos'=>$contactos,  'centro'=>$centro,
+            ));
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id'=>$centro_id,
+            ));
+        }
+    }
+    
+
+ 
     public function addAction() {
+        $centro_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$centro_id) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'add',
+                        'id' => 'x'
+            ));
+        }
+
         $form = new ContactoForm();
         $form->get('submit')->setValue('Agregar');
-
         $request = $this->getRequest();
+        
         if ($request->isPost()) {
             $contacto= new Contacto();
             $form->setInputFilter($contacto->getInputFilter());
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid()){
                 $contacto->exchangeArray($form->getData());
                 $this->getContactoTable()->save($contacto);
 
-                // Redireccionar a la lista de usuarios
-                return $this->redirect()->toRoute('contacto');
+                // Redireccionar a la lista de canales
+                return $this->redirect()->toRoute('contacto', array(
+                            'action' => 'listar',
+                            'id' => $centro_id,
+                ));
             }
         }
-        return array('form' => $form);
+        
+        $centro = $this->getCentroTable()->get($centro_id);
+        return array(
+            'form' => $form, 'centro' => $centro
+        );
     }
     
     
-     public function editAction()
-     {
-         $id = (int) $this->params()->fromRoute('id', 0);
-         if (!$id) {
-             return $this->redirect()->toRoute('contacto', array(
-                 'action' => 'add'
-             ));
-         }
+    public function editAction() {
+        $contacto_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$contacto_id) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id' => 'x'
+            ));
+        }
+        
+        try {
+            $contacto = $this->getContactoTable()->get($contacto_id);
+            $centro = $this->getCentroTable()->get($contacto->centro_id);
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar'
+            ));
+        }
 
-         // Get the Album with the specified id.  An exception is thrown
-         // if it cannot be found, in which case go to the index page.
-         try {
-             $contacto = $this->getContactoTable()->get($id);
-         }
-         catch (\Exception $ex) {
-             return $this->redirect()->toRoute('contacto', array(
-                 'action' => 'index'
-             ));
-         }
+        $form = new ContactoForm();
+        $form->bind($contacto);
+        $form->get('submit')->setAttribute('value', 'Aplicar');
 
-         $form  = new ContactoForm();
-         $form->bind($contacto);
-         $form->get('submit')->setAttribute('value', 'Edit');
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter($contacto->getInputFilter());
+            $form->setData($request->getPost());
 
-         $request = $this->getRequest();
-         if ($request->isPost()) {
-             $form->setInputFilter($contacto->getInputFilter());
-             $form->setData($request->getPost());
+            if ($form->isValid()) {
+                $this->getContactoTable()->save($contacto);
 
-             if ($form->isValid()) {
-                 $this->getUsuarioTable()->save($contacto);
+                 return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id'=>$contacto->centro_id,
+                 ));
+            }
+        }
 
-                 // Redirect to list of albums
-                 return $this->redirect()->toRoute('contacto');
-             }
-         }
-
-         return array(
-             'id' => $id,
-             'form' => $form,
-         );
-     }
-     
-     
-     public function deleteAction()
-     {
-         $id = (int) $this->params()->fromRoute('id', 0);
-         if (!$id) {
-             return $this->redirect()->toRoute('contacto');
-         }
-
-         $request = $this->getRequest();
-         if ($request->isPost()) {
-             $del = $request->getPost('del', 'No');
-
-             if ($del == 'Yes') {
-                 $id = (int) $request->getPost('id');
-                 $this->getContactoTable()->delete($id);
-             }
-
-             // Redirect to list of albums
-             return $this->redirect()->toRoute('contacto');
-         }
-
-         return array(
-             'id'    => $id,
-             'usuario' => $this->getContactoTable()->get($id)
-         );
-     }
+        return array(
+            'form' => $form, 'contacto' => $contacto, 'centro' => $centro 
+        );
+    }
 
 }

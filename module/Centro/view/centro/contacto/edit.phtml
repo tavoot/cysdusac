@@ -1,0 +1,35 @@
+ <?php
+$title ="Edicion de Contactos". "-" . $centro->siglas ;
+$this->headTitle($title);
+ ?>
+ <div class='panel panel-warning'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
+
+ <?php
+ $form = $this->form;
+ $form->setAttribute('action', $this->url(
+     'contacto',
+     array(
+         'action' => 'edit',
+         'id'     => $contacto->id,
+     )
+ ));
+ $form->prepare();
+?>
+
+<div class="row">
+<?php echo $this->form()->openTag($form); ?>
+<?php
+echo $this->formHidden($form->get('id')->setValue($contacto->id));
+echo $this->formHidden($form->get('centro_id')->setValue($centro->id));
+echo $this->formRow($form->get('nombre')). "<br>";
+echo $this->formRow($form->get('email')). "<br>";
+echo $this->formRow($form->get('telefono')). "<br>";
+echo $this->formRow($form->get('puesto')). "<br>"; 
+echo $this->formSubmit($form->get('submit')->setValue('Editar'));
+echo $this->form()->closeTag();
+?>
+</div>

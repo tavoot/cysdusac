@@ -15,7 +15,7 @@ use Zend\Form\Form;
      public function __construct($name = null)
      {
          // we want to ignore the name passed
-         parent::__construct('usuario');
+         parent::__construct('contacto');
 
          $this->add(array(
              'name' => 'id',
@@ -23,10 +23,15 @@ use Zend\Form\Form;
          ));
          
          $this->add(array(
+             'name' => 'centro_id',
+             'type' => 'Hidden',
+         ));
+         
+         $this->add(array(
              'name' => 'nombre',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Usuario',
+                 'label' => 'nombre',
              ),
          ));
 

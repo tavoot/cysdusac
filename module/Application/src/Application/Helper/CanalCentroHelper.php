@@ -44,7 +44,8 @@ class CanalCentroHelper extends AbstractHelper implements ServiceLocatorAwareInt
                     $output = $output . "<a href='#'>$centro->siglas<span class='fa arrow'></span</a>";
                     $output = $output . "<ul class='nav nav-third-level'>";
                     $output = $output . "<li><a href='$url/centro/edit/$centro->id'>Informacion General</a></li>";
-                    $output = $output . "<li><a href='$url/item/listar/$canal_id'>Canale RSS Interno</a></li>";
+                    $output = $output . "<li><a href='$url/contacto/listar/$centro->id'>Contactos</a></li>";
+                    $output = $output . "<li><a href='$url/item/listar/$canal_id'>Canales RSS Interno</a></li>";
                     $output = $output . "<li><a href='$url/canal/listar/$centro->id'>Canales RSS Externo</a></li></ul>";
                 }
             }

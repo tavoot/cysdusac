@@ -10,6 +10,7 @@ namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\Contacto;
+use \Zend\Db\Sql\Select;
 
 class ContactoTable{
     
@@ -36,14 +37,29 @@ class ContactoTable{
          }
          return $row;
      }
+     
+     public function getByCentroContacto($centro_id)
+     {
+        $centro_id  = (int) $centro_id;
+        $select = new Select();
+        $select->from('contacto');
+        $select->join('centro', 'contacto.centro_id=centro.id', array('siglas'), 'INNER');
+        $select->where(array('centro_id'=>$centro_id));
+        $rowset = $this->tableGateway->selectWith($select);
+         if (!$rowset) {
+             throw new \Exception("Registro no encontrado $centro_id");
+         }
+         return $rowset;
+     }
 
     public function save(Contacto $contacto)
     {
-        
         $data = array(
             'nombre'=>$contacto->nombre,
             'email'=>$contacto->email, 
-            'telefono'=>$contacto->pais);
+            'telefono'=>$contacto->telefono,
+            'puesto'=>$contacto->puesto, 
+            'centro_id'=>$contacto->centro_id);
 
          $id = (int) $contacto->id;
          if ($id == 0) {

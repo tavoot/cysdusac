@@ -26,6 +26,7 @@ use Zend\Form\Form;
          ));
          
        
+       
          $this->add(array(
              'name' => 'nombre',
              'type' => 'Text',

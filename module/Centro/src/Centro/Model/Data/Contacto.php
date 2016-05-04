@@ -21,6 +21,9 @@ class Contacto
      public $email;
      public $telefono;
      public $puesto;
+     public $centro_id;
+     
+     //public $centro_siglas;
      
     protected $inputFilter;
 
@@ -31,6 +34,10 @@ class Contacto
          $this->email  = (!empty($data['email'])) ? $data['email'] : null;
          $this->telefono  = (!empty($data['telefono'])) ? $data['telefono'] : null;
          $this->puesto = (!empty($data['puesto'])) ? $data['puesto'] : null;
+         $this->centro_id = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
+         
+         //$this->centro_siglas= (!empty($data['siglas'])) ? $data['siglas'] : null;
+         
      }
      
      public function getArrayCopy() {
