@@ -10,6 +10,7 @@ namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\Centro;
+use Zend\Db\Sql\Select;
 
 class CentroTable{
     
@@ -23,6 +24,15 @@ class CentroTable{
      public function fetchAll()
      {
          $resultSet = $this->tableGateway->select();
+         return $resultSet;
+     }
+     
+     public function fetchCentros()
+     {
+         $resultSet = $this->tableGateway->select(function(Select $select){
+             $select->where->literal('id != 1');
+         });
+         
          return $resultSet;
      }
 
@@ -57,6 +67,7 @@ class CentroTable{
          $id = (int) $centro->id;
          if ($id == 0) {
              $this->tableGateway->insert($data);
+             $id = $this->tableGateway->getLastInsertValue();
          } else {
              if ($this->get($id)) {
                  $this->tableGateway->update($data, array('id' => $id));
@@ -64,6 +75,8 @@ class CentroTable{
                  throw new \Exception('El centro con el id no existe');
              }
          }
+         
+         return $id;
      }
 
      public function delete($id)

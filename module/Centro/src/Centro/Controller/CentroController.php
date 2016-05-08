@@ -14,6 +14,8 @@ use Centro\Model\Data\Centro;
 use Centro\Model\Data\Usuario;
 use Centro\Form\CentroForm;
 use Centro\Util\Session;
+use Centro\Util\XmlGenerator;
+use Centro\Util\FileManager;
 
 
 class CentroController extends AbstractActionController {
@@ -27,7 +29,7 @@ class CentroController extends AbstractActionController {
         //$usuario->getUsuarioCentroTable()->getCentrosPorUsuario($usuario->id);
         
         return new ViewModel(array(
-            'centros' => $this->getCentroTable()->fetchAll(),
+            'centros' => $this->getCentroTable()->fetchCentros(),
         ));
         
         
@@ -73,8 +75,20 @@ class CentroController extends AbstractActionController {
 
             if ($form->isValid()) {
                 $centro->exchangeArray($form->getData());
-                $this->getCentroTable()->save($centro);
-
+                $id = $this->getCentroTable()->save($centro);
+                
+                // creamos el directorio del nuevo centro
+                if(!isset($id)) {
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('AVISO: No se pudo agregar el centro');
+                    // Redireccionar a la lista de centros
+                    return $this->redirect()->toRoute('centro');
+                }
+                FileManager::addCentroFolder($id);
+                // actualizamos el config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
                 // Redireccionar a la lista de centros
@@ -157,7 +171,7 @@ class CentroController extends AbstractActionController {
     public function relacigerAction(){
         $form = new CentroForm();
         $form->get('submit')->setValue('Agregar');
-
+        
         $request = $this->getRequest();
         if ($request->isPost()) {
             $centro = new Centro();
