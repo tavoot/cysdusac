@@ -36,7 +36,7 @@ class Canal implements InputFilterAwareInterface {
          $this->enlace  = (!empty($data['enlace'])) ? $data['enlace'] : null;
          $this->lenguaje  = (!empty($data['lenguaje'])) ? $data['lenguaje'] : null;
          $this->centro_id  = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
-         $this->secuencia = (!empty($data['secuencia'])) ? $data['secuencia'] : null;
+         $this->secuencia = (isset($data['secuencia'])) ? $data['secuencia'] : null;
          
          $this->tipo_valor = (!empty($data['valor'])) ? $data['valor'] : null;
          

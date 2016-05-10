@@ -29,7 +29,7 @@ class UsuarioCentroHelper extends AbstractHelper implements ServiceLocatorAwareI
             foreach($usuarioscentros as $usuariocentro){
             $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
                 if($centro){
-                    $output = $output . "<li><a href='$url/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+                    $output = $output . "<li><a href='$url$usuariocentro->centro_id'>$centro->siglas</a></li>";
                 }
 
             }

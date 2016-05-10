@@ -27,6 +27,17 @@ class CanalTable{
          $resultSet = $this->tableGateway->select();
          return $resultSet;
      }
+     
+     public function fetchAllByCentro($centro_id)
+     {
+         $select = new Select();
+         $select->from('canal');
+         $select->where(array('centro_id' => $centro_id));
+         $select->order('secuencia ASC');
+         
+         $resultSet = $this->tableGateway->selectWith($select);
+         return $resultSet;
+     }
 
      public function get($id)
      {

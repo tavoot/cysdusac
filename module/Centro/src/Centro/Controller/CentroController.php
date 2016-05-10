@@ -14,10 +14,14 @@ use Centro\Model\Data\Centro;
 use Centro\Model\Data\Usuario;
 use Centro\Form\CentroForm;
 use Centro\Util\Session;
+use Centro\Util\XmlGenerator;
+use Centro\Util\FileManager;
 
 
 class CentroController extends AbstractActionController {
 
+    const RELACIGER = 1;
+    
     protected $centroTable;
     protected $usuario;
     
@@ -27,7 +31,7 @@ class CentroController extends AbstractActionController {
         //$usuario->getUsuarioCentroTable()->getCentrosPorUsuario($usuario->id);
         
         return new ViewModel(array(
-            'centros' => $this->getCentroTable()->fetchAll(),
+            'centros' => $this->getCentroTable()->fetchCentros(),
         ));
         
         
@@ -73,8 +77,20 @@ class CentroController extends AbstractActionController {
 
             if ($form->isValid()) {
                 $centro->exchangeArray($form->getData());
-                $this->getCentroTable()->save($centro);
-
+                $id = $this->getCentroTable()->save($centro);
+                
+                // creamos el directorio del nuevo centro
+                if(!isset($id)) {
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('AVISO: No se pudo agregar el centro');
+                    // Redireccionar a la lista de centros
+                    return $this->redirect()->toRoute('centro');
+                }
+                FileManager::addCentroFolder($id);
+                // actualizamos el config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
                 // Redireccionar a la lista de centros
@@ -114,6 +130,10 @@ class CentroController extends AbstractActionController {
             if ($form->isValid()) {
                 $this->getCentroTable()->save($centro);
 
+                // actualizamos el config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro editado satisfactoriamente');
                 // Redirect to list of albums
@@ -140,6 +160,14 @@ class CentroController extends AbstractActionController {
             if ($del == 'Si') {
                 $id = (int) $request->getPost('id');
                 $this->getCentroTable()->delete($id);
+                
+                // eliminamos la carpeta del centro
+                $fileManager = new FileManager();
+                $fileManager->removeCentroFolder($id);
+                // actualizamos el config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro eliminado satisfactoriamente');
             }
@@ -155,23 +183,48 @@ class CentroController extends AbstractActionController {
     }
     
     public function relacigerAction(){
+        try {
+            // instancia del centro que sera manipulada por el form
+            $centro = $this->getCentroTable()->get(self::RELACIGER);
+            // instancia que mantendra los datos que no se modifican
+            $relaciger = $this->getCentroTable()->get(self::RELACIGER);
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'index'
+            ));
+        }
+        
         $form = new CentroForm();
+        $form->bind($centro);
         $form->get('submit')->setValue('Agregar');
-
+        
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $centro = new Centro();
             $form->setInputFilter($centro->getInputFilter());
+            $form->setValidationGroup('id','mision', 'vision', 'descripcion');
             $form->setData($request->getPost());
-
+            
             if ($form->isValid()) {
-                $centro->exchangeArray($form->getData());
-                $this->getCentroTable()->save($centro);
-
+                // actualizacion de los campos enviados
+                $relaciger->mision = $centro->mision;
+                $relaciger->vision = $centro->vision;
+                $relaciger->descripcion = $centro->descripcion;
+                
+                // guardo los cambios
+                $this->getCentroTable()->save($relaciger);
+                // actualizamos el config relaciger.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general agregada');
                 // Redireccionar a la lista de centros
                 return $this->redirect()->toRoute('centro');
             }
+            //var_dump($form->getMessages());
+            //var_dump($form->getInputFilter()->getRawValues());
         }
-        return array('form' => $form);    }
+        
+        return array('form' => $form);
+    }
 
 }

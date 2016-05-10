@@ -111,7 +111,7 @@ class Centro implements InputFilterAwareInterface
                      ),
                  ),
              ));
-
+             
              $this->inputFilter = $inputFilter;
          }
 
