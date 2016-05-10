@@ -49,9 +49,11 @@ class UsuarioCentroController extends AbstractActionController {
         //var_dump($usuariocentro);
         //var_dump($this->getUsuarioCentroTable()->getCentrosPorUsuario(1));
         
-        return new ViewModel(array(
-            'usuarioscentros' => $this->getUsuarioCentroTable()->getByCentro(2),
-        ));
+        //return new ViewModel(array(
+        //    'usuarioscentros' => $this->getUsuarioCentroTable()->getByCentro(2),
+        //));
+        
+        return $this->redirect()->toRoute('centro');
         
     }
     
@@ -62,9 +64,7 @@ class UsuarioCentroController extends AbstractActionController {
      public function findAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('usuariocentro', array(
-                        'action' => 'find'
-            ));
+            return $this->redirect()->toRoute('centro');
         }
 
         try { 
@@ -97,9 +97,7 @@ class UsuarioCentroController extends AbstractActionController {
                 'usuarioscentros' => $usuarioscentros, 'centro'=>$this->centro, 'usuarios' => $usuarios
             ));
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('usuariocentro', array(
-                        'action' => 'find',
-            ));
+            return $this->redirect()->toRoute('centro');
         }
     }
 

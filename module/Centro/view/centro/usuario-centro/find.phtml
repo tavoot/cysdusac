@@ -24,12 +24,15 @@ $this->headTitle($title);
 
 
 <br>
-<table class="table table-striped">
-    <tr>
-        <th>Usuario Permitidos </th>
-        <th>Centro</th>
-        <th>Acciones</th>
-    </tr>
+<table class="table table-hover">
+    <thead>
+        <tr class="active">
+            <th>Usuarios permitidos </th>
+            <th>Centro</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
     <?php foreach ($usuarioscentros as $usuariocentro) : ?>
         <tr>
             <td><?php echo $this->escapeHtml($usuariocentro->usuario_valor); ?></td>
@@ -40,4 +43,5 @@ $this->headTitle($title);
             </td>
         </tr>
     <?php endforeach; ?>
+    </tbody>
 </table>

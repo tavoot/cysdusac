@@ -4,27 +4,52 @@
  $title = "INFORMACIÓN GENERAL - $centro->siglas";
  $this->headTitle($title);
  ?>
-<h1><span class="label label-default"><?php echo $this->escapeHtml($title); ?></span></h1>
- <table class="table table-striped">
- <tr>
-     <th>ID</th>
-     <th>Siglas</th>
-     <th>Mision</th>
-     <th>Vision</th>
-     <th>Descripcion</th>
-     <th>&nbsp;</th>
- </tr>
- <tr>
-     <td><?php echo $this->escapeHtml($centro->id);?></td>
-     <td><?php echo $this->escapeHtml($centro->siglas);?></td>
-     <td><?php echo $this->escapeHtml($centro->mision);?></td>
-     <td><?php echo $this->escapeHtml($centro->vision);?></td>
-     <td><?php echo $this->escapeHtml($centro->descripcion);?></td>
-     <td>
-         <a href="<?php echo $this->url('centro',
-             array('action'=>'edit', 'id' => $centro->id));?>">Editar</a>
-         <a href="<?php echo $this->url('centro',
-             array('action'=>'delete', 'id' => $centro->id));?>">Eliminar</a>
-     </td>
- </tr>
- </table>
+<h1>
+    <span class="label label-default"><?php echo $this->escapeHtml($title); ?></span>
+</h1>
+<br>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+            <tr class="active">
+                <th>Dato</th>
+                <th>Valor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Identificador:</b></td>
+                <td><?php echo $this->escapeHtml($centro->id);?></td>
+            </tr>
+            <tr>
+                <td><b>Nombre:</b></td>
+                <td><?php echo $this->escapeHtml($centro->nombre);?></td>
+            </tr>
+            <tr>
+                <td><b>Siglas:</b></td>
+                <td><?php echo $this->escapeHtml($centro->siglas);?></td>
+            </tr>
+            <tr>
+                <td><b>Pa&iacute;s:</b></td>
+                <td><?php echo $this->escapeHtml($centro->pais);?></td>
+            </tr>
+            <tr>
+                <td><b>Sitio web:</b></td>
+                <td><?php echo $this->escapeHtml($centro->sitio_web);?></td>
+            </tr>
+            <tr>
+                <td><b>Direcci&oacute;n:</b></td>
+                <td><?php echo $this->escapeHtml($centro->direccion);?></td>
+            </tr>
+            <tr>
+                <td><b>Tel&eacute;fono:</b></td>
+                <td><?php echo $this->escapeHtml($centro->telefono);?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <a class="btn btn-warning btn-lg" href="<?php echo $this->url('centro', array('action'=>'edit', 'id' => $centro->id));?>">Editar</a>
+    <a class="btn btn-danger btn-lg" href="<?php echo $this->url('centro', array('action'=>'delete', 'id' => $centro->id));?>">Eliminar</a>
+</div>
