@@ -46,11 +46,7 @@ class FileManager {
         return $result;
     }
     
-    public static function removeCentroFolder($centro_id) {
-        
-    }
-    
-    
+     
     public static function initRelacigerDirectory() {
         $result = true;
         
@@ -92,6 +88,25 @@ class FileManager {
         
         $result = touch(self::PATH_CENTROS."$centro_id/estadistica/canales/canal_$canal_secuencia.php");
         return $result;
+    }
+    
+    
+    public function removeCentroFolder($centro_id) {
+        $carpetaEliminar = self::PATH_CENTROS.$centro_id;
+        $this->removeFolder($carpetaEliminar);
+    }
+    
+    
+    private function removeFolder($carpeta){
+        $listaElementos = glob($carpeta.'/*');
+        foreach ($listaElementos as $elemento) {
+            if(is_dir($elemento)) {
+                $this->removeFolder($elemento);
+            } else {
+                unlink($elemento);
+            }
+        }
+        rmdir($carpeta);
     }
     
     
