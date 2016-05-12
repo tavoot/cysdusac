@@ -11,6 +11,7 @@ namespace Centro\Model\Data;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Validator\NotEmpty;
 
 class Usuario implements InputFilterAwareInterface {
 
@@ -66,12 +67,119 @@ class Usuario implements InputFilterAwareInterface {
                 ),
                 'validators' => array(
                     array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
                         'name' => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 100,
+                            'min' => 5,
+                            'max' => 50,
+                            'setMessages' => array(
+                                'stringLengthTooShort' => 'El nombre de usuario debe poseer al menos 5 caracteres',
+                                'stringLengthTooLong' => 'El nombre de usuario ingresado es mayor al limite permitido',
+                            ),
                         ),
+                        'break_chain_on_failure' => true,
+                    ),
+                ),
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'password',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 4 ,
+                            'max' => 15,
+                            'setMessages' => array(
+                                'stringLengthTooShort' => 'El password debe poseer al menos 4 caracteres',
+                                'stringLengthTooLong' => 'El password ingresado es mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                ),
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'email',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name' => 'EmailAddress',
+                        'options' => array(
+                            'message' => 'Direccion de email no valida',
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                ),
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'pais',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name' => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min' => 4,
+                            'max' => 50,
+                            'setMessages' => array(
+                                'stringLengthTooShort' => 'La cadena ingresada debe poseer al menos 4 caracteres',
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
                     ),
                 ),
             ));
