@@ -10,6 +10,7 @@ namespace Centro\Model\Data;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Validator\NotEmpty;
 
 class Centro implements InputFilterAwareInterface
  {
@@ -83,12 +84,25 @@ class Centro implements InputFilterAwareInterface
                  ),
                  'validators' => array(
                      array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                     ),
+                     array(
                          'name'    => 'StringLength',
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 1,
-                             'max'      => 100,
+                             'max'      => 200,
+                             'setMessages' => array(
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
                          ),
+                         'break_chain_on_failure' => true,
                      ),
                  ),
              ));
@@ -102,12 +116,166 @@ class Centro implements InputFilterAwareInterface
                  ),
                  'validators' => array(
                      array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                     ),
+                     array(
+                         'name'    => 'StringLength',
+                         'options' => array(
+                             'encoding' => 'UTF-8',
+                             'min'      => 4,
+                             'max'      => 20,
+                             'setMessages' => array(
+                                'stringLengthTooShort' => 'La cadena ingresada debe poseer al menos 4 caracteres',
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
+                 ),
+             ));
+             
+             $inputFilter->add(array(
+                 'name'     => 'tipo',
+                 'required' => true,
+                 'filters'  => array(
+                     array('name' => 'StripTags'),
+                     array('name' => 'StringTrim'),
+                 ),
+                 'validators' => array(
+                     array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                     ),
+                     array(
+                         'name'    => 'StringLength',
+                         'options' => array(
+                             'encoding' => 'UTF-8',
+                             'min'      => 3,
+                             'max'      => 60,
+                             'setMessages' => array(
+                                'stringLengthTooShort' => 'La cadena ingresada debe poseer al menos 4 caracteres',
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
+                 ),
+             ));
+             
+             $inputFilter->add(array(
+                 'name'     => 'pais',
+                 'required' => true,
+                 'filters'  => array(
+                     array('name' => 'StripTags'),
+                     array('name' => 'StringTrim'),
+                 ),
+                 'validators' => array(
+                     array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                     ),
+                     array(
+                         'name'    => 'StringLength',
+                         'options' => array(
+                             'encoding' => 'UTF-8',
+                             'min'      => 4,
+                             'max'      => 60,
+                             'setMessages' => array(
+                                'stringLengthTooShort' => 'La cadena ingresada debe poseer al menos 4 caracteres',
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
+                 ),
+             ));
+             
+             $inputFilter->add(array(
+                 'name'     => 'sitio_web',
+                 'required' => true,
+                 'filters'  => array(
+                     array('name' => 'StripTags'),
+                     array('name' => 'StringTrim'),
+                 ),
+                 'validators' => array(
+                     array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                     ),
+                     array(
                          'name'    => 'StringLength',
                          'options' => array(
                              'encoding' => 'UTF-8',
                              'min'      => 1,
-                             'max'      => 100,
+                             'max'      => 150,
+                             'setMessages' => array(
+                                'stringLengthTooLong' => 'Cadena de caracteres mayor al limite permitido',
+                            ),
                          ),
+                         'break_chain_on_failure' => true,
+                     ),
+                 ),
+             ));
+             
+             $inputFilter->add(array(
+                 'name'     => 'direccion',
+                 'required' => false,
+                 'filters'  => array(
+                     array('name' => 'StripTags'),
+                     array('name' => 'StringTrim'),
+                 ),
+                 'validators' => array(
+                     array(
+                         'name'    => 'StringLength',
+                         'options' => array(
+                             'encoding' => 'UTF-8',
+                             'min'      => 1,
+                             'max'      => 250,
+                             'setMessages' => array(
+                                'stringLengthTooLong' => 'Cadena de caracteres mayor al limite permitodo',
+                            ),
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
+                 ),
+             ));
+             
+             $inputFilter->add(array(
+                 'name'     => 'telefono',
+                 'required' => false,
+                 'filters'  => array(
+                     array('name' => 'StripTags'),
+                     array('name' => 'StringTrim'),
+                 ),
+                 'validators' => array(
+                     array(
+                         'name'    => 'Regex',
+                         'options' => array(
+                             'pattern' => '/[0-9]{3}-[0-9]{8}/',
+                             'message' => 'Formato no valido, necesita codigo de area (3 digitos) y el numero (8 digitos)',
+                         ),
+                         'break_chain_on_failure' => true,
                      ),
                  ),
              ));
