@@ -45,6 +45,7 @@ use Zend\Form\Element;
                  'label' => 'Usuario',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese nombre de usuario',
                 'class' => 'form-control',
              ),
          ));
@@ -55,6 +56,7 @@ use Zend\Form\Element;
                  'label' => 'Password',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese password',
                 'class' => 'form-control',
              ),
          ));
@@ -66,6 +68,7 @@ use Zend\Form\Element;
                  'label' => 'Email',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese email',
                 'class' => 'form-control',
              ),
          ));
@@ -77,6 +80,7 @@ use Zend\Form\Element;
                  'label' => 'Pais',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese pais',
                 'class' => 'form-control',
              ),
          ));

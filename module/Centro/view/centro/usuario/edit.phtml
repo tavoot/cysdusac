@@ -30,23 +30,23 @@ use Centro\Util\CatalogoValor as Catalogo;
     <?php 
             if($element->getValue() == Catalogo::ESTANDAR){
                 $usuarioestandar = true;
-                continue;
+                //continue;
                 //$element->setAttributes(array('disabled' => 'disabled'));
             }
             
             if($usuarioestandar){
                 switch ($element->getName()){
                     case "usuario":
-                    $element->setAttributes(array('disabled' => 'disabled'));
+                    $element->setAttributes(array('readonly' => 'true'));
                     break;
                     case "pais":
-                    $element->setAttributes(array('disabled' => 'disabled'));
+                    $element->setAttributes(array('readonly' => 'true'));
                     break;
                 }
             }
             
     ?>
-    <div class="form-group">
+    <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
         <?php
             echo $this->formElement($element);  
@@ -66,7 +66,7 @@ use Centro\Util\CatalogoValor as Catalogo;
 <div>
     <?php
         if($usuarioestandar){
-            echo $this->partial("partial/edit/centros.phtml", array('centros'=>$this->centros));
+            echo $this->partial("centro/usuario/partial/edit/centros.phtml", array('centros'=>$this->centros));
         }
     ?>
 </div>

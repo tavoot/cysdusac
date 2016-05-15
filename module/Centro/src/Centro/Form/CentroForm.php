@@ -34,6 +34,7 @@ use Zend\Form\Form;
                  'label' => 'Nombre',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese nombre',
                 'class' => 'form-control',
              ),
          ));
@@ -45,6 +46,7 @@ use Zend\Form\Form;
                  'label' => 'Tipo',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese tipo de centro',
                 'class' => 'form-control',
              ),
          ));
@@ -57,6 +59,7 @@ use Zend\Form\Form;
                  'label' => 'Pais',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese pais',
                 'class' => 'form-control',
              ),
          ));
@@ -68,6 +71,7 @@ use Zend\Form\Form;
                  'label' => 'Siglas',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese siglas',
                 'class' => 'form-control',
              ),
          ));
@@ -79,6 +83,7 @@ use Zend\Form\Form;
                  'label' => 'Sitio Web',
              ),
              'attributes' => array(
+                'placeholder' => 'http://www.ejemplo.org',
                 'class' => 'form-control',
              ),
          ));
@@ -90,6 +95,7 @@ use Zend\Form\Form;
                  'label' => 'Direccion',
              ),
              'attributes' => array(
+                'placeholder' => 'Ingrese direccion',
                 'class' => 'form-control',
              ),
          ));
@@ -101,13 +107,14 @@ use Zend\Form\Form;
                  'label' => 'Telefono',
              ),
              'attributes' => array(
+                'placeholder' => '000-00000000',
                 'class' => 'form-control',
              ),
          ));
          
          $this->add(array(
              'name' => 'url_imagen',
-             'type' => 'Text',
+             'type' => 'File',
              'options' => array(
                  'label' => 'URL Imagen',
              ),

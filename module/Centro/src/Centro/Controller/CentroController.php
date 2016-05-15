@@ -11,7 +11,7 @@ namespace Centro\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Centro\Model\Data\Centro;
-use Centro\Model\Data\Usuario;
+use Centro\Model\Data\UsuarioCentro;
 use Centro\Form\CentroForm;
 use Centro\Util\Session;
 use Centro\Util\XmlGenerator;
@@ -64,6 +64,14 @@ class CentroController extends AbstractActionController {
         }
         return $this->centroTable;
     }
+    
+    public function getUsuarioCentroTable() {
+        if (!$this->usuariocentroTable) {
+            $sm = $this->getServiceLocator();
+            $this->usuariocentroTable = $sm->get('Centro\Model\Logic\UsuarioCentroTable');
+        }
+        return $this->usuariocentroTable;
+    }
 
     public function addAction() {
         $form = new CentroForm();
@@ -79,7 +87,7 @@ class CentroController extends AbstractActionController {
                 $centro->exchangeArray($form->getData());
                 $id = $this->getCentroTable()->save($centro);
                 
-                // creamos el directorio del nuevo centro
+                // 1. creamos el directorio del nuevo centro
                 if(!isset($id)) {
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('AVISO: No se pudo agregar el centro');
@@ -87,9 +95,14 @@ class CentroController extends AbstractActionController {
                     return $this->redirect()->toRoute('centro');
                 }
                 FileManager::addCentroFolder($id);
-                // actualizamos el config centros.xml
+                // 2. actualizamos el config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                // 3. asociacion del centro con el usuario
+                $datosUsuario = Session::getUsuario($this->getServiceLocator());
+                $usuarioCentro = new UsuarioCentro();
+                $usuarioCentro->exchangeArray(array('usuario_id' => $datosUsuario->id, 'centro_id' => $id));
+                $this->getUsuarioCentroTable()->save($usuarioCentro);
                 
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
