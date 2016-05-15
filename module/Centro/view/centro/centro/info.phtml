@@ -1,0 +1,134 @@
+<?php
+// module/Album/view/album/album/edit.phtml:
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
+
+$title = 'Informacion Centro';
+$this->headTitle($title);
+
+
+
+
+$form = $this->form;
+$form->setAttribute('action', $this->url(
+    'centro',
+    array(
+        'action' => 'info',
+        'id'     => $this->id,
+    )
+));
+
+$form->prepare();
+?>
+
+<?php 
+echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); 
+echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('alert','alert-danger')); 
+?>
+
+<div class="row">
+    <div class='panel panel-primary'>
+        <div class='panel-heading'>
+            <h4>Imagen del centro</h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <?php echo $this->form()->openTag($form); ?>
+
+        <?php foreach($form as $element): ?>
+        <div class="form-group">
+            <label class="control-label"><?php echo $element->getLabel() ?></label>
+            <?php echo $this->formElement($element); ?>
+        </div>
+        <?php endforeach; ?>
+        <?php echo $this->form()->closeTag(); ?>
+    </div>
+    <div class="col-md-6">
+        <img class="img-thumbnail center-block" src="<?php echo $this->basePath().'/'.$centro->url_imagen ?>" alt="Sin imagen" width="100" height="100">
+        <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class='panel panel-primary'>
+        <div class='panel-heading'>
+            <h4>Datos del centro</h4>
+        </div>
+    </div>
+    
+    <div>
+        <table class="table table-hover">
+            <thead>
+                <tr class="active">
+                    <th>Dato</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Identificador:</b></td>
+                    <td><?php echo $centro->id ?></td>
+                </tr>
+                <tr>
+                    <td><b>Nombre:</b></td>
+                    <td><?php echo $centro->nombre ?></td>
+                </tr>
+                <tr>
+                    <td><b>Siglas:</b></td>
+                    <td><?php echo $centro->siglas ?></td>
+                </tr>
+                <tr>
+                    <td><b>Pa&iacute;s:</b></td>
+                    <td><?php echo $centro->pais ?></td>
+                </tr>
+                <tr>
+                    <td><b>Sitio web:</b></td>
+                    <td><?php echo $centro->sitio_web ?></td>
+                </tr>
+                <tr>
+                    <td><b>Direcci&oacute;n:</b></td>
+                    <td><?php echo $centro->direccion ?></td>
+                </tr>
+                <tr>
+                    <td><b>Tel&eacute;fono:</b></td>
+                    <td><?php echo $centro->telefono ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class='panel panel-primary'>
+        <div class='panel-heading'>
+            <h4>Contatos</h4>
+        </div>
+    </div>
+    
+    <div>
+        <?php if(count($contactos)): ?>
+        <table class="table table-hover">
+            <thead>
+                <tr class="active">
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Puesto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($contactos as $contacto): ?>
+                <tr>
+                    <td><?php echo $contacto->nombre ?></td>
+                    <td><?php echo $contacto->email ?></td>
+                    <td><?php echo $contacto->telefono ?></td>
+                    <td><?php echo $contacto->puesto ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php endif; ?>
+    </div>
+    
+</div>
+

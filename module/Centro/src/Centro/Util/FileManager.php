@@ -19,7 +19,8 @@ class FileManager {
     const PATH_CONFIG = 'public/apprelaciger/data/config/';
     const PATH_CENTROS = 'public/apprelaciger/data/centros/';
     
-
+    const PUBLIC_PATH_CENTROS = 'apprelaciger/data/centros/';
+    
     public static function addCentroFolder($centro_id) {
         $result = true;
         

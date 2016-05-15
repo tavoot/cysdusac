@@ -114,7 +114,7 @@ use Zend\Form\Form;
          
          $this->add(array(
              'name' => 'url_imagen',
-             'type' => 'File',
+             'type' => 'Text',
              'options' => array(
                  'label' => 'URL Imagen',
              ),
