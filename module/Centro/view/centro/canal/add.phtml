@@ -1,29 +1,63 @@
 <?php
 use Centro\Util\CatalogoValor as Catalogo;
 
-$title ='Canales - '  . $centro->siglas ;
+$title ='Añadir Nuevo Canal - '  . $centro->siglas ;
 $this->headTitle($title);
 ?>
+
 <div class='panel panel-info'>
     <div class='panel-heading'>
         <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
- </div>
+</div>
 
- <?php
+<?php
 $form->setAttribute('action', $this->url('canal', array('action' => 'add', 'id'=>$centro->id)));
+$form->setAttribute('class', 'col-md-6');
 $form->prepare();
 
-echo $this->form()->openTag($form);
-echo $this->formHidden($form->get('id'));
-echo $this->formHidden($form->get('tipo')->setValue(Catalogo::EXTERNO));
-echo $this->formHidden($form->get('centro_id')->setValue($centro->id));
-echo $this->formHidden($form->get('secuencia')->setValue($secuencia));
-echo $this->formRow($form->get('titulo')). "<br>";
-echo $this->formRow($form->get('enlace')). "<br>";
-echo $this->formRow($form->get('lenguaje')). "<br>";
-echo $this->formRow($form->get('descripcion')). "<br>"; 
-echo $this->formSubmit($form->get('submit')->setValue('Editar'));
-echo $this->form()->closeTag();
-
 ?>
+
+<div class="row">
+<?php echo $this->form()->openTag($form); ?>
+<br>
+<?php foreach($form as $element): ?>
+    <?php 
+    if($element->getName() == 'id' || 
+            $element->getName() == 'centro_id' || 
+            $element->getName() == 'secuencia' || 
+            $element->getName() == 'tipo') {
+            
+        switch ($element->getName()){
+            case 'centro_id':
+                echo $this->formElement($element->setValue($centro->id));
+                break;
+            case 'secuencia':
+                echo $this->formElement($element->setValue($secuencia));
+                break;
+            case 'tipo':
+                echo $this->formElement($element->setValue(Catalogo::EXTERNO));
+                break;
+            default:
+                echo $this->formElement($element);
+        }
+            
+    } else {
+    ?>
+    <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
+        <label class="control-label"><?php echo $element->getLabel() ?></label>
+        <?php
+            echo $this->formElement($element);
+            if($this->formElementErrors($element)){
+                echo $this->formElementErrors()
+                        ->setMessageOpenFormat('<p class="help-block">')
+                        ->setMessageSeparatorString('</p><p class="help-block">')
+                        ->setMessageCloseString('</p>')
+                        ->render($element);
+            }
+        ?>
+    </div>
+    <?php } ?>
+<?php endforeach; ?>
+<?php echo $this->form()->closeTag(); ?>
+</div>

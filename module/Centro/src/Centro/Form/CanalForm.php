@@ -35,16 +35,18 @@ use Zend\Form\Form;
          
           $this->add(array(
              'name' => 'tipo',
-             'type' => 'Text',
-             'options' => array(
-                 'label' => 'Tipo',
-             ),
+             'type' => 'Hidden',
          ));
+          
          $this->add(array(
              'name' => 'titulo',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Nombre',
+             ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese nombre',
+                 'class' => 'form-control',
              ),
          ));
 
@@ -54,6 +56,10 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Enlace',
              ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese enlace',
+                 'class' => 'form-control',
+             ),
          ));
          
          $this->add(array(
@@ -62,12 +68,21 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Lenguaje',
              ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese lenguaje',
+                 'class' => 'form-control',
+             ),
          ));
+         
          $this->add(array(
              'name' => 'descripcion',
              'type' => 'TextArea',
              'options' => array(
                  'label' => 'Descripcion',
+             ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese descripcion',
+                 'class' => 'form-control',
              ),
          ));
          

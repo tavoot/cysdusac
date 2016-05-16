@@ -13,6 +13,7 @@ use Zend\View\Model\ViewModel;
 use Centro\Model\Data\Canal;
 use Centro\Form\CanalForm;
 use Centro\Util\CatalogoValor as Catalogo;
+use Centro\Util\XmlGenerator;
 
 class CanalController extends AbstractActionController {
 
@@ -121,7 +122,15 @@ class CanalController extends AbstractActionController {
             if ($form->isValid()){
                 $canal->exchangeArray($form->getData());
                 $this->getCanalTable()->save($canal);
-
+                
+                // actualizacion del config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
+                // aqui llamada al filemanager
+                
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Canal agregado satisfactoriamente');
                 // Redireccionar a la lista de canales
                 return $this->redirect()->toRoute('canal', array(
                             'action' => 'listar',
@@ -171,10 +180,17 @@ class CanalController extends AbstractActionController {
             if ($form->isValid()) {
                 $this->getCanalTable()->save($canal);
 
-                 return $this->redirect()->toRoute('canal', array(
+                // actualizacion del config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Canal editado satisfactoriamente');
+                // redirigir a la lista de canales del centro
+                return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar',
                         'id'=>$canal->centro_id,
-                 ));
+                ));
             }
         }
 
@@ -182,4 +198,53 @@ class CanalController extends AbstractActionController {
             'form' => $form, 'canal' => $canal, 'centro' => $centro 
         );
     }
+    
+    public function deleteAction(){
+        $canal_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$canal_id) {
+            return $this->redirect()->toRoute('canal', array(
+                        'action' => 'listar',
+                        'id' => 'x'
+            ));
+        }
+        
+        try {
+            $canal = $this->getCanalTable()->get($canal_id);
+            $centro = $this->getCentroTable()->get($canal->centro_id);
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('canal', array(
+                        'action' => 'listar'
+            ));
+        }
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $del = $request->getPost('del', 'No');
+            
+            if($del == 'Si'){
+                $id = (int) $request->getPost('id');
+                $this->getCanalTable()->delete($id);
+                
+                // actualizacion del config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+                // aqui llamada al filemanager
+                
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Canal eliminado satisfactoriamente');
+            }
+            
+            // redirigir a la lista de canalis del centro
+            return $this->redirect()->toRoute('canal', array('action' => 'listar', 'id' => $centro->id));
+        }
+
+        return array(
+            'id' => $canal_id, 
+            'canal' => $canal, 
+            'centro' => $centro 
+        );
+    }
+    
 }
