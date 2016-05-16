@@ -1,0 +1,29 @@
+<?php
+
+ $title = 'Eliminar Contacto - ' . $centro->siglas;
+ $this->headTitle($title);
+ ?>
+
+ <div class='panel panel-danger'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
+
+ <p>¿Esta seguro que desea eliminar al Contacto
+     <strong>'<?php echo $this->escapeHtml($contacto->nombre); ?>'</strong>, email 
+     <strong>'<?php echo $this->escapeHtml($contacto->email); ?>'</strong>?
+ </p>
+ <?php
+ $url = $this->url('contacto', array(
+     'action' => 'delete',
+     'id'     => $this->id,
+ ));
+ ?>
+ <form action="<?php echo $url; ?>" method="post">
+ <div>
+     <input type="hidden" name="id" value="<?php echo (int) $contacto->id; ?>" />
+     <input class="btn btn-success btn-lg" type="submit" name="del" value="Si" />
+     <input class="btn btn-danger btn-lg" type="submit" name="del" value="No" />
+ </div>
+ </form>

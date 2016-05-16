@@ -31,7 +31,11 @@ use Zend\Form\Form;
              'name' => 'nombre',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'nombre',
+                 'label' => 'Nombre',
+             ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese nombre',
+                 'class' => 'form-control',
              ),
          ));
 
@@ -41,12 +45,20 @@ use Zend\Form\Form;
              'options' => array(
                  'label' => 'Email',
              ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese email',
+                 'class' => 'form-control',
+             ),
          ));
          $this->add(array(
              'name' => 'telefono',
              'type' => 'Text',
              'options' => array(
                  'label' => 'Telefono',
+             ),
+             'attributes' => array(
+                 'placeholder' => '000-00000000',
+                 'class' => 'form-control',
              ),
          ));
          
@@ -55,6 +67,10 @@ use Zend\Form\Form;
              'type' => 'Text',
              'options' => array(
                  'label' => 'Puesto',
+             ),
+             'attributes' => array(
+                 'placeholder' => 'Ingrese puesto',
+                 'class' => 'form-control',
              ),
          ));
 

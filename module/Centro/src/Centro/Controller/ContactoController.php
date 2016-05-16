@@ -13,6 +13,7 @@ use Zend\View\Model\ViewModel;
 
 use Centro\Model\Data\Contacto;
 use Centro\Form\ContactoForm;
+use Centro\Util\XmlGenerator;
 
 
 
@@ -91,7 +92,13 @@ class ContactoController extends AbstractActionController {
                 $contacto->exchangeArray($form->getData());
                 $this->getContactoTable()->save($contacto);
 
-                // Redireccionar a la lista de canales
+                // actualizacion del config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Contacto agregado satisfactoriamente');
+                // redireccion a lista de contactos del centro
                 return $this->redirect()->toRoute('contacto', array(
                             'action' => 'listar',
                             'id' => $centro_id,
@@ -137,16 +144,70 @@ class ContactoController extends AbstractActionController {
             if ($form->isValid()) {
                 $this->getContactoTable()->save($contacto);
 
-                 return $this->redirect()->toRoute('contacto', array(
+                // actualizacion del config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Contacto editado satisfactoriamente');
+                // redireccion a lista de contactos del centro
+                return $this->redirect()->toRoute('contacto', array(
                         'action' => 'listar',
                         'id'=>$contacto->centro_id,
-                 ));
+                ));
             }
         }
 
         return array(
             'form' => $form, 'contacto' => $contacto, 'centro' => $centro 
         );
+    }
+    
+    public function deleteAction() {
+        $contacto_id = (int) $this->params()->fromRoute('id', 0);
+        if (!$contacto_id) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id' => 'x'
+            ));
+        }
+        
+        try {
+            $contacto = $this->getContactoTable()->get($contacto_id);
+            $centro = $this->getCentroTable()->get($contacto->centro_id);
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar'
+            ));
+        }
+        
+        $request = $this->getRequest();
+        if($request->isPost()){
+            $del = $request->getPost('del', 'No');
+            
+            if($del == 'Si'){
+                $id = (int) $request->getPost('id');
+                $this->getContactoTable()->delete($id);
+                
+                // actualizacion del config centros.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Contacto eliminado satisfactoriamente');
+            }
+            
+            // redireccion a lista de contactos del centro
+            return $this->redirect()->toRoute('contacto', array('action' => 'listar', 'id' => $centro->id ));
+        }
+        
+        return array(
+            'id' => $contacto_id,
+            'contacto' => $contacto,
+            'centro' => $centro
+        );
+        
     }
 
 }

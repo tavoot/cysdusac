@@ -12,6 +12,7 @@ namespace Centro\Model\Data;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Validator\NotEmpty;
 
 
 class Contacto
@@ -59,6 +60,14 @@ class Contacto
                     array('name' => 'Int'),
                 ),
             ));
+            
+            $inputFilter->add(array(
+                'name' => 'centro_id',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'Int'),
+                ),
+            ));
 
             $inputFilter->add(array(
                 'name' => 'nombre',
@@ -69,16 +78,110 @@ class Contacto
                 ),
                 'validators' => array(
                     array(
-                        'name' => 'StringLength',
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name'    => 'StringLength',
                         'options' => array(
                             'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 100,
+                            'min'      => 1,
+                            'max'      => 75,
+                            'setMessages' => array(
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
                         ),
+                        'break_chain_on_failure' => true,
                     ),
-                ),
+                 ),
             ));
 
+            $inputFilter->add(array(
+                'name' => 'email',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name' => 'EmailAddress',
+                        'options' => array(
+                            'message' => 'Direccion de email no valida',
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 50,
+                            'setMessages' => array(
+                                'stringLengthTooLong' => 'La cadena del correo ingresada es mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                 ),
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'telefono',
+                'required' => false,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern' => '/[0-9]{3}-[0-9]{8}/',
+                            'message' => 'Formato no valido, necesita codigo de area (3 digitos) y el numero (8 digitos)',
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                 ),
+            ));
+            
+            $inputFilter->add(array(
+                'name' => 'puesto',
+                'required' => false,
+                'filters' => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 45,
+                            'setMessages' => array(
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                 ),
+            ));
+            
             $this->inputFilter = $inputFilter;
         }
         return $this->inputFilter;
