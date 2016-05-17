@@ -23,6 +23,7 @@ use Zend\Validator\File\IsImage;
 use Zend\Validator\File\ImageSize;
 use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Model\Data\Canal;
+use Centro\Model\Data\Cambio;
 
 class CentroController extends AbstractActionController {
 
@@ -33,6 +34,7 @@ class CentroController extends AbstractActionController {
     protected $canalTable;
     protected $usuario;
     protected $usuariocentroTable;
+    protected $cambioTable;
     
 
     public function indexAction() {
@@ -97,6 +99,14 @@ class CentroController extends AbstractActionController {
         }
         return $this->canalTable;
     }
+    
+    public function getCambioTable() {
+        if (!$this->cambioTable) {
+            $sm = $this->getServiceLocator();
+            $this->cambioTable = $sm->get('Centro\Model\Logic\CambioTable');
+        }
+        return $this->cambioTable;
+    }
 
     public function addAction() {
         $form = new CentroForm();
@@ -123,6 +133,9 @@ class CentroController extends AbstractActionController {
                 // 2. actualizamos el config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
+                
+                
                 // 3. asociacion del centro con el usuario
                 $datosUsuario = Session::getUsuario($this->getServiceLocator());
                 $usuarioCentro = new UsuarioCentro();
@@ -133,6 +146,10 @@ class CentroController extends AbstractActionController {
                 $canal = new Canal();
                 $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0));
                 $this->getCanalTable()->save($canal);
+                
+                // 5. Agrego el nuevo cambio que sufre el sistema a la base de datos
+                 $this->registrarCambio(Catalogo::AGREGAR_CENTRO, $id);
+                
                 
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
@@ -177,6 +194,9 @@ class CentroController extends AbstractActionController {
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
+                // registro en el sistema que ha habido un cambio en la informacion general del centro
+                $this->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $id);
+                 
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro editado satisfactoriamente');
                 // Redirect to list of albums
@@ -189,6 +209,8 @@ class CentroController extends AbstractActionController {
             'form' => $form,
         );
     }
+    
+    
 
     public function deleteAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
@@ -211,6 +233,9 @@ class CentroController extends AbstractActionController {
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
+                // agregamos un registro de cambios al sistema con la opcion de eliminar
+                $this->registrarCambio(Catalogo::ELIMINAR_CENTRO, $id);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro eliminado satisfactoriamente');
             }
@@ -223,6 +248,12 @@ class CentroController extends AbstractActionController {
             'id' => $id,
             'centro' => $this->getCentroTable()->get($id)
         );
+    }
+    
+    private function registrarCambio($valor, $centro_id){
+        $cambio = new Cambio();
+        $cambio->exchangeArray(array('tipo'=> $valor,  'centro_id'=>$centro_id));
+        $this->getCambioTable()->save($cambio);
     }
     
     public function relacigerAction(){
@@ -330,6 +361,9 @@ class CentroController extends AbstractActionController {
                     $writer = new XmlGenerator($this->getServiceLocator());
                     $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                     
+                    // registro en el sistema, que ha habudo un cambio de imagen
+                    $this->registrarCambio(Catalogo::CAMBIO_DE_IMAGEN_CENTRO, $id);
+                    
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Imagen de centro cargada con exito');
                     // redireccion a info del centro
@@ -347,6 +381,13 @@ class CentroController extends AbstractActionController {
             'centro'    => $centro,
             'contactos' => $contactos,
         );
+    }
+    
+    public function soporteAction(){
+        $writer = new XmlGenerator($this->getServiceLocator());
+        $writer->writeXmlConfig(XmlGenerator::CONFIG_CONTROL);
+        
+        
     }
 
 }

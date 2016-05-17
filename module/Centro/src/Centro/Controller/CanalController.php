@@ -227,17 +227,11 @@ class CanalController extends AbstractActionController {
                 $canal_actual = $this->getCanalTable()->get($id);
                 
                  //actualizar los indices de la secuencia para los demas valores
-                $canales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
-                foreach($canales as $canal){
-                    if($canal_actual->secuencia < $canal->secuencia){
-                        $canal->secuencia = (int) $canal->secuencia - 1;
-                        $this->getCanalTable()->save($canal);
-                    }
-                }
+                $this->updateSecuencia($canal_actual);
                 
+                //elimina un canal de la base de datos
                 $this->getCanalTable()->delete($id);
                 
-               
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
@@ -259,4 +253,14 @@ class CanalController extends AbstractActionController {
         );
     }
     
+}
+
+function updateSecuencia($canal_actual) {
+    $listacanales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
+    foreach ($listacanales as $canal) {
+        if ($canal_actual->secuencia < $canal->secuencia) {
+            $canal->secuencia = (int) $canal->secuencia - 1;
+            $this->getCanalTable()->save($canal);
+        }
+    }
 }

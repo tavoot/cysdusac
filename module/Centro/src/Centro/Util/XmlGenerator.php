@@ -103,10 +103,25 @@ class XmlGenerator {
                 $writer->openURI($this->pathConfig.'control.xml');
                 $writer->startDocument('1.0','UTF-8');
                 $writer->setIndent(true);
-                $writer->setIndentString('   ');
+                 $writer->setIndentString('   ');
                 
+                // obtengo la lista de cambios
+                $cambioTable = $this->serviceManager->get('Centro\Model\Logic\cambioTable');
+                $listaCambios = $cambioTable->fetchAll();
                 
+                $writer->startElement('log'); //<principal>
+                foreach($listaCambios as $cambio){
+                    $writer->startElement('cambio');
+                    $writer->writeElement('tipo', $cambio->tipo);
+                    $writer->writeElement('id', $cambio->centro_id);
+                   $writer->endElement();
+                }
+                
+                $writer->endElement(); //</principal>
+                $writer->endDocument();
+                $writer->flush();
                 break;
+                
             case self::CONFIG_CENTROS:
                 $writer->openURI($this->pathConfig.'centros.xml');
                 $writer->startDocument('1.0','UTF-8');
