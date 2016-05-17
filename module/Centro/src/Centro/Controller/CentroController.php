@@ -21,7 +21,8 @@ use Zend\File\Transfer\Adapter\Http;
 use Zend\Validator\File\Extension;
 use Zend\Validator\File\IsImage;
 use Zend\Validator\File\ImageSize;
-
+use Centro\Util\CatalogoValor as Catalogo;
+use Centro\Model\Data\Canal;
 
 class CentroController extends AbstractActionController {
 
@@ -29,7 +30,9 @@ class CentroController extends AbstractActionController {
     
     protected $contactoTable;
     protected $centroTable;
+    protected $canalTable;
     protected $usuario;
+    protected $usuariocentroTable;
     
 
     public function indexAction() {
@@ -86,6 +89,14 @@ class CentroController extends AbstractActionController {
         }
         return $this->contactoTable;
     }
+    
+    public function getCanalTable() {
+        if (!$this->canalTable) {
+            $sm = $this->getServiceLocator();
+            $this->canalTable = $sm->get('Centro\Model\Logic\CanalTable');
+        }
+        return $this->canalTable;
+    }
 
     public function addAction() {
         $form = new CentroForm();
@@ -117,6 +128,11 @@ class CentroController extends AbstractActionController {
                 $usuarioCentro = new UsuarioCentro();
                 $usuarioCentro->exchangeArray(array('usuario_id' => $datosUsuario->id, 'centro_id' => $id));
                 $this->getUsuarioCentroTable()->save($usuarioCentro);
+                
+                // 4.Al nuevo centro creado le agrego su respectivo canal interno
+                $canal = new Canal();
+                $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0));
+                $this->getCanalTable()->save($canal);
                 
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');

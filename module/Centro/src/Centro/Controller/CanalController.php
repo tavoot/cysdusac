@@ -47,7 +47,7 @@ class CanalController extends AbstractActionController {
     
      public function listarAction() {
         //verifica si es un request para eliminar canales
-        $request = $this->getRequest();
+        /*$request = $this->getRequest();
         if ($request->isPost()){
             $canal_id = $this->params()->fromPost('canal');
             $canal_actual = $this->getCanalTable()->get($canal_id);
@@ -70,7 +70,7 @@ class CanalController extends AbstractActionController {
                         'action' => 'listar',
                         'id' => $canal_actual->centro_id,
             ));
-        }
+        }*/
         
         
         $centro_id = (int) $this->params()->fromRoute('id', 0);
@@ -224,8 +224,20 @@ class CanalController extends AbstractActionController {
             
             if($del == 'Si'){
                 $id = (int) $request->getPost('id');
+                $canal_actual = $this->getCanalTable()->get($id);
+                
+                 //actualizar los indices de la secuencia para los demas valores
+                $canales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
+                foreach($canales as $canal){
+                    if($canal_actual->secuencia < $canal->secuencia){
+                        $canal->secuencia = (int) $canal->secuencia - 1;
+                        $this->getCanalTable()->save($canal);
+                    }
+                }
+                
                 $this->getCanalTable()->delete($id);
                 
+               
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
