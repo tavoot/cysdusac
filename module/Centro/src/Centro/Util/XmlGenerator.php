@@ -106,7 +106,7 @@ class XmlGenerator {
                  $writer->setIndentString('   ');
                 
                 // obtengo la lista de cambios
-                $cambioTable = $this->serviceManager->get('Centro\Model\Logic\cambioTable');
+                $cambioTable = $this->serviceManager->get('Centro\Model\Logic\CambioTable');
                 $listaCambios = $cambioTable->fetchAll();
                 
                 $writer->startElement('log'); //<principal>

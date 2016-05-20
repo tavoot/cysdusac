@@ -5,6 +5,8 @@ namespace Centro\Util;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Db\TableGateway\TableGateway;
 
+
+
 class TableProvider {
 
     const CAMBIO_TABLE = 'Centro\Model\Logic\CambioTable';
@@ -57,5 +59,9 @@ class TableProvider {
     public function getServiceManager(){
         return $this->sm;
     }
+    
+    
+    
+    
 
 }

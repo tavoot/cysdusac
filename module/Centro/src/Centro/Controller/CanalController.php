@@ -12,8 +12,9 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Centro\Model\Data\Canal;
 use Centro\Form\CanalForm;
-use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Util\XmlGenerator;
+use Centro\Util\CatalogoValor as Catalogo;
+use Centro\Util\UtilSistema as Log;
 
 class CanalController extends AbstractActionController {
 
@@ -27,15 +28,14 @@ class CanalController extends AbstractActionController {
         ));
     }
 
-     public function getCentroTable() {
+    public function getCentroTable() {
         if (!$this->centroTable) {
             $sm = $this->getServiceLocator();
             $this->centroTable = $sm->get('Centro\Model\Logic\CentroTable');
         }
         return $this->centroTable;
     }
-    
-   
+
     public function getCanalTable() {
         if (!$this->canalTable) {
             $sm = $this->getServiceLocator();
@@ -43,64 +43,34 @@ class CanalController extends AbstractActionController {
         }
         return $this->canalTable;
     }
-    
-    
-     public function listarAction() {
-        //verifica si es un request para eliminar canales
-        /*$request = $this->getRequest();
-        if ($request->isPost()){
-            $canal_id = $this->params()->fromPost('canal');
-            $canal_actual = $this->getCanalTable()->get($canal_id);
-            
-            
-            //actualizar los indices de la secuencia para los demas valores
-            $canales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
-            foreach($canales as $canal){
-                if($canal_actual->secuencia < $canal->secuencia){
-                    $canal->secuencia = (int) $canal->secuencia - 1;
-                    $this->getCanalTable()->save($canal);
-                }
-            }
 
-            //elimina un canal de la base de datos
-            $this->getCanalTable()->delete($canal_id);
-            
+    public function listarAction() {
 
-            return $this->redirect()->toRoute('canal', array(
-                        'action' => 'listar',
-                        'id' => $canal_actual->centro_id,
-            ));
-        }*/
-        
-        
         $centro_id = (int) $this->params()->fromRoute('id', 0);
         if (!$centro_id) {
             return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar',
-                        'id'=>'x'
+                        'id' => 'x'
             ));
         }
-        
 
-        try { 
+
+        try {
             //variable global
-            $canales= $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
-            $centro=$this->getCentroTable()->get($centro_id);
-            
+            $canales = $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
+            $centro = $this->getCentroTable()->get($centro_id);
+
             return new ViewModel(array(
-                'canales'=>$canales,  'centro'=>$centro,
+                'canales' => $canales, 'centro' => $centro,
             ));
-            
         } catch (\Exception $ex) {
             return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar',
-                        'id'=>$canal_id,
+                        'id' => $canal_id,
             ));
         }
     }
-    
 
- 
     public function addAction() {
         $centro_id = (int) $this->params()->fromRoute('id', 0);
         if (!$centro_id) {
@@ -113,22 +83,29 @@ class CanalController extends AbstractActionController {
         $form = new CanalForm();
         $form->get('submit')->setValue('Agregar');
         $request = $this->getRequest();
-        
+
         if ($request->isPost()) {
-            $canal= new Canal();
+            $canal = new Canal();
             $form->setInputFilter($canal->getInputFilter());
             $form->setData($request->getPost());
 
-            if ($form->isValid()){
+            if ($form->isValid()) {
+                //si es valido el formulario, obtengo el numero de canales
+                $canales = $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
+                $secuencia = (int) sizeof($canales) + 1;
+
                 $canal->exchangeArray($form->getData());
+                $canal->secuencia = $secuencia;
                 $this->getCanalTable()->save($canal);
-                
+
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
-                // aqui llamada al filemanager
-                
+
+                //registrar cambio en el sistema cuando se agrega un canal al centro
+                $log = new Log($this->getServiceLocator());
+                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro_id);
+
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Canal agregado satisfactoriamente');
                 // Redireccionar a la lista de canales
@@ -139,16 +116,14 @@ class CanalController extends AbstractActionController {
             }
         }
 
-        $canales= $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
-        $secuencia = (int) sizeof($canales) +  1;
-        
+
+
         $centro = $this->getCentroTable()->get($centro_id);
         return array(
-            'form' => $form, 'centro' => $centro, 'secuencia'=>$secuencia
+            'form' => $form, 'centro' => $centro,
         );
     }
-    
-    
+
     public function editAction() {
         $canal_id = (int) $this->params()->fromRoute('id', 0);
         if (!$canal_id) {
@@ -157,11 +132,10 @@ class CanalController extends AbstractActionController {
                         'id' => 'x'
             ));
         }
-        
+
         try {
             $canal = $this->getCanalTable()->get($canal_id);
             $centro = $this->getCentroTable()->get($canal->centro_id);
-            
         } catch (\Exception $ex) {
             return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar'
@@ -183,23 +157,37 @@ class CanalController extends AbstractActionController {
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
+
+                //registrar cambio en el sistema cuando se edita un canal al centro
+                $log = new Log($this->getServiceLocator());
+                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
+
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Canal editado satisfactoriamente');
-                // redirigir a la lista de canales del centro
-                return $this->redirect()->toRoute('canal', array(
-                        'action' => 'listar',
-                        'id'=>$canal->centro_id,
-                ));
+
+
+                if ($canal->tipo == Catalogo::EXTERNO) {
+                    //redirigir a la lista de canales del centro
+                    return $this->redirect()->toRoute('canal', array(
+                                'action' => 'listar',
+                                'id' => $centro->id,
+                    ));
+                } else if ($canal->tipo == Catalogo::INTERNO) {
+                    //redirigir a la lista de items con el id del canal
+                    return $this->redirect()->toRoute('item', array(
+                                'action' => 'listar',
+                                'id' => $canal->id,
+                    ));
+                }
             }
         }
 
         return array(
-            'form' => $form, 'canal' => $canal, 'centro' => $centro 
+            'form' => $form, 'canal' => $canal, 'centro' => $centro
         );
     }
-    
-    public function deleteAction(){
+
+    public function deleteAction() {
         $canal_id = (int) $this->params()->fromRoute('id', 0);
         if (!$canal_id) {
             return $this->redirect()->toRoute('canal', array(
@@ -207,11 +195,10 @@ class CanalController extends AbstractActionController {
                         'id' => 'x'
             ));
         }
-        
+
         try {
             $canal = $this->getCanalTable()->get($canal_id);
             $centro = $this->getCentroTable()->get($canal->centro_id);
-            
         } catch (\Exception $ex) {
             return $this->redirect()->toRoute('canal', array(
                         'action' => 'listar'
@@ -221,46 +208,48 @@ class CanalController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $del = $request->getPost('del', 'No');
-            
-            if($del == 'Si'){
+
+            if ($del == 'Si') {
                 $id = (int) $request->getPost('id');
                 $canal_actual = $this->getCanalTable()->get($id);
-                
-                 //actualizar los indices de la secuencia para los demas valores
+
+                //actualizar los indices de la secuencia para los demas valores
                 $this->updateSecuencia($canal_actual);
-                
+
                 //elimina un canal de la base de datos
                 $this->getCanalTable()->delete($id);
-                
+
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
 
-                // aqui llamada al filemanager
-                
+                //registrar cambio en el sistema cuando se edita un canal al centro
+                $log = new Log($this->getServiceLocator());
+                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
+
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Canal eliminado satisfactoriamente');
             }
-            
+
             // redirigir a la lista de canalis del centro
             return $this->redirect()->toRoute('canal', array('action' => 'listar', 'id' => $centro->id));
         }
 
         return array(
-            'id' => $canal_id, 
-            'canal' => $canal, 
-            'centro' => $centro 
+            'id' => $canal_id,
+            'canal' => $canal,
+            'centro' => $centro
         );
     }
-    
-}
 
-function updateSecuencia($canal_actual) {
-    $listacanales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
-    foreach ($listacanales as $canal) {
-        if ($canal_actual->secuencia < $canal->secuencia) {
-            $canal->secuencia = (int) $canal->secuencia - 1;
-            $this->getCanalTable()->save($canal);
+    private function updateSecuencia($canal_actual) {
+        $listacanales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
+        foreach ($listacanales as $canal) {
+            if ($canal_actual->secuencia < $canal->secuencia) {
+                $canal->secuencia = (int) $canal->secuencia - 1;
+                $this->getCanalTable()->save($canal);
+            }
         }
     }
+
 }

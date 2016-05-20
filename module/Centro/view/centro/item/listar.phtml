@@ -32,14 +32,8 @@
      <td><?php echo $this->escapeHtml($item->enlace);?></td>
      <td><?php echo $this->escapeHtml($item->fecha_publicacion);?></td>
      <td>
-         
-         <a class="btn btn-lg btn-warning" href="<?php echo $this->url('item',
-             array('action'=>'edit', 'id' => $item->id));?>">Editar</a>
-         
-         <form method="POST" action=" <?php echo $this->url('item',array('action'=>'listar')); ?> ">
-             <input type="hidden" name= 'item' value="<?php echo $item->id; ?>" />
-             <input class="btn btn-lg btn-danger" type='submit' value='Eliminar' />
-         </form>
+         <a class="btn btn-lg btn-warning" href="<?php echo $this->url('item',array('action'=>'edit', 'id' => $item->id));?>">Editar</a>
+         <a class="btn btn-lg btn-danger" href="<?php echo $this->url('item',array('action'=>'delete', 'id' => $item->id));?>">Eliminar</a>
      </td>
  </tr>
  <?php endforeach; ?>
