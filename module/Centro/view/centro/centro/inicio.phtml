@@ -1,14 +1,18 @@
 <?php
- use Zend\Mvc\Controller\Plugin\FlashMessenger;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
  
- $title = 'RELACIGER';
- $this->headTitle($title);
- ?>
- 
- <?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, array('alert','alert-success')); ?>
+$title = 'RELACIGER';
+$this->headTitle($title);
 
- <div class='panel panel-primary'>
-    <div class='panel-heading'>
-        <h1>Gestor de Centros - RELACIGER</h1>
-    </div>
- </div>
+?>
+ 
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, array('alert','alert-success')); ?>
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('alert','alert-danger')); ?>
+
+ <div class='jumbotron'>
+    <h2>Gestor de canales RSS - RELACIGER</h2>
+    <p>
+        Sistema de gesti&oacute;n de canales RSS de noticias de los centros de la 
+        Red Latinoamericana de Centros de Informaci&oacute;n en Gesti&oacute;n del Riesgo de Desastres
+    </p>
+</div>
