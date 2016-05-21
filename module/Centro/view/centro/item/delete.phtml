@@ -1,0 +1,28 @@
+<?php
+$title = $canal->titulo . " - " . $centro->siglas;
+$this->headTitle($title);
+?>
+
+<div class='panel panel-danger'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+</div>
+
+<p>¿Esta seguro que desea eliminar esta noticia con el titulo
+    <strong>'<?php echo $this->escapeHtml($item->titulo); ?>'</strong>, y enlace 
+    <strong>'<?php echo $this->escapeHtml($item->enlace); ?>'</strong>?
+</p>
+<?php
+$url = $this->url('item', array(
+    'action' => 'delete',
+    'id' => $item->id,
+        ));
+?>
+<form action="<?php echo $url; ?>" method="post">
+    <div>
+        <input type="hidden" name="id" value="<?php echo (int) $item->id; ?>" />
+        <input class="btn btn-success btn-lg" type="submit" name="del" value="Si" />
+        <input class="btn btn-danger btn-lg" type="submit" name="del" value="No" />
+    </div>
+</form>

@@ -15,6 +15,10 @@ use Centro\Model\Data\Item;
 use Centro\Model\Logic\ItemTable;
 use Centro\Model\Data\UsuarioCentro;
 use Centro\Model\Logic\UsuarioCentroTable;
+use Centro\Model\Data\Cambio;
+use Centro\Model\Logic\CambioTable;
+use Centro\Model\Data\Version;
+use Centro\Model\Logic\VersionTable;
 
 use Centro\Model\Data\CatalogoTipo;
 use Centro\Model\Logic\CatalogoTipoTable;
@@ -140,6 +144,34 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new UsuarioCentro());
                     return new TableGateway('usuario_centro', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
+                  /*Cambio*/
+                'Centro\Model\Logic\CambioTable' => function($sm) {
+                    $tableGateway = $sm->get('CambioTableGateway');
+                    $table = new CambioTable($tableGateway);
+                    return $table;
+                },
+                        
+                'CambioTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Cambio());
+                    return new TableGateway('cambio', $dbAdapter, null, $resultSetPrototype);
+                },
+                        
+                /*version*/
+                'Centro\Model\Logic\VersionTable' => function($sm) {
+                    $tableGateway = $sm->get('VersionTableGateway');
+                    $table = new VersionTable($tableGateway);
+                    return $table;
+                },
+                        
+                'VersionTableGateway' => function ($sm) {
+                    $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Version());
+                    return new TableGateway('version', $dbAdapter, null, $resultSetPrototype);
                 },
                         
                 /*CartalogoTipos*/

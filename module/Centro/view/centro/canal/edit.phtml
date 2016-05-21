@@ -41,7 +41,11 @@ $form->prepare();
                 echo $this->formElement($element->setValue($canal->secuencia));
                 break;
             case 'tipo':
-                echo $this->formElement($element->setValue(Catalogo::EXTERNO));
+                if($canal->secuencia==0){
+                    echo $this->formElement($element->setValue(Catalogo::INTERNO));
+                }else{
+                    echo $this->formElement($element->setValue(Catalogo::EXTERNO));
+                }
                 break;
             default:
                 echo $this->formElement($element->setValue($canal->id));

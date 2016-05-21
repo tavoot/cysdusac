@@ -43,8 +43,7 @@ class VersionTable{
         
         $data = array(
             'fecha'=>$version->fecha,
-            'version'=>$version->version, 
-            'centro_id'=>$version->centro_id);
+            'version'=>$version->version);
 
          $id = (int) $version->id;
          if ($id == 0) {

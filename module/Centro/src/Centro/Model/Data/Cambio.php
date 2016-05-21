@@ -12,12 +12,14 @@ class Cambio
 {
      public $id;
      public $tipo;
-     public $version_id;
+     public $fecha;
+     public $centro_id;
 
      public function exchangeArray($data)
      {
-         $this->id     = (!empty($data['id'])) ? $data['id'] : null;
+         $this->id    = (!empty($data['id'])) ? $data['id'] : null;
          $this->tipo  = (!empty($data['tipo'])) ? $data['tipo'] : null;
-         $this->version_id  = (!empty($data['version_id'])) ? $data['version_id'] : null;
+         $this->fecha = (!empty($data['fecha'])) ? $data['fecha'] : null;
+         $this->centro_id  = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
      }
  }

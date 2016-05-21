@@ -41,8 +41,8 @@ class CambioTable{
     {
         
         $data = array(
-            'tipo'=>$cambio->fecha,
-            'version_id'=>$cambio->version_id);
+            'tipo'=>$cambio->tipo,
+            'centro_id'=>$cambio->centro_id);
 
          $id = (int) $cambio->id;
          if ($id == 0) {

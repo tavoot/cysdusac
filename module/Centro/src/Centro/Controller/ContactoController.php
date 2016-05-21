@@ -10,11 +10,11 @@ namespace Centro\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-
 use Centro\Model\Data\Contacto;
 use Centro\Form\ContactoForm;
 use Centro\Util\XmlGenerator;
-
+use Centro\Util\CatalogoValor as Catalogo;
+use Centro\Util\UtilSistema as Log;
 
 
 class ContactoController extends AbstractActionController {
@@ -96,6 +96,10 @@ class ContactoController extends AbstractActionController {
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
+                // registro en el sistema que ha agregado un contacto para el centro
+                $log = new Log($this->getServiceLocator());
+                $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro_id);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Contacto agregado satisfactoriamente');
                 // redireccion a lista de contactos del centro
@@ -148,6 +152,10 @@ class ContactoController extends AbstractActionController {
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
+                // registro en el sistema que ha actualizado un contacto para el centro
+                $log = new Log($this->getServiceLocator());
+                $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro->id);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Contacto editado satisfactoriamente');
                 // redireccion a lista de contactos del centro
@@ -193,6 +201,10 @@ class ContactoController extends AbstractActionController {
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                
+                // registro en el sistema que ha removido un contacto para el centro
+                $log = new Log($this->getServiceLocator());
+                $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro->id);
 
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Contacto eliminado satisfactoriamente');
