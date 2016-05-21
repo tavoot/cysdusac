@@ -116,7 +116,7 @@ class UsuarioCentroController extends AbstractActionController {
         if ($request->isPost()) {
             $usuariocentro = $this->getUsuarioCentroTable()->get($id);
             $del = $request->getPost('del', 'No');
-            if ($del == 'Yes'){
+            if ($del == 'Si'){
                 $id = (int) $request->getPost('id');
                 $this->getUsuarioCentroTable()->delete($id);
             }

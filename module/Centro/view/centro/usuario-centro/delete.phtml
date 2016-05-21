@@ -3,7 +3,11 @@
  $title = 'Eliminar Asignacion de Usuario';
  $this->headTitle($title);
  ?>
- <h1><?php echo $this->escapeHtml($title); ?></h1>
+ <div class='panel panel-danger'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
 
  <p>Esta seguro de que desea eliminar la asignacion del usuario?
      <strong> '<?php echo $this->escapeHtml($usuariocentro->usuario_valor); ?>' </strong> con el centro 
@@ -19,7 +23,7 @@
  <div>
      <input type="hidden" name="centro_id" value="<?php echo (int)$usuariocentro->centro_id; ?>" />
      <input type="hidden" name="id" value="<?php echo (int)$usuariocentro->id; ?>" />
-     <input class="btn btn-lg btn-success" type="submit" name="del" value="Yes" />
+     <input class="btn btn-lg btn-success" type="submit" name="del" value="Si" />
      <input class="btn btn-lg btn-danger" type="submit" name="del" value="No" />
  </div>
  </form>
