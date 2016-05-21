@@ -76,7 +76,7 @@ class AccesoController extends AbstractActionController {
                     
                     $this->flashMessenger()->addSuccessMessage('Bienvenido al sistema');
 
-                    return $this->redirect()->toRoute('centro');
+                    return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
                 } else {
                     $this->flashMessenger()->addErrorMessage('Usuario/Password ingresado es incorrecto');
                     return $this->redirect()->toRoute('acceso/default', array('action' => 'login'));

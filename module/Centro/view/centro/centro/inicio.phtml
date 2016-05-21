@@ -1,0 +1,14 @@
+<?php
+ use Zend\Mvc\Controller\Plugin\FlashMessenger;
+ 
+ $title = 'RELACIGER';
+ $this->headTitle($title);
+ ?>
+ 
+ <?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_SUCCESS, array('alert','alert-success')); ?>
+
+ <div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h1>Gestor de Centros - RELACIGER</h1>
+    </div>
+ </div>
