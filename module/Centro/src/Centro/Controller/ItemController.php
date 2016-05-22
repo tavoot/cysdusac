@@ -57,8 +57,8 @@ class ItemController extends AbstractActionController {
     public function listarAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
-            return $this->redirect()->toRoute('item', array(
-                        'action' => 'listar',
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'inicio',
             ));
         }
 
@@ -74,9 +74,8 @@ class ItemController extends AbstractActionController {
                 'items' => $items, 'canal' => $this->canal, 'centro' => $this->centro
             ));
         } catch (\Exception $ex) {
-            return $this->redirect()->toRoute('item', array(
-                        'action' => 'listar',
-                        'id' => $id,
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'inicio',
             ));
         }
     }
@@ -111,7 +110,9 @@ class ItemController extends AbstractActionController {
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
-
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Nuevo item de noticia agregado satisfactoriamente');
+                
                 // Redireccionar a la lista de canales
                 return $this->redirect()->toRoute('item', array(
                             'action' => 'listar',
@@ -164,6 +165,9 @@ class ItemController extends AbstractActionController {
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Item de noticia editado satisfactoriamente');
+                
                 return $this->redirect()->toRoute('item', array(
                             'action' => 'listar',
                             'id' => $item->canal_id,
@@ -213,7 +217,7 @@ class ItemController extends AbstractActionController {
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
                 // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Noticia eliminada satisfactoriamente');
+                $this->flashMessenger()->addInfoMessage('Item de noticia eliminado satisfactoriamente');
             }
 
             // redirigir a la lista de canalis del centro

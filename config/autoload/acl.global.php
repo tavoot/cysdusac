@@ -47,6 +47,7 @@ return array(
                     'listar'    => 'estandar',
                     'add'       => 'estandar',
                     'edit'      => 'estandar',
+                    'delete'    => 'estandar',
                 ),
                 'Centro\Controller\UsuarioCentro' => array(
                     'find'      => 'administrador',

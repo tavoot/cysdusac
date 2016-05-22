@@ -49,7 +49,12 @@ class Module{
             }
             
             if(!$acl->isAllowed($rol, $controller, $action)) {
-                $url = $e->getRouter()->assemble(array('action' => 'inicio'), array('name' => 'centro'));
+                if(!$auth->hasIdentity()) {
+                    $url = $e->getRouter()->assemble(array(), array('name' => 'home'));
+                } else {
+                    $url = $e->getRouter()->assemble(array('action' => 'inicio'), array('name' => 'centro'));
+                }
+                
                 $response = $e->getResponse();
                 $response->setHeaders($response->getHeaders()->addHeaderLine('Location', $url));
                 $response->setStatusCode(302);

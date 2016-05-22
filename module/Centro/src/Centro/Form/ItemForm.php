@@ -57,7 +57,7 @@ use Zend\Form\Form;
         
          $this->add(array(
              'name' => 'descripcion',
-             'type' => 'Text',
+             'type' => 'TextArea',
              'options' => array(
                  'label' => 'Descripcion',
              ),

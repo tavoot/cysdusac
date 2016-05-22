@@ -1,9 +1,12 @@
  <?php
 //"module/Centro/view/centro/centro/index.phtml"
+ use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
- $title =$canal->titulo . " - ". $centro->siglas ;
+ $title = "Canal interno - ". $centro->siglas ;
  $this->headTitle($title);
  ?>
+
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); ?>
 
 <div class='panel panel-primary'>
     <div class='panel-heading'>
@@ -13,28 +16,30 @@
 
 
  <p>
-     <a href="<?php echo $this->url('canal', array('action'=>'edit', 'id'=>$canal->id));?>">Configurar Canal Interno</a>
+     <a class="btn btn-warning" href="<?php echo $this->url('canal', array('action'=>'edit', 'id'=>$canal->id));?>">Configurar Canal Interno</a>
+     <a class="btn btn-info" href="<?php echo $this->url('item', array('action'=>'add', 'id'=>$canal->id));?>">Agregar Nuevo Item</a>
  </p>
- <p>
-     <a href="<?php echo $this->url('item', array('action'=>'add', 'id'=>$canal->id));?>">Agregar Nuevo Item</a>
- </p>
-
- <table class="table table-striped">
- <tr>
-     <th>Titulo</th>
-     <th>Enlace</th>
-     <th>Fecha de Publicacion</th>
-     <th>&nbsp;</th>
- </tr>
- <?php foreach ($items as $item) : ?>
- <tr>
-     <td><?php echo $this->escapeHtml($item->titulo);?></td>
-     <td><?php echo $this->escapeHtml($item->enlace);?></td>
-     <td><?php echo $this->escapeHtml($item->fecha_publicacion);?></td>
-     <td>
-         <a class="btn btn-lg btn-warning" href="<?php echo $this->url('item',array('action'=>'edit', 'id' => $item->id));?>">Editar</a>
-         <a class="btn btn-lg btn-danger" href="<?php echo $this->url('item',array('action'=>'delete', 'id' => $item->id));?>">Eliminar</a>
-     </td>
- </tr>
- <?php endforeach; ?>
+ 
+ <table class="table table-hover">
+     <thead>
+         <tr class="active">
+         <th>Titulo</th>
+         <th>Enlace</th>
+         <th>Fecha de Publicacion</th>
+         <th>&nbsp;</th>
+         </tr>
+     </thead>
+     <tbody>
+     <?php foreach ($items as $item) : ?>
+         <tr>
+         <td><?php echo $this->escapeHtml($item->titulo);?></td>
+         <td><?php echo $this->escapeHtml($item->enlace);?></td>
+         <td><?php echo $this->escapeHtml($item->fecha_publicacion);?></td>
+         <td>
+            <a class="btn btn-lg btn-warning" href="<?php echo $this->url('item',array('action'=>'edit', 'id' => $item->id));?>">Editar</a>
+            <a class="btn btn-lg btn-danger" href="<?php echo $this->url('item',array('action'=>'delete', 'id' => $item->id));?>">Eliminar</a>
+         </td>
+         </tr>
+     <?php endforeach; ?>
+     </tbody>
  </table>
