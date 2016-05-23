@@ -41,17 +41,14 @@ $form->prepare();
                 echo $this->formElement($element->setValue($canal->secuencia));
                 break;
             case 'tipo':
-                if($canal->secuencia==0){
-                    echo $this->formElement($element->setValue(Catalogo::INTERNO));
-                }else{
-                    echo $this->formElement($element->setValue(Catalogo::EXTERNO));
-                }
+                echo $this->formElement($element->setValue($canal->tipo));
                 break;
             default:
                 echo $this->formElement($element->setValue($canal->id));
         }
             
     } else {
+        if($canal->tipo == Catalogo::EXTERNO && ($element->getName() != 'lenguaje' && $element->getName() != 'descripcion')) {
     ?>
     <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
@@ -66,6 +63,21 @@ $form->prepare();
             }
         ?>
     </div>
+    <?php } else if($canal->tipo == Catalogo::INTERNO) { ?>
+    <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
+        <label class="control-label"><?php echo $element->getLabel() ?></label>
+        <?php
+            echo $this->formElement($element);
+            if($this->formElementErrors($element)){
+                echo $this->formElementErrors()
+                        ->setMessageOpenFormat('<p class="help-block">')
+                        ->setMessageSeparatorString('</p><p class="help-block">')
+                        ->setMessageCloseString('</p>')
+                        ->render($element);
+            }
+        ?>
+    </div>
+    <?php } ?>
     <?php } ?>
 <?php endforeach; ?>
 <?php echo $this->form()->closeTag(); ?>    

@@ -11,6 +11,7 @@ namespace Centro\Model\Data;
 use Zend\InputFilter\InputFilter;
 use Zend\InputFilter\InputFilterAwareInterface;
 use Zend\InputFilter\InputFilterInterface;
+use Zend\Validator\NotEmpty;
 
 class Item
 {
@@ -53,8 +54,101 @@ class Item
                     array('name' => 'Int'),
                 ),
             ));
-
             
+            $inputFilter->add(array(
+                'name' => 'canal_id',
+                'required' => true,
+                'filters' => array(
+                    array('name' => 'Int'),
+                ),
+            ));
+            
+            $inputFilter->add(array(
+                'name'     => 'titulo',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 200,
+                            'setMessages' => array(
+                                'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                ),
+             ));
+             
+            $inputFilter->add(array(
+                'name'     => 'enlace',
+                'required' => true,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name' => 'NotEmpty',
+                        'options' => array(
+                            'setMessages' => array(
+                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 200,
+                            'setMessages' => array(
+                                'stringLengthTooLong' => 'Cadena de caracteres mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                ),
+            ));
+            
+            $inputFilter->add(array(
+                'name'     => 'descripcion',
+                'required' => false,
+                'filters'  => array(
+                    array('name' => 'StripTags'),
+                    array('name' => 'StringTrim'),
+                ),
+                'validators' => array(
+                    array(
+                        'name'    => 'StringLength',
+                        'options' => array(
+                            'encoding' => 'UTF-8',
+                            'min'      => 1,
+                            'max'      => 500,
+                            'setMessages' => array(
+                                'stringLengthTooLong' => 'Cadena de caracteres mayor al limite permitido',
+                            ),
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
+                ),
+            ));
 
             $this->inputFilter = $inputFilter;
         }

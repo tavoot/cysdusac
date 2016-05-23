@@ -385,4 +385,10 @@ class CentroController extends AbstractActionController {
         
     }
 
+    
+    public function inicioAction(){
+        // pantalla de inicio para ambos usuarios
+        return new ViewModel();
+    }
+    
 }

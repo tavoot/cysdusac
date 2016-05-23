@@ -25,7 +25,9 @@ $form->prepare();
     <?php 
     if($element->getName() == 'id' || 
             $element->getName() == 'centro_id' || 
-            $element->getName() == 'tipo') {
+            $element->getName() == 'tipo' ||
+            $element->getName() == 'lenguaje' ||
+            $element->getName() == 'descripcion') {
             
         switch ($element->getName()){
             case 'centro_id':
@@ -33,6 +35,9 @@ $form->prepare();
                 break;
             case 'tipo':
                 echo $this->formElement($element->setValue(Catalogo::EXTERNO));
+                break;
+            case 'lenguaje':
+            case 'descripcion':
                 break;
             default:
                 echo $this->formElement($element);

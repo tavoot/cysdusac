@@ -42,10 +42,10 @@ use Zend\Form\Form;
              'name' => 'titulo',
              'type' => 'Text',
              'options' => array(
-                 'label' => 'Nombre',
+                 'label' => 'Titulo',
              ),
              'attributes' => array(
-                 'placeholder' => 'Ingrese nombre',
+                 'placeholder' => 'Ingrese titulo',
                  'class' => 'form-control',
              ),
          ));
@@ -57,7 +57,7 @@ use Zend\Form\Form;
                  'label' => 'Enlace',
              ),
              'attributes' => array(
-                 'placeholder' => 'Ingrese enlace',
+                 'placeholder' => 'http://www.ejemplo.org',
                  'class' => 'form-control',
              ),
          ));
@@ -69,7 +69,7 @@ use Zend\Form\Form;
                  'label' => 'Lenguaje',
              ),
              'attributes' => array(
-                 'placeholder' => 'Ingrese lenguaje',
+                 'placeholder' => 'aa o aa-bb',
                  'class' => 'form-control',
              ),
          ));
