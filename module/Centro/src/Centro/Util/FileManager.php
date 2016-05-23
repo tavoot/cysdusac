@@ -75,6 +75,7 @@ class FileManager {
         touch(self::PATH_CENTROS.'relaciger/estadisticas/descripcion.php');
         touch(self::PATH_CENTROS.'relaciger/estadisticas/mision.php');
         touch(self::PATH_CENTROS.'relaciger/estadisticas/vision.php');
+        touch(self::PATH_CENTROS.'relaciger/estadisticas/contacto.php');
         // archivos de configuracion
         touch(self::PATH_CONFIG.'centros.xml');
         touch(self::PATH_CONFIG.'control.xml');
