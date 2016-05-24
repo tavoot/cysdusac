@@ -10,6 +10,7 @@ namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\Cambio;
+use \Zend\Db\Sql\Select;
 
 class CambioTable{
     
@@ -36,12 +37,24 @@ class CambioTable{
          }
          return $row;
      }
+     
+     public function getByVersion($version){
+         $select = new Select();
+         $select->from('cambio');
+         $select->where(array('version' => $version));
+         $rowset = $this->tableGateway->selectWith($select);
+         if (!$rowset) {
+             throw new \Exception("Registros no encontrados");
+         }
+         return $rowset;
+     }
+     
 
     public function save(Cambio $cambio)
     {
-        
         $data = array(
             'tipo'=>$cambio->tipo,
+            'version'=>$cambio->version,
             'centro_id'=>$cambio->centro_id);
 
          $id = (int) $cambio->id;

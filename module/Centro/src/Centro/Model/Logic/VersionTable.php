@@ -26,11 +26,21 @@ class VersionTable{
          $resultSet = $this->tableGateway->select();
          return $resultSet;
      }
+     
+     public function getLastValue(){
+         $rowset = $this->tableGateway->select()->count();
+         
+         if (!$rowset) {
+             return 0;
+             //throw new \Exception("Problemas con el ultimo registro");
+         }
+         return $rowset;
+     }
 
      public function get($id)
      {
          $id  = (int) $id;
-         $rowset = $this->tableGateway->select(array('id' => $id));
+         $rowset = $this->tableGateway->select(array('version' => $id));
          $row = $rowset->current();
          if (!$row) {
              throw new \Exception("Registro no encontrado $id");
