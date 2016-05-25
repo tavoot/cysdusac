@@ -102,7 +102,6 @@ class CentroController extends AbstractActionController {
         return $this->canalTable;
     }
     
- 
 
     public function addAction() {
         $form = new CentroForm();
@@ -382,9 +381,8 @@ class CentroController extends AbstractActionController {
     }
     
     public function soporteAction(){
-        $writer = new XmlGenerator($this->getServiceLocator());
-        $writer->writeXmlConfig(XmlGenerator::CONFIG_CONTROL);
-        
+        $log = new Log($this->getServiceLocator());
+        $log->registrarVersion();
         
     }
 

@@ -13,7 +13,9 @@ class Cambio
      public $id;
      public $tipo;
      public $fecha;
+     public $version;
      public $centro_id;
+     
 
      public function exchangeArray($data)
      {
@@ -21,5 +23,7 @@ class Cambio
          $this->tipo  = (!empty($data['tipo'])) ? $data['tipo'] : null;
          $this->fecha = (!empty($data['fecha'])) ? $data['fecha'] : null;
          $this->centro_id  = (!empty($data['centro_id'])) ? $data['centro_id'] : null;
+         $this->version = (!empty($data['version'])) ? $data['version'] : null;
+         
      }
  }

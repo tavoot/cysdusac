@@ -109,18 +109,26 @@ class XmlGenerator {
                 $writer->openURI($this->pathConfig.'control.xml');
                 $writer->startDocument('1.0','UTF-8');
                 $writer->setIndent(true);
-                 $writer->setIndentString('   ');
+                $writer->setIndentString('   ');
+                  
+                  // obtengo la clase para setear la version
+                $versionTable = $this->serviceManager->get('Centro\Model\Logic\VersionTable');
+                $version = $versionTable->get($versionTable->getLastValue());
+                
+                $writer->startElement('log'); //<principal>
+                $writer->writeElement('version', $version->version);
+                $writer->writeElement('fecha', $version->fecha);
                 
                 // obtengo la lista de cambios
                 $cambioTable = $this->serviceManager->get('Centro\Model\Logic\CambioTable');
-                $listaCambios = $cambioTable->fetchAll();
+                $listaCambios = $cambioTable->getByVersion($version->version);
+              
                 
-                $writer->startElement('log'); //<principal>
                 foreach($listaCambios as $cambio){
                     $writer->startElement('cambio');
                     $writer->writeElement('tipo', $cambio->tipo);
                     $writer->writeElement('id', $cambio->centro_id);
-                   $writer->endElement();
+                    $writer->endElement();
                 }
                 
                 $writer->endElement(); //</principal>
