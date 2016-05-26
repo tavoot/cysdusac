@@ -17,27 +17,8 @@ return array(
             'Centro\Controller\UsuarioCentro' => 'Centro\Controller\UsuarioCentroController',
             'Centro\Controller\User' => 'Centro\Controller\UserController',
             'Centro\Controller\Acceso' => 'Centro\Controller\AccesoController',
-            'Centro\Controller\Version' => 'Centro\Controller\VersionController',
-            
         ),
     ),
-    
-    'console' => array(
-        'router' => array(
-            'routes' => array(
-                'version' => array(
-                    'options' => array(
-                        'route' => 'version create [--verbose|-v]',
-                        'defaults' => array(
-                            'controller' => 'Centro\Controller\Version',
-                            'action' => 'create',
-                        ),
-                    ),
-                ),
-            )
-        )
-    ),
-    
     // The following section is new and should be added to your file
     'router' => array(
         'routes' => array(
@@ -154,21 +135,6 @@ return array(
                     ),
                     'defaults' => array(
                         'controller' => 'Centro\Controller\Usuario',
-                        'action' => 'index',
-                    ),
-                ),
-            ),
-            
-            'version' => array(
-                'type' => 'segment',
-                'options' => array(
-                    'route' => '/version[/:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id' => '[0-9]+',
-                    ),
-                    'defaults' => array(
-                        'controller' => 'Centro\Controller\Version',
                         'action' => 'index',
                     ),
                 ),

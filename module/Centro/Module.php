@@ -31,7 +31,13 @@ use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
-class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
+
+use Zend\ModuleManager\Feature\ConsoleBannerProviderInterface;
+use Zend\ModuleManager\Feature\ConsoleUsageProviderInterface;
+use Zend\Console\Adapter\AdapterInterface as Console;
+
+
+class Module implements AutoloaderProviderInterface, ConfigProviderInterface, ConsoleBannerProviderInterface, ConsoleUsageProviderInterface {
 
     public function getAutoloaderConfig() {
         return array(
@@ -45,6 +51,20 @@ class Module implements AutoloaderProviderInterface, ConfigProviderInterface {
             ),
         );
     }
+    
+        
+    public function getConsoleUsage(Console $console)
+    {
+        return array(
+                array( '--verbose'   , 'verbose mode'      , 'Desplegar informacion durante el procesamiento'),
+                array( '-v'          , 'Same as --verbose' , 'Desplegar informacion durante el procesamiento'),
+            );
+    }
+    public function getConsoleBanner(Console $console)
+    {
+        return "Module Centro 0.0.1";
+    }
+    
 
     public function getConfig() {
         return include __DIR__ . '/config/module.config.php';

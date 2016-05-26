@@ -1,0 +1,17 @@
+<?php use Centro\Util\CatalogoValor as Catalogo; ?>
+
+<?php if ($this->tipo==Catalogo::OLDVERSION): ?>
+<div class="panel panel-warning">
+      <div class="panel-heading">Informacion del Sistema</div>
+      <div class="panel-body"><?php echo $this->message;?> <a class="btn btn-warning btn-lg" target='blank' href ="/apprelaciger/data/config/control.xml">Ver</a></div>
+</div>
+
+<?php endif;?>
+
+<?php if ($this->tipo==Catalogo::NEWVERSION): ?>
+<div class="panel panel-success">
+      <div class="panel-heading">Informacion del Sistema</div>
+      <div class="panel-body"><?php echo $this->message; ?> <a class="btn btn-success btn-lg" target='blank' href ="/apprelaciger/data/config/control.xml">Ver</a></div>
+</div>
+
+<?php endif;?>
