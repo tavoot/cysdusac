@@ -36,7 +36,6 @@ return array(
                     'find'      => 'administrador',
                     'info'      => 'estandar',
                     'inicio'    => 'usuario',
-                    'soporte'   => 'administrador',
                 ),
                 'Centro\Controller\Contacto' => array(
                     'listar'    => 'estandar',
@@ -59,6 +58,9 @@ return array(
                     'add'       => 'administrador',
                     'edit'      => 'administrador',
                     'delete'    => 'administrador',
+                ),
+                'Centro\Controller\Version' => array(
+                    'create'     => 'administrador',
                 ),
             ),
             'deny' => array(

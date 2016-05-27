@@ -19,6 +19,9 @@ class CatalogoValor{
     CONST ESTANDAR=7;             
     CONST INTERNO=8;                       
     CONST EXTERNO=9;
+    
     CONST UNVERSIONED=-1;
+    CONST OLDVERSION=0;
+    CONST NEWVERSION=1;
    
 }     
