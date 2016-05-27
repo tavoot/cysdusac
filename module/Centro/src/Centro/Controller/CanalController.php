@@ -13,6 +13,7 @@ use Zend\View\Model\ViewModel;
 use Centro\Model\Data\Canal;
 use Centro\Form\CanalForm;
 use Centro\Util\XmlGenerator;
+use Centro\Util\FileManager;
 use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Util\UtilSistema as Log;
 
@@ -101,10 +102,13 @@ class CanalController extends AbstractActionController {
                 // actualizacion del config centros.xml
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-
+                
                 //registrar cambio en el sistema cuando se agrega un canal al centro
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro_id);
+
+                // crear el archivo estadistico del canal
+                FileManager::addCanalFile($centro_id, $secuencia);
 
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Canal agregado satisfactoriamente');
@@ -173,6 +177,9 @@ class CanalController extends AbstractActionController {
                                 'id' => $centro->id,
                     ));
                 } else if ($canal->tipo == Catalogo::INTERNO) {
+                    // actualizacion del archivo canalrss.xml
+                    $writer->writeXmlCentro($centro->id);
+                    
                     //redirigir a la lista de items con el id del canal
                     return $this->redirect()->toRoute('item', array(
                                 'action' => 'listar',

@@ -110,6 +110,10 @@ class ItemController extends AbstractActionController {
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
+                // actualizacion del archivo canalrss.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlCentro($centro->id);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Nuevo item de noticia agregado satisfactoriamente');
                 
@@ -165,6 +169,10 @@ class ItemController extends AbstractActionController {
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
+                // actualizacion del archivo canalrss.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlCentro($centro->id);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Item de noticia editado satisfactoriamente');
                 
@@ -216,6 +224,10 @@ class ItemController extends AbstractActionController {
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
+                // actualizacion del archivo canalrss.xml
+                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer->writeXmlCentro($centro->id);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Item de noticia eliminado satisfactoriamente');
             }

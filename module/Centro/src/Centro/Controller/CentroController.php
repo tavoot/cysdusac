@@ -146,6 +146,9 @@ class CentroController extends AbstractActionController {
                 $log = new Log($this->getServiceLocator());
                 $log->registrarCambio(Catalogo::AGREGAR_CENTRO, $id);
                 
+                // 6. crear el archivo de estadistico del canal interno
+                FileManager::addCanalFile($id, 0);
+                
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
                 // Redireccionar a la lista de centros

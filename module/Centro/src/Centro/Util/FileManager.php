@@ -41,6 +41,8 @@ class FileManager {
             if(!$result) return $result;
         }
         
+        // archivo de canal rss del centro
+        $result = touch(self::PATH_CENTROS."$centro_id/canal/canalrss.xml");
         // archivo estadistico de detalle del centro
         $result = touch(self::PATH_CENTROS."$centro_id/estadistica/detalle.php");
         
