@@ -66,12 +66,12 @@ class Module {
 
                 //Cambia de layout cuando es usuario estandar ya que el usuario de admin
                 //es el default
-                if ($auth->hasIdentity()) {
+                /*if ($auth->hasIdentity()) {
                     $usuario = $auth->getStorage()->read();
                     if ($usuario->tipo == CatalogoValor::ESTANDAR) {
                         $e->getViewModel()->setTemplate('layout/layout_standard');
                     }
-                }
+                }*/
             }
                     , 100);
         } elseif ($e->getRequest() instanceof ConsoleRequest) {

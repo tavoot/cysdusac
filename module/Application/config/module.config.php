@@ -111,7 +111,7 @@ return array(
         'invokables' => array(
             'usuariocentrohelper' => 'Application\Helper\UsuarioCentroHelper',
             'canalcentrohelper' => 'Application\Helper\CanalCentroHelper',
-            ''
+            'menuhelper' => 'Application\Helper\MenuHelper',
         ),
     ),
     

@@ -43,7 +43,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">RELACIGER v1.0</a>
+                <a class="navbar-brand" href="/centro/inicio">RELACIGER v1.0</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -71,46 +71,7 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> Administraci&oacute;n<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <!-- /.nav-third-level -->
-                                    <a href="#">Administrar Centros</a>
-                                    <ul class="nav nav-third-level">
-                                        <li><a href="/centro">Centros</a></li>
-                                        <?php echo $this->usuariocentrohelper('/usuariocentro/find/'); ?>
-                                    </ul>
-                                       
-                                    <!-- /.nav-third-level -->
-                                </li>
-                                <li>
-                                    <a href="/usuario">Administrar Usuarios</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Relaciger<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/centro/relaciger">Informaci&oacute;n General</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> <span class="fa arrow"></span>Centros</a>
-                            <ul class="nav nav-second-level">
-                                <?php echo $this->usuariocentrohelper('/centro/find/'); ?>
-                            </ul>
-
-
-                        </li>
-                        <li>
-                            <a href="/version/create"><i class="fa fa-table fa-fw"></i> <span class="fa arrow"></span>Mantenimiento</a>
-                        </li>
-
+                        <?php echo $this->menuhelper(''); ?>
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
