@@ -30,7 +30,7 @@ return array(
                 'Centro\Controller\Centro' => array(
                     'index'     => 'administrador',
                     'add'       => 'administrador',
-                    'edit'      => 'administrador',
+                    'edit'      => 'usuario',
                     'delete'    => 'administrador',
                     'relaciger' => 'administrador',
                     'find'      => 'administrador',
@@ -58,6 +58,7 @@ return array(
                     'add'       => 'administrador',
                     'edit'      => 'administrador',
                     'delete'    => 'administrador',
+                    'perfil'    => 'usuario',
                 ),
                 'Centro\Controller\Version' => array(
                     'create'     => 'administrador',

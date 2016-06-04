@@ -73,7 +73,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output .= '<li>';
                     $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuarios<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
-                    $output .= '<li><a href="/usuario/edit/'.$this->usuario->id.'">Perfil</a></li>';
+                    $output .= '<li><a href="/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
                     $output .= '<li><a href="/acceso/logout">Logout</a></li>';
                     $output .= '</ul>';
                     $output .= '</li>';
@@ -140,7 +140,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output .= '<li>';
                     $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuarios<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
-                    $output .= '<li><a href="/usuario/edit/'.$this->usuario->id.'">Perfil</a></li>';
+                    $output .= '<li><a href="/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
                     $output .= '<li><a href="/acceso/logout">Logout</a></li>';
                     $output .= '</ul>';
                     $output .= '</li>';

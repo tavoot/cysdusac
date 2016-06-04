@@ -97,6 +97,9 @@ echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('ale
                 </tr>
             </tbody>
         </table>
+        <a class="btn btn-lg btn-warning" href="<?php echo $this->url('centro', array('action'=>'edit', 'id' => $centro->id));?>">Editar</a>
+        <br>
+        <br>
     </div>
     
     <div class='panel panel-primary'>

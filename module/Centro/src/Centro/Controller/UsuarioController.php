@@ -14,6 +14,7 @@ use Centro\Model\Data\Usuario;
 use Centro\Util\CatalogoTipo;
 use Centro\Form\UsuarioForm;
 use Centro\Util\UtilUsuario;
+use Centro\Util\Session;
 
 class UsuarioController extends AbstractActionController {
 
@@ -116,7 +117,7 @@ class UsuarioController extends AbstractActionController {
         if ($request->isPost()) {
             $form->setInputFilter($usuario->getInputFilter());
             $form->setData($request->getPost());
-
+            
             if ($form->isValid()) {
                 $usuario->password = $utilUser->cifrar($usuario->password);
                 $this->getUsuarioTable()->save($usuario);
@@ -170,6 +171,70 @@ class UsuarioController extends AbstractActionController {
         );
     }
 
+    public function perfilAction() {
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'inicio'
+            ));
+        }
+
+        try {
+            $usuario = $this->getUsuarioTable()->get($id);
+            $tipoId = $usuario->tipo;
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('centro', array(
+                        'action' => 'inicio'
+            ));
+        }
+        
+        $config = $this->getConfig('encrypt');
+        $utilUser = new UtilUsuario($config);
+
+        $form = new UsuarioForm();
+        $this->getCatalogoUsuarios($form);
+
+        $usuario->password = $utilUser->decifrar($usuario->password);
+        
+        $form->bind($usuario);
+        $form->get('submit')->setAttribute('value', 'Actualizar perfil');
+
+        $request = $this->getRequest();
+        if ($request->isPost()) {
+            $form->setInputFilter($usuario->getInputFilter());
+            $form->setValidationGroup('id', 'usuario', 'password', 'email', 'pais');
+            $form->setData($request->getPost());
+            
+            if ($form->isValid()) {
+                $usuario->password = $utilUser->cifrar($usuario->password);
+                $usuario->tipo = $tipoId;
+                
+                $this->getUsuarioTable()->save($usuario);
+
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Pefil de usuario actualizado satisfactoriamente');
+                // solo para visualizar el mensaje de la transaccion
+                return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
+            } 
+        }
+        
+        
+        $centros = array();
+        $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($id);
+        foreach($usuarioscentros as $usuariocentro){
+            $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
+                array_push($centros, $centro);
+        }
+        $tipoUsuario = Session::getUsuario($this->getServiceLocator())->tipo;
+        
+        return array(
+            'id' => $id,
+            'form' => $form,
+            'centros'=>$centros,
+            'tipoUsuario' => $tipoUsuario,
+        );
+    }
+    
     private function getCatalogoValorTable() {
         if (!$this->catalogovalorTable) {
             $sm = $this->getServiceLocator();

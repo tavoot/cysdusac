@@ -198,8 +198,17 @@ class CentroController extends AbstractActionController {
                  
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('Centro editado satisfactoriamente');
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('centro');
+                
+                // dependiendo del tipo de usuario redirige a distinta pagina
+                $datosUsuario = Session::getUsuario($this->getServiceLocator());
+                
+                if($datosUsuario->tipo == Catalogo::ADMINISTRATIVO) {
+                    // Redirect to list of albums
+                    return $this->redirect()->toRoute('centro');
+                } else {
+                    // Redirect to info
+                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+                }
             }
         }
 
