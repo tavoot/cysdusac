@@ -10,6 +10,7 @@ namespace Centro\Util;
 
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Centro\Util\CatalogoValor;
+use Centro\Util\FileManager;
 /**
  * Description of XmlGenerator
  *
@@ -37,9 +38,9 @@ class XmlGenerator {
     
     public function __construct(ServiceLocatorInterface $serviceManager) {
         $this->serviceManager = $serviceManager;
-        $this->pathConfig = 'public/apprelaciger/data/config/';
-        $this->pathCentros = 'public/apprelaciger/data/centros/';
-        $this->pathCentrosStat = 'apprelaciger/data/centros/';
+        $this->pathConfig = 'public/apprelaciger/data-app-relaciger/config/';
+        $this->pathCentros = 'public/apprelaciger/data-app-relaciger/centros/';
+        $this->pathCentrosStat = 'apprelaciger/data-app-relaciger/centros/';
         $this->http_host = $_SERVER['HTTP_HOST'];
     }
 
@@ -53,6 +54,11 @@ class XmlGenerator {
      */
     public function writeXmlConfig($tipo_archivo) {
         $writer = new \XMLWriter();
+        
+        // Ya que existe actualizacion sobre relaciger y se necesita actualizar
+        // el archivo xml antes de la creacion de cualquier centro se realiza la
+        // inicializacion del centro, si existiera el directorio no realiza nada
+        FileManager::initRelacigerDirectory();
         
         switch ($tipo_archivo){
             case self::CONFIG_RELACIGER:
