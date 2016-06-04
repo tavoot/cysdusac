@@ -19,8 +19,8 @@ use Centro\Util\XmlGenerator;
 use Centro\Util\FileManager;
 use Zend\File\Transfer\Adapter\Http;
 use Zend\Validator\File\Extension;
-use Zend\Validator\File\IsImage;
 use Zend\Validator\File\ImageSize;
+use Application\Validator\ImageDimension;
 use Centro\Model\Data\Canal;
 use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Util\UtilSistema as Log;
@@ -340,15 +340,15 @@ class CentroController extends AbstractActionController {
                 $result = $form->getData(); 
                 
                 $validatorExtension = new Extension(array('png','jpg'));
-                $validatorIsImage = new IsImage();
-                $validatorImageSize = new ImageSize(array('maxWidth' => 100, 'maxHeight' => 100));
+                $validatorDimension = new ImageDimension();
+                $validatorImageSize = new ImageSize(array('minWidth' => 500, 'minHeight' => 500));
                 
                 $httpAdapter = new Http();
-                $httpAdapter->setValidators(array($validatorExtension,$validatorImageSize,$validatorImageSize), $result['input_carga']['name']);
-
+                $httpAdapter->setValidators(array($validatorExtension,$validatorDimension,$validatorImageSize), $result['input_carga']['name']);
+                
                 if(!$httpAdapter->isValid()){
                     // mensaje de la transaccion
-                    $this->flashMessenger()->addErrorMessage('No pudo cargarse la imagen, verifique extension y dimensiones no mayor a 100x100');
+                    $this->flashMessenger()->addErrorMessage('No pudo cargarse la imagen, verifique extension y dimensiones no menor a 500x500');
                     // redireccion a info del centro
                     return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
                 } else {
