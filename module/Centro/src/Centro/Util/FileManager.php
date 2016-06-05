@@ -16,13 +16,18 @@ namespace Centro\Util;
 class FileManager {
 
     // directorios de generacion de archivos y directorios
-    const PATH_CONFIG = 'public/apprelaciger/data/config/';
-    const PATH_CENTROS = 'public/apprelaciger/data/centros/';
+    const PATH_ROOT_RELACIGER = 'public/apprelaciger/data-app-relaciger';
+    const PATH_CONFIG = 'public/apprelaciger/data-app-relaciger/config/';
+    const PATH_CENTROS = 'public/apprelaciger/data-app-relaciger/centros/';
     
-    const PUBLIC_PATH_CENTROS = 'apprelaciger/data/centros/';
+    const PUBLIC_PATH_CENTROS = 'apprelaciger/data-app-relaciger/centros/';
     
     public static function addCentroFolder($centro_id) {
         $result = true;
+        
+        // llamamos siempre a la funcion de inicializacion del directorio
+        // si existe no realizara ninguna accion
+        self::initRelacigerDirectory();
         
         // carpetas a crear para un centro
         // canal
@@ -30,7 +35,7 @@ class FileManager {
             $result = mkdir(self::PATH_CENTROS."$centro_id/canal", 0777, true);
             if(!$result) return $result;
         }
-        //estadistica
+        // estadistica
         if(!file_exists(self::PATH_CENTROS."$centro_id/estadistica/canales")) {
             $result = mkdir(self::PATH_CENTROS."$centro_id/estadistica/canales", 0777, true);
             if(!$result) return $result;
@@ -53,6 +58,10 @@ class FileManager {
     public static function initRelacigerDirectory() {
         $result = true;
         
+        if(file_exists(self::PATH_ROOT_RELACIGER)) {
+            return $result;
+        }
+        
         // carpetas de la estructura principal
         if(!file_exists(self::PATH_CENTROS)) {
             $result = mkdir(self::PATH_CENTROS, 0777, true);
@@ -74,10 +83,12 @@ class FileManager {
         }
         
         // archivos estadisticos relaciger
+        touch(self::PATH_CENTROS.'relaciger/estadisticas/acerca.php');
         touch(self::PATH_CENTROS.'relaciger/estadisticas/descripcion.php');
+        touch(self::PATH_CENTROS.'relaciger/estadisticas/inicio.php');
         touch(self::PATH_CENTROS.'relaciger/estadisticas/mision.php');
         touch(self::PATH_CENTROS.'relaciger/estadisticas/vision.php');
-        touch(self::PATH_CENTROS.'relaciger/estadisticas/contacto.php');
+        
         // archivos de configuracion
         touch(self::PATH_CONFIG.'centros.xml');
         touch(self::PATH_CONFIG.'control.xml');
