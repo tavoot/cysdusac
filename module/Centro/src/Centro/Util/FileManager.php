@@ -16,11 +16,11 @@ namespace Centro\Util;
 class FileManager {
 
     // directorios de generacion de archivos y directorios
-    const PATH_ROOT_RELACIGER = 'public/apprelaciger/data-app-relaciger';
-    const PATH_CONFIG = 'public/apprelaciger/data-app-relaciger/config/';
-    const PATH_CENTROS = 'public/apprelaciger/data-app-relaciger/centros/';
+    const PATH_ROOT_RELACIGER = 'public/data-app-relaciger';
+    const PATH_CONFIG = 'public/data-app-relaciger/config/';
+    const PATH_CENTROS = 'public/data-app-relaciger/centros/';
     
-    const PUBLIC_PATH_CENTROS = 'apprelaciger/data-app-relaciger/centros/';
+    const PUBLIC_PATH_CENTROS = 'data-app-relaciger/centros/';
     
     public static function addCentroFolder($centro_id) {
         $result = true;
