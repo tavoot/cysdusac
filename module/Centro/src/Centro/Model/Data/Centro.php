@@ -208,21 +208,12 @@ class Centro implements InputFilterAwareInterface
              
              $inputFilter->add(array(
                  'name'     => 'sitio_web',
-                 'required' => true,
+                 'required' => false,
                  'filters'  => array(
                      array('name' => 'StripTags'),
                      array('name' => 'StringTrim'),
                  ),
                  'validators' => array(
-                     array(
-                        'name' => 'NotEmpty',
-                        'options' => array(
-                            'setMessages' => array(
-                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
-                            ),
-                        ),
-                        'break_chain_on_failure' => true,
-                     ),
                      array(
                          'name'    => 'StringLength',
                          'options' => array(
