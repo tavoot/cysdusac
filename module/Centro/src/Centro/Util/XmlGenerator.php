@@ -121,7 +121,7 @@ class XmlGenerator {
                 $versionTable = $this->serviceManager->get('Centro\Model\Logic\VersionTable');
                 $version = $versionTable->get($versionTable->getLastValue());
                 
-                $writer->startElement('log'); //<principal>
+                $writer->startElement('control'); //<principal>
                 $writer->writeElement('version', $version->version);
                 $writer->writeElement('fecha', $version->fecha);
                 
@@ -184,11 +184,13 @@ class XmlGenerator {
                             // lista de canales por centro
                             $listaCanales = $canalTable->fetchAllByCentro($centro->id);
                             foreach ($listaCanales as $canal) {
-                                $writer->startElement('canal');
-                                    $writer->writeElement('id', $canal->secuencia);
-                                    $writer->writeElement('link', $canal->enlace);
-                                    $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
-                                $writer->endElement();
+                                if($canal->habilitado==TRUE){
+                                    $writer->startElement('canal');
+                                        $writer->writeElement('id', $canal->secuencia);
+                                        $writer->writeElement('link', $canal->enlace);
+                                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
+                                    $writer->endElement();
+                                }
                             }
                         
                         $writer->endElement();

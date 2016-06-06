@@ -1,0 +1,18 @@
+ <?php
+ 
+ $title = 'Control de Versiones';
+ $this->headTitle($title);
+ ?>
+ <div class='panel panel-info'>
+    <div class='panel-heading'>
+        <h3><?php echo $this->escapeHtml($title); ?></h3>
+    </div>
+ </div>
+ <?php
+ $form->setAttribute('action', $this->url('centro', array('action' => 'add')));
+ $form->prepare();
+
+ ?>
+<div class="row">
+<?php echo $this->form()->closeTag(); ?>
+</div>

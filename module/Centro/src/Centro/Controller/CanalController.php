@@ -148,6 +148,7 @@ class CanalController extends AbstractActionController {
 
         $form = new CanalForm();
         $form->bind($canal);
+        //var_dump($canal);
         $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();

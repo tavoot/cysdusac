@@ -22,7 +22,7 @@ use Zend\Form\Form;
              'type' => 'Hidden',
          ));
          
-          $this->add(array(
+         $this->add(array(
              'name' => 'secuencia',
              'type' => 'Hidden',
          ));
@@ -32,6 +32,13 @@ use Zend\Form\Form;
              'type' => 'Hidden',
          ));
          
+         $this->add(array(
+             'options' => array(
+                 'label' => 'Habilitar Canal Interno',
+             ),
+             'name' => 'habilitado',
+             'type' => 'checkbox',
+         ));
          
           $this->add(array(
              'name' => 'tipo',

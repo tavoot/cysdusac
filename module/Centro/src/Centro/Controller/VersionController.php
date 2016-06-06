@@ -8,13 +8,15 @@
 
 namespace Centro\Controller;
 
-
 use Centro\Model\Data\Version;
+use Centro\Form\VersionForm;
 use Zend\Mvc\Controller\AbstractActionController;
 use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Util\XmlGenerator;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\Http\Request as HttpRequest;
+
+
 use RuntimeException;
 
 class VersionController extends AbstractActionController {
@@ -38,6 +40,14 @@ class VersionController extends AbstractActionController {
             $this->cambioTable = $sm->get('Centro\Model\Logic\CambioTable');
         }
         return $this->cambioTable;
+    }
+    
+    public function addAction(){
+        $form = new VersionForm();
+        //$form->get('submit')->setValue('Agregar');
+        
+        
+        //return array('form' => $form);
     }
 
     public function createAction() {
