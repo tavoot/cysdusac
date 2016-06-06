@@ -103,7 +103,7 @@ class CentroController extends AbstractActionController {
     }
     
 
-    public function addAction() {
+    public function addAction(){
         $form = new CentroForm();
         $form->get('submit')->setValue('Agregar');
 
@@ -113,7 +113,7 @@ class CentroController extends AbstractActionController {
             $form->setInputFilter($centro->getInputFilter());
             $form->setData($request->getPost());
 
-            if ($form->isValid()) {
+            if ($form->isValid()){
                 $centro->exchangeArray($form->getData());
                 $id = $this->getCentroTable()->save($centro);
                 
