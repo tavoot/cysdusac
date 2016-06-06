@@ -208,21 +208,12 @@ class Centro implements InputFilterAwareInterface
              
              $inputFilter->add(array(
                  'name'     => 'sitio_web',
-                 'required' => true,
+                 'required' => false,
                  'filters'  => array(
                      array('name' => 'StripTags'),
                      array('name' => 'StringTrim'),
                  ),
                  'validators' => array(
-                     array(
-                        'name' => 'NotEmpty',
-                        'options' => array(
-                            'setMessages' => array(
-                                NotEmpty::IS_EMPTY => 'Campo obligatorio',
-                            ),
-                        ),
-                        'break_chain_on_failure' => true,
-                     ),
                      array(
                          'name'    => 'StringLength',
                          'options' => array(
@@ -235,6 +226,14 @@ class Centro implements InputFilterAwareInterface
                          ),
                          'break_chain_on_failure' => true,
                      ),
+                     array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern' => '#(http://|https://).+#',
+                            'message' => 'Formato del sitio web ingresado no valido',
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
                  ),
              ));
              
@@ -270,10 +269,21 @@ class Centro implements InputFilterAwareInterface
                  ),
                  'validators' => array(
                      array(
-                         'name'    => 'Regex',
+                         'name'    => 'StringLength',
                          'options' => array(
-                             'pattern' => '/[0-9]{3}-[0-9]{8}/',
-                             'message' => 'Formato no valido, necesita codigo de area (3 digitos) y el numero (8 digitos)',
+                             'encoding' => 'UTF-8',
+                             'min'      => 1,
+                             'max'      => 15,
+                             'setMessages' => array(
+                                'stringLengthTooLong' => 'El numero excede la cantidad de digitos permitidos (15)',
+                            ),
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
+                     array(
+                         'name'    => 'Digits',
+                         'options' => array(
+                             'message' => 'El campo solo recibe valores numericos',
                          ),
                          'break_chain_on_failure' => true,
                      ),
