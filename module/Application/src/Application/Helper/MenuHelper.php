@@ -73,8 +73,8 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output .= '<li>';
                     $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuarios<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
-                    $output .= '<li><a href="/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
-                    $output .= '<li><a href="/acceso/logout">Logout</a></li>';
+                    $output .= '<li><a href="'.$url.'/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
+                    $output .= '<li><a href="'.$url.'/acceso/logout">Logout</a></li>';
                     $output .= '</ul>';
                     $output .= '</li>';
                     
@@ -86,8 +86,8 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output = '<li>';
                     $output .= '<a href="#"><i class="fa fa-gear fa-fw"></i> Administraci&oacute;n<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
-                    $output .= '<li><a href="/centro/index">Centros</a></li>';
-                    $output .= '<li><a href="/usuario/index">Usuarios</a></li>';
+                    $output .= '<li><a href="'.$url.'/centro/index">Centros</a></li>';
+                    $output .= '<li><a href="'.$url.'/usuario/index">Usuarios</a></li>';
                     $output .= '<li>';
                     $output .= '<a href="#"> Usuarios - Centros<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-third-level">';
@@ -95,7 +95,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     foreach ($usuarioscentros as $usuariocentro){
                         $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
                         if($centro){
-                            $output .=  '<li><a href="/usuariocentro/find/'.$usuariocentro->centro_id.'">'.$centro->siglas.'</a></li>';
+                            $output .=  '<li><a href="'.$url.'/usuariocentro/find/'.$usuariocentro->centro_id.'">'.$centro->siglas.'</a></li>';
                         }
                     }
                     
@@ -109,7 +109,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output .= '<a href="#"><i class="fa fa-pencil fa-fw"></i> Relaciger<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
                     $output .= '<li>';
-                    $output .= '<a href="/centro/relaciger">Informaci&oacute;n General</a>';
+                    $output .= '<a href="'.$url.'/centro/relaciger">Informaci&oacute;n General</a>';
                     $output .= '</li>';
                     $output .= '</ul>';
                     $output .= '</li>';
@@ -124,7 +124,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     foreach ($usuarioscentros as $usuariocentro){
                         $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
                         if($centro){
-                            $output .=  "<li><a href='/centro/find/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+                            $output .=  "<li><a href='$url/centro/info/$usuariocentro->centro_id'>$centro->siglas</a></li>";
                         }
                     }
                     
@@ -133,15 +133,15 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     
                     // menu mantenimiento
                     $output .= '<li>';
-                    $output .= '<a href="/version/create"><i class="fa fa-wrench fa-fw"></i> Mantenimiento</a>';
+                    $output .= '<a href="'.$url.'/version/create"><i class="fa fa-wrench fa-fw"></i> Mantenimiento</a>';
                     $output .= '</li>';
                     
                     // menu usuario
                     $output .= '<li>';
                     $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuarios<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
-                    $output .= '<li><a href="/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
-                    $output .= '<li><a href="/acceso/logout">Logout</a></li>';
+                    $output .= '<li><a href="'.$url.'/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
+                    $output .= '<li><a href="'.$url.'/acceso/logout">Logout</a></li>';
                     $output .= '</ul>';
                     $output .= '</li>';
                     
