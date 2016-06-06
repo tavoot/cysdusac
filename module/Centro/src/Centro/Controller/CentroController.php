@@ -170,6 +170,7 @@ class CentroController extends AbstractActionController {
         // if it cannot be found, in which case go to the index page.
         try {
             $centro = $this->getCentroTable()->get($id);
+            $urlImagen = $centro->url_imagen;
         } catch (\Exception $ex) {
             return $this->redirect()->toRoute('centro', array(
                         'action' => 'index'
@@ -186,6 +187,8 @@ class CentroController extends AbstractActionController {
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                $centro->url_imagen = $urlImagen;
+                
                 $this->getCentroTable()->save($centro);
 
                 // actualizamos el config centros.xml
@@ -202,13 +205,13 @@ class CentroController extends AbstractActionController {
                 // dependiendo del tipo de usuario redirige a distinta pagina
                 $datosUsuario = Session::getUsuario($this->getServiceLocator());
                 
-                if($datosUsuario->tipo == Catalogo::ADMINISTRATIVO) {
+                //if($datosUsuario->tipo == Catalogo::ADMINISTRATIVO) {
                     // Redirect to list of albums
-                    return $this->redirect()->toRoute('centro');
-                } else {
+                //    return $this->redirect()->toRoute('centro');
+                //} else {
                     // Redirect to info
                     return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
-                }
+                //}
             }
         }
 
@@ -275,7 +278,7 @@ class CentroController extends AbstractActionController {
         
         $form = new CentroForm();
         $form->bind($centro);
-        $form->get('submit')->setValue('Agregar');
+        $form->get('submit')->setValue('Guardar');
         
         $request = $this->getRequest();
         if ($request->isPost()) {
