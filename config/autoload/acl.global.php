@@ -62,6 +62,7 @@ return array(
                 ),
                 'Centro\Controller\Version' => array(
                     'create'     => 'administrador',
+                    'add'       =>  'administrador',
                 ),
             ),
             'deny' => array(

@@ -184,11 +184,13 @@ class XmlGenerator {
                             // lista de canales por centro
                             $listaCanales = $canalTable->fetchAllByCentro($centro->id);
                             foreach ($listaCanales as $canal) {
-                                $writer->startElement('canal');
-                                    $writer->writeElement('id', $canal->secuencia);
-                                    $writer->writeElement('link', $canal->enlace);
-                                    $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
-                                $writer->endElement();
+                                if($canal->habilitado==TRUE){
+                                    $writer->startElement('canal');
+                                        $writer->writeElement('id', $canal->secuencia);
+                                        $writer->writeElement('link', $canal->enlace);
+                                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
+                                    $writer->endElement();
+                                }
                             }
                         
                         $writer->endElement();

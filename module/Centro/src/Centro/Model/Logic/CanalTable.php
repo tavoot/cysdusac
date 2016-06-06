@@ -76,6 +76,7 @@ class CanalTable{
             'lenguaje'=>$canal->lenguaje,
             'descripcion'=>$canal->descripcion,
             'secuencia'=>$canal->secuencia,
+            'habilitado'=>$canal->habilitado,
             'centro_id'=>$canal->centro_id);
 
          $id = (int) $canal->id;

@@ -11,35 +11,25 @@ namespace Centro\Form;
 use Zend\Form\Form;
 
 /**
- * Description of UploadForm
+ * Description of VersionForm
  *
- * @author nando
+ * @author tavoot
  */
-class UploadForm extends Form {
-    //put your code here
+
+class VersionForm extends Form {
+  
     
     public function __construct($name = null) {
         
-        parent::__construct('upload');
+        parent::__construct('version');
         
-        
-        $this->add(array(
-            'name' => 'input_carga',
-            'type' => 'File',
-            'options' => array(
-                'label' => 'Imagen',
-            ),
-            'attributes' => array(
-                'class' => 'form-control',
-            ),
-        ));
         
         $this->add(array(
            'name' => 'submit',
            'type' => 'Submit',
             'attributes' => array(
                 'class' => 'btn btn-lg btn-success',
-                'value' => 'Cargar',
+                'value' => 'Versionar Cambios',
                 'id'    => 'submitbutton',
             ),
         ));
