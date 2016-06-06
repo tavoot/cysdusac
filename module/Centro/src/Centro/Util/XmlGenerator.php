@@ -25,6 +25,9 @@ class XmlGenerator {
     private $pathCentros;
     private $pathCentrosStat;
     
+    // protocolo 
+    private $protocolo;
+    
     // host donde esta la aplicacion
     private $http_host;
 
@@ -40,8 +43,9 @@ class XmlGenerator {
         $this->serviceManager = $serviceManager;
         $this->pathConfig = 'public/data-app-relaciger/config/';
         $this->pathCentros = 'public/data-app-relaciger/centros/';
-        $this->pathCentrosStat = 'data-app-relaciger/centros/';
+        $this->pathCentrosStat = 'apprelaciger/public/data-app-relaciger/centros/';
         $this->http_host = $_SERVER['HTTP_HOST'];
+        $this->protocolo = 'http://';
     }
 
     
@@ -79,25 +83,25 @@ class XmlGenerator {
                     $writer->writeElement('nombre', $centro->nombre);
                     $writer->writeElement('siglas', $centro->siglas);
                     $writer->writeElement('web', $centro->sitio_web);
-                    $writer->writeElement('imagen', (!empty($centro->url_imagen))? $this->http_host.'/'.$centro->url_imagen : null);
+                    $writer->writeElement('imagen', (!empty($centro->url_imagen))? $this->protocolo.$this->http_host.'/apprelaciger/public/'.$centro->url_imagen : null);
                 
                     $writer->startElement('mision');
                         $writer->writeElement('texto', $centro->mision);
-                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/mision.php');
+                        $writer->writeElement('stat', $this->protocolo.$this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/mision.php');
                     $writer->endElement();
                     
                     $writer->startElement('vision');
                         $writer->writeElement('texto', $centro->vision);
-                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/vision.php');
+                        $writer->writeElement('stat', $this->protocolo.$this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/vision.php');
                     $writer->endElement();
                     
                     $writer->startElement('descripcion');
                         $writer->writeElement('texto', $centro->descripcion);
-                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/descripcion.php');
+                        $writer->writeElement('stat', $this->protocolo.$this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/descripcion.php');
                     $writer->endElement();
                     
                     $writer->startElement('lista');
-                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/contacto.php');
+                        $writer->writeElement('stat', $this->protocolo.$this->http_host.'/'.$this->pathCentrosStat.'relaciger/estadisticas/contacto.php');
                         foreach ($listaContactos as $contacto){
                             $writer->startElement('contacto');
                                 $writer->writeElement('nombre', $contacto->nombre);
@@ -161,7 +165,7 @@ class XmlGenerator {
                     foreach ($listaCentros as $centro) {
                         $writer->startElement('centro');
                             $writer->writeElement('id', $centro->id);
-                            $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/detalle.php');
+                            $writer->writeElement('stat', $this->protocolo.$this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/detalle.php');
                             $writer->writeElement('nombre', $centro->nombre);
                             $writer->writeElement('siglas', $centro->siglas);
                             $writer->writeElement('tipo', $centro->tipo);
@@ -169,7 +173,7 @@ class XmlGenerator {
                             $writer->writeElement('web', $centro->sitio_web);
                             $writer->writeElement('direccion', $centro->direccion);
                             $writer->writeElement('telefono', $centro->telefono);
-                            $writer->writeElement('imagen', (!empty($centro->url_imagen))? $this->http_host.'/'.$centro->url_imagen : null);
+                            $writer->writeElement('imagen', (!empty($centro->url_imagen))? $this->protocolo.$this->http_host.'/apprelaciger/public/'.$centro->url_imagen : null);
                             
                             // lista de contactos por centro
                             $listaContactos = $contactoTable->getByCentroContacto($centro->id);
@@ -188,7 +192,7 @@ class XmlGenerator {
                                     $writer->startElement('canal');
                                         $writer->writeElement('id', $canal->secuencia);
                                         $writer->writeElement('link', $canal->enlace);
-                                        $writer->writeElement('stat', $this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
+                                        $writer->writeElement('stat', $this->protocolo.$this->http_host.'/'.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
                                     $writer->endElement();
                                 }
                             }

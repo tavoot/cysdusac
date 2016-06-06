@@ -58,7 +58,7 @@ class FileManager {
     public static function initRelacigerDirectory() {
         $result = true;
         
-        if(file_exists(self::PATH_ROOT_RELACIGER)) {
+        if(file_exists(self::PATH_CENTROS) && file_exists(self::PATH_CONFIG)) {
             return $result;
         }
         

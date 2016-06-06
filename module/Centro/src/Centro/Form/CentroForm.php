@@ -107,7 +107,7 @@ use Zend\Form\Form;
                  'label' => 'Telefono',
              ),
              'attributes' => array(
-                'placeholder' => '000-00000000',
+                'placeholder' => 'Ingrese telefono',
                 'class' => 'form-control',
              ),
          ));
