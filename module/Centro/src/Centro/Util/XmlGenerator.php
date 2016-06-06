@@ -121,7 +121,7 @@ class XmlGenerator {
                 $versionTable = $this->serviceManager->get('Centro\Model\Logic\VersionTable');
                 $version = $versionTable->get($versionTable->getLastValue());
                 
-                $writer->startElement('log'); //<principal>
+                $writer->startElement('control'); //<principal>
                 $writer->writeElement('version', $version->version);
                 $writer->writeElement('fecha', $version->fecha);
                 
