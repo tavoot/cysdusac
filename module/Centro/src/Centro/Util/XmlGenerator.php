@@ -38,9 +38,9 @@ class XmlGenerator {
     
     public function __construct(ServiceLocatorInterface $serviceManager) {
         $this->serviceManager = $serviceManager;
-        $this->pathConfig = 'public/apprelaciger/data-app-relaciger/config/';
-        $this->pathCentros = 'public/apprelaciger/data-app-relaciger/centros/';
-        $this->pathCentrosStat = 'apprelaciger/data-app-relaciger/centros/';
+        $this->pathConfig = 'public/data-app-relaciger/config/';
+        $this->pathCentros = 'public/data-app-relaciger/centros/';
+        $this->pathCentrosStat = 'data-app-relaciger/centros/';
         $this->http_host = $_SERVER['HTTP_HOST'];
     }
 
