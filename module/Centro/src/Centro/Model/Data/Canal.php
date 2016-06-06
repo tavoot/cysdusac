@@ -141,6 +141,14 @@ class Canal implements InputFilterAwareInterface {
                         ),
                         'break_chain_on_failure' => true,
                     ),
+                    array(
+                        'name'    => 'Regex',
+                        'options' => array(
+                            'pattern' => '#(http://|https://).+#',
+                            'message' => 'Formato del url ingresada no valido',
+                        ),
+                        'break_chain_on_failure' => true,
+                    ),
                 ),
             ));
             

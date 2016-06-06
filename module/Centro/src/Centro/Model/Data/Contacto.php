@@ -149,13 +149,24 @@ class Contacto
                 ),
                 'validators' => array(
                     array(
-                        'name'    => 'Regex',
-                        'options' => array(
-                            'pattern' => '/[0-9]{3}-[0-9]{8}/',
-                            'message' => 'Formato no valido, necesita codigo de area (3 digitos) y el numero (8 digitos)',
-                        ),
-                        'break_chain_on_failure' => true,
-                    ),
+                         'name'    => 'StringLength',
+                         'options' => array(
+                             'encoding' => 'UTF-8',
+                             'min'      => 1,
+                             'max'      => 15,
+                             'setMessages' => array(
+                                'stringLengthTooLong' => 'El numero excede la cantidad de digitos permitidos (15)',
+                            ),
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
+                     array(
+                         'name'    => 'Digits',
+                         'options' => array(
+                             'message' => 'El campo solo recibe valores numericos',
+                         ),
+                         'break_chain_on_failure' => true,
+                     ),
                  ),
             ));
             
