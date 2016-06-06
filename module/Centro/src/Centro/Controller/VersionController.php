@@ -15,8 +15,6 @@ use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Util\XmlGenerator;
 use Zend\Console\Request as ConsoleRequest;
 use Zend\Http\Request as HttpRequest;
-
-
 use RuntimeException;
 
 class VersionController extends AbstractActionController {
@@ -44,10 +42,22 @@ class VersionController extends AbstractActionController {
     
     public function addAction(){
         $form = new VersionForm();
-        //$form->get('submit')->setValue('Agregar');
+        $form->get('submit')->setValue('Generar Nueva Version');
+        $request = $this->getRequest();
         
+        if ($request->isPost()){
+                // mensaje de la transaccion
+                $this->flashMessenger()->addInfoMessage('Revision creada satisfactoriamente');
+                // redireccion a lista de contactos del centro
+                
+                return $this->redirect()->toRoute('version', array(
+                            'action' => 'create',
+                ));
+        }
         
-        //return array('form' => $form);
+        return array(
+            'form' => $form
+        );
     }
 
     public function createAction() {
