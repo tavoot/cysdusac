@@ -34,7 +34,7 @@ return array(
                     'delete'    => 'administrador',
                     'relaciger' => 'administrador',
                     'find'      => 'administrador',
-                    'info'      => 'estandar',
+                    'info'      => 'usuario',
                     'inicio'    => 'usuario',
                 ),
                 'Centro\Controller\Contacto' => array(
