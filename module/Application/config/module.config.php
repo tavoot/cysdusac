@@ -112,6 +112,7 @@ return array(
             'usuariocentrohelper' => 'Application\Helper\UsuarioCentroHelper',
             'canalcentrohelper' => 'Application\Helper\CanalCentroHelper',
             'menuhelper' => 'Application\Helper\MenuHelper',
+            'usuarioinfohelper' => 'Application\Helper\UsuarioInfoHelper',
         ),
     ),
     
