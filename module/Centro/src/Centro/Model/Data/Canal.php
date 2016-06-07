@@ -193,6 +193,11 @@ class Canal implements InputFilterAwareInterface {
                     ),
                  ),
             ));
+            
+            $inputFilter->add(array(
+                'name' => 'habilitado',
+                'required' => false,
+            ));
 
             
 

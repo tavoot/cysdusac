@@ -33,11 +33,12 @@ use Zend\Form\Form;
          ));
          
          $this->add(array(
+             'name' => 'habilitado',
+             'type' => 'checkbox',
              'options' => array(
                  'label' => 'Habilitar Canal Interno',
              ),
-             'name' => 'habilitado',
-             'type' => 'checkbox',
+             
          ));
          
           $this->add(array(
