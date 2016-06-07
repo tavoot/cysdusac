@@ -27,11 +27,8 @@ $form->prepare();
             $element->getName()== 'descripcion' || 
             $element->getName()== 'submit') { 
         
-        if($element->getName() == 'nombre' || $element->getName() == 'siglas' || $element->getName() == 'sitio_web') {
-            $element->setAttributes(array('readonly' => 'true'));
-        }
     ?>
-    <div class="form-group">
+    <div class="form-group <?php if($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
         <?php
             echo $this->formElement($element);
