@@ -128,10 +128,10 @@ class Centro implements InputFilterAwareInterface
                          'name'    => 'StringLength',
                          'options' => array(
                              'encoding' => 'UTF-8',
-                             'min'      => 4,
+                             'min'      => 1,
                              'max'      => 20,
                              'setMessages' => array(
-                                'stringLengthTooShort' => 'La cadena ingresada debe poseer al menos 4 caracteres',
+                                'stringLengthTooShort' => 'La cadena ingresada debe poseer al menos 1 caracter',
                                 'stringLengthTooLong' => 'La cadena ingresada es mayor al limite permitido',
                             ),
                          ),
