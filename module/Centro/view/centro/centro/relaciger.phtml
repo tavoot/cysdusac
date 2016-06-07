@@ -19,10 +19,18 @@ $form->prepare();
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
     <?php if($element->getName()== 'id' ||
+            $element->getName()== 'nombre' ||
+            $element->getName()== 'siglas' ||
+            $element->getName()== 'sitio_web' ||
             $element->getName()== 'mision' || 
             $element->getName()== 'vision' || 
             $element->getName()== 'descripcion' || 
-            $element->getName()== 'submit') { ?>
+            $element->getName()== 'submit') { 
+        
+        if($element->getName() == 'nombre' || $element->getName() == 'siglas' || $element->getName() == 'sitio_web') {
+            $element->setAttributes(array('readonly' => 'true'));
+        }
+    ?>
     <div class="form-group">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
         <?php
@@ -34,7 +42,12 @@ $form->prepare();
                         ->setMessageCloseString('</p>')
                         ->render($element);
             }
-            if($element->getName() !=  'id' && $element->getName() !=  'submit') {
+            if($element->getName() != 'id' &&
+                    $element->getName() != 'nombre' &&
+                    $element->getName() != 'siglas' &&
+                    $element->getName() != 'sitio_web' &&
+                    $element->getName() != 'submit') {
+                
                 $nombre = $element->getName();
                 //var_dump($nombre);
                 $this->QuCKEditor(

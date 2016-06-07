@@ -299,7 +299,7 @@ class CentroController extends AbstractActionController {
                 $writer = new XmlGenerator($this->getServiceLocator());
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
                 // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general agregada');
+                $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general guardada satisfactoriamente');
                 // Redireccionar a la lista de centros
                 return $this->redirect()->toRoute('centro');
             }
