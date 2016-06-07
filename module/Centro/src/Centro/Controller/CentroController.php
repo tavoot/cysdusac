@@ -284,11 +284,14 @@ class CentroController extends AbstractActionController {
         $request = $this->getRequest();
         if ($request->isPost()) {
             $form->setInputFilter($centro->getInputFilter());
-            $form->setValidationGroup('id','mision', 'vision', 'descripcion');
+            $form->setValidationGroup('id', 'nombre', 'siglas', 'sitio_web', 'mision', 'vision', 'descripcion');
             $form->setData($request->getPost());
             
             if ($form->isValid()) {
                 // actualizacion de los campos enviados
+                $relaciger->nombre = $centro->nombre;
+                $relaciger->siglas = $centro->siglas;
+                $relaciger->sitio_web = $centro->sitio_web;
                 $relaciger->mision = $centro->mision;
                 $relaciger->vision = $centro->vision;
                 $relaciger->descripcion = $centro->descripcion;
