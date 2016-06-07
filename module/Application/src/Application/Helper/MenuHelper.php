@@ -80,7 +80,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     
                     break;
                 case CatalogoValor::ADMINISTRATIVO:
-                    $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($this->usuario->id);
+                    $listaCentros = $this->getCentroTable()->fetchCentros();
                     
                     // menu administracion
                     $output = '<li>';
@@ -92,10 +92,9 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output .= '<a href="#"> Usuarios - Centros<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-third-level">';
                     
-                    foreach ($usuarioscentros as $usuariocentro){
-                        $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
+                    foreach ($listaCentros as $centro){
                         if($centro){
-                            $output .=  '<li><a href="'.$url.'/usuariocentro/find/'.$usuariocentro->centro_id.'">'.$centro->siglas.'</a></li>';
+                            $output .=  '<li><a href="'.$url.'/usuariocentro/find/'.$centro->id.'">'.$centro->siglas.'</a></li>';
                         }
                     }
                     
@@ -114,17 +113,32 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     $output .= '</ul>';
                     $output .= '</li>';
                     
-                    $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($this->usuario->id);
+                    $listaCentros = $this->getCentroTable()->fetchCentros();
                     
                     // menu centros
                     $output .= '<li>';
                     $output .= '<a href="#"><i class="fa fa-th fa-fw"></i> Centros<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
                     
-                    foreach ($usuarioscentros as $usuariocentro){
-                        $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
+                    foreach($listaCentros as $centro){
                         if($centro){
-                            $output .=  "<li><a href='$url/centro/info/$usuariocentro->centro_id'>$centro->siglas</a></li>";
+                            //solo deberia de existir un canal interno para cualquier centro
+                            $canal_id=0;
+                            $canales = $this->getCanalTable()->getByCentroCanal($centro->id, CatalogoValor::INTERNO);
+
+                            foreach($canales as $canal){
+                                $canal_id = $canal->id;
+                            }
+
+                            //var_dump($canal_id);
+                            $output .= '<li>';
+                            $output = $output . "<a href='#'>$centro->siglas<span class='fa arrow'></span></a>";
+                            $output = $output . "<ul class='nav nav-third-level'>";
+                            $output = $output . "<li><a href='$url/centro/info/$centro->id'>Informacion General</a></li>";
+                            $output = $output . "<li><a href='$url/contacto/listar/$centro->id'>Contactos</a></li>";
+                            $output = $output . "<li><a href='$url/item/listar/$canal_id'>Canales RSS Interno</a></li>";
+                            $output = $output . "<li><a href='$url/canal/listar/$centro->id'>Canales RSS Externo</a></li></ul>";
+                            $output .= '</li>';
                         }
                     }
                     
