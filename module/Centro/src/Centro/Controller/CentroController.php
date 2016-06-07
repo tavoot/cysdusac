@@ -138,8 +138,9 @@ class CentroController extends AbstractActionController {
                 $this->getUsuarioCentroTable()->save($usuarioCentro);
                 
                 // 4.Al nuevo centro creado le agrego su respectivo canal interno
+                $urlCanalInterno = 'http://'.$_SERVER['HTTP_HOST'].'/apprelaciger/'.FileManager::PATH_CENTROS.$id.'/canal/canalrss.xml';
                 $canal = new Canal();
-                $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0));
+                $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0, 'enlace'=> $urlCanalInterno));
                 $this->getCanalTable()->save($canal);
                 
                 // 5. Agrego el nuevo cambio que sufre el sistema a la base de datos
