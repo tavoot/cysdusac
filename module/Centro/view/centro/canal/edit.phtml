@@ -48,7 +48,7 @@ $form->prepare();
         }
             
     } else {
-        if($canal->tipo == Catalogo::EXTERNO && ($element->getName() != 'lenguaje' && $element->getName() != 'descripcion')) {
+        if($canal->tipo == Catalogo::EXTERNO && ($element->getName() != 'lenguaje' && $element->getName() != 'descripcion' && $element->getName() != 'habilitado')) {
     ?>
     <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
