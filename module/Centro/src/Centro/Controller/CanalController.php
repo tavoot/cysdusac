@@ -97,6 +97,7 @@ class CanalController extends AbstractActionController {
 
                 $canal->exchangeArray($form->getData());
                 $canal->secuencia = $secuencia;
+                $canal->habilitado = 1;
                 $this->getCanalTable()->save($canal);
 
                 // actualizacion del config centros.xml
@@ -157,6 +158,7 @@ class CanalController extends AbstractActionController {
             $form->setData($request->getPost());
 
             if ($form->isValid()) {
+                if($canal->tipo == Catalogo::EXTERNO) $canal->habilitado = 1;
                 $this->getCanalTable()->save($canal);
 
                 // actualizacion del config centros.xml
