@@ -102,6 +102,15 @@ class CentroController extends AbstractActionController {
         return $this->canalTable;
     }
     
+    public function getParametersUrl($request) {
+        $data = array();
+        
+        $data['protocolo'] = $request->getUri()->getScheme();
+        $data['host'] = $request->getUri()->getHost();
+        $data['basepath'] = $request->getBasePath();
+        
+        return $data;
+    }
 
     public function addAction(){
         $form = new CentroForm();
@@ -126,7 +135,7 @@ class CentroController extends AbstractActionController {
                 }
                 FileManager::addCentroFolder($id);
                 // 2. actualizamos el config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 
@@ -138,7 +147,8 @@ class CentroController extends AbstractActionController {
                 $this->getUsuarioCentroTable()->save($usuarioCentro);
                 
                 // 4.Al nuevo centro creado le agrego su respectivo canal interno
-                $urlCanalInterno = 'http://'.$_SERVER['HTTP_HOST'].'/apprelaciger/'.FileManager::PATH_CENTROS.$id.'/canal/canalrss.xml';
+                $serverUrl = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getHost());
+                $urlCanalInterno = $serverUrl.$request->getBasePath().'/'.FileManager::PUBLIC_PATH_CENTROS.$id.'/canal/canalrss.xml';
                 $canal = new Canal();
                 $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0, 'enlace'=> $urlCanalInterno));
                 $this->getCanalTable()->save($canal);
@@ -193,7 +203,7 @@ class CentroController extends AbstractActionController {
                 $this->getCentroTable()->save($centro);
 
                 // actualizamos el config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 // registro en el sistema que ha habido un cambio en la informacion general del centro
@@ -242,7 +252,7 @@ class CentroController extends AbstractActionController {
                 $fileManager = new FileManager();
                 $fileManager->removeCentroFolder($id);
                 // actualizamos el config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 // agregamos un registro de cambios al sistema con la opcion de eliminar
@@ -299,7 +309,7 @@ class CentroController extends AbstractActionController {
                 // guardo los cambios
                 $this->getCentroTable()->save($relaciger);
                 // actualizamos el config relaciger.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
                 // mensaje de la transaccion
                 $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general guardada satisfactoriamente');
@@ -370,7 +380,7 @@ class CentroController extends AbstractActionController {
                     $this->getCentroTable()->save($centro);
                     
                     // actualizamos el config centros.xml
-                    $writer = new XmlGenerator($this->getServiceLocator());
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                     $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                     
                     // registro en el sistema, que ha habudo un cambio de imagen
