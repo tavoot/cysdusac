@@ -64,6 +64,9 @@ class XmlGenerator {
         
         switch ($tipo_archivo){
             case self::CONFIG_RELACIGER:
+                $xmlReservado = array("<", ">", "&#39;");
+                $xmlReemplazo = array("&lt;", "&gt;", "&apos;");
+                
                 $writer->openURI($this->pathConfig.'relaciger.xml');
                 $writer->startDocument('1.0','UTF-8');
                 $writer->setIndent(true);
@@ -84,17 +87,29 @@ class XmlGenerator {
                     $writer->writeElement('imagen', (!empty($centro->url_imagen))? $this->serverUrl.$centro->url_imagen : null);
                 
                     $writer->startElement('mision');
-                        $writer->writeElement('texto', $centro->mision);
+                        //$writer->writeElement('texto', $centro->mision);
+                        $misionFormateada = str_replace($xmlReservado, $xmlReemplazo, $centro->mision);
+                        $writer->startElement('texto');
+                            $writer->writeRaw($misionFormateada);
+                        $writer->endElement();
                         $writer->writeElement('stat', $this->serverUrl.$this->pathCentrosStat.'relaciger/estadisticas/mision.php');
                     $writer->endElement();
                     
                     $writer->startElement('vision');
-                        $writer->writeElement('texto', $centro->vision);
+                        //$writer->writeElement('texto', $centro->vision);
+                        $visionFormateada = str_replace($xmlReservado, $xmlReemplazo, $centro->vision);
+                        $writer->startElement('texto');
+                            $writer->writeRaw($visionFormateada);
+                        $writer->endElement();
                         $writer->writeElement('stat', $this->serverUrl.$this->pathCentrosStat.'relaciger/estadisticas/vision.php');
                     $writer->endElement();
                     
                     $writer->startElement('descripcion');
-                        $writer->writeElement('texto', $centro->descripcion);
+                        //$writer->writeElement('texto', $centro->descripcion);
+                        $descripcionFormateada = str_replace($xmlReservado, $xmlReemplazo, $centro->descripcion);
+                        $writer->startElement('texto');
+                            $writer->writeRaw($descripcionFormateada);
+                        $writer->endElement();
                         $writer->writeElement('stat', $this->serverUrl.$this->pathCentrosStat.'relaciger/estadisticas/descripcion.php');
                     $writer->endElement();
                     
