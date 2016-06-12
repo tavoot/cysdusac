@@ -54,6 +54,16 @@ class ItemController extends AbstractActionController {
         return $this->itemTable;
     }
 
+    public function getParametersUrl($request) {
+        $data = array();
+        
+        $data['protocolo'] = $request->getUri()->getScheme();
+        $data['host'] = $request->getUri()->getHost();
+        $data['basepath'] = $request->getBasePath();
+        
+        return $data;
+    }
+    
     public function listarAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
@@ -111,7 +121,7 @@ class ItemController extends AbstractActionController {
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
                 // actualizacion del archivo canalrss.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlCentro($centro->id);
                 
                 // mensaje de la transaccion
@@ -170,7 +180,7 @@ class ItemController extends AbstractActionController {
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
                 // actualizacion del archivo canalrss.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlCentro($centro->id);
                 
                 // mensaje de la transaccion
@@ -225,7 +235,7 @@ class ItemController extends AbstractActionController {
                 $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
                 // actualizacion del archivo canalrss.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlCentro($centro->id);
                 
                 // mensaje de la transaccion

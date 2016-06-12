@@ -44,6 +44,16 @@ class CanalController extends AbstractActionController {
         }
         return $this->canalTable;
     }
+    
+    public function getParametersUrl($request) {
+        $data = array();
+        
+        $data['protocolo'] = $request->getUri()->getScheme();
+        $data['host'] = $request->getUri()->getHost();
+        $data['basepath'] = $request->getBasePath();
+        
+        return $data;
+    }
 
     public function listarAction() {
 
@@ -101,7 +111,7 @@ class CanalController extends AbstractActionController {
                 $this->getCanalTable()->save($canal);
 
                 // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 //registrar cambio en el sistema cuando se agrega un canal al centro
@@ -162,7 +172,7 @@ class CanalController extends AbstractActionController {
                 $this->getCanalTable()->save($canal);
 
                 // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
 
                 //registrar cambio en el sistema cuando se edita un canal al centro
@@ -230,7 +240,7 @@ class CanalController extends AbstractActionController {
                 $this->getCanalTable()->delete($id);
 
                 // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
 
                 //registrar cambio en el sistema cuando se edita un canal al centro

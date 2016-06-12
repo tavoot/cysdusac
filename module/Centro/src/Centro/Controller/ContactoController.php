@@ -40,8 +40,17 @@ class ContactoController extends AbstractActionController {
         return $this->contactoTable;
     }
     
+    public function getParametersUrl($request) {
+        $data = array();
+        
+        $data['protocolo'] = $request->getUri()->getScheme();
+        $data['host'] = $request->getUri()->getHost();
+        $data['basepath'] = $request->getBasePath();
+        
+        return $data;
+    }
     
-     public function listarAction() {
+    public function listarAction() {
         $centro_id = (int) $this->params()->fromRoute('id', 0);
         if (!$centro_id) {
             return $this->redirect()->toRoute('contacto', array(
@@ -93,7 +102,7 @@ class ContactoController extends AbstractActionController {
                 $this->getContactoTable()->save($contacto);
 
                 // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 // registro en el sistema que ha agregado un contacto para el centro
@@ -149,7 +158,7 @@ class ContactoController extends AbstractActionController {
                 $this->getContactoTable()->save($contacto);
 
                 // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 // registro en el sistema que ha actualizado un contacto para el centro
@@ -199,7 +208,7 @@ class ContactoController extends AbstractActionController {
                 $this->getContactoTable()->delete($id);
                 
                 // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator());
+                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                 $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
                 
                 // registro en el sistema que ha removido un contacto para el centro
