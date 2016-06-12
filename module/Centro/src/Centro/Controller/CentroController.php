@@ -21,6 +21,7 @@ use Zend\File\Transfer\Adapter\Http;
 use Zend\Validator\File\Extension;
 use Zend\Validator\File\ImageSize;
 use Application\Validator\ImageDimension;
+use Zend\Filter\File\Rename;
 use Centro\Model\Data\Canal;
 use Centro\Util\CatalogoValor as Catalogo;
 use Centro\Util\UtilSistema as Log;
@@ -370,11 +371,22 @@ class CentroController extends AbstractActionController {
                     return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
                 } else {
                     // definimos path y cargamos la imagen
-                    $httpAdapter->setDestination(FileManager::PATH_CENTROS.$id."/img");
+                    $pathImageTarget = FileManager::PATH_CENTROS.$id."/img";
+                    $httpAdapter->setDestination($pathImageTarget);
                     $httpAdapter->receive($result['input_carga']['name']);
                     
+                    // renombramos la imagen cargada
+                    $extension = pathinfo($pathImageTarget."/".$result['input_carga']['name'], PATHINFO_EXTENSION);
+                    $newFileName = "imagen.".strtolower($extension);
+                    
+                    $filterRename = new Rename(array(
+                        'target' => $pathImageTarget."/".$newFileName,
+                        'overwrite' => true,
+                    ));
+                    $filterRename->filter($pathImageTarget."/".$result['input_carga']['name']);
+                    
                     // definimos valor del path de la imagen
-                    $centro->url_imagen = FileManager::PUBLIC_PATH_CENTROS.$id."/img/".$result['input_carga']['name'];
+                    $centro->url_imagen = FileManager::PUBLIC_PATH_CENTROS.$id."/img/".$newFileName;
                     
                     // se guarda la url de la imagen
                     $this->getCentroTable()->save($centro);
