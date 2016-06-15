@@ -2,11 +2,8 @@
 // module/Album/view/album/album/edit.phtml:
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
-$title = 'Informacion Centro';
+$title = 'Informacion General Centro';
 $this->headTitle($title);
-
-
-
 
 $form = $this->form;
 $form->setAttribute('action', $this->url(
@@ -38,6 +35,7 @@ echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('ale
         <?php echo $this->form()->openTag($form); ?>
 
         <?php foreach($form as $element): ?>
+       
         <div class="form-group">
             <label class="control-label"><?php echo $element->getLabel() ?></label>
             <?php echo $this->formElement($element); ?>

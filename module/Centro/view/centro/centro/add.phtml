@@ -16,6 +16,13 @@
 <div class="row">
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
+    <?php
+        if ($element->getName() == 'submit') {
+            echo $this->formElement($element);
+            continue;
+            //echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cancelar</a>';
+        }
+    ?>
     <?php if($element->getName()!= 'mision' && 
             $element->getName()!= 'vision' && 
             $element->getName()!= 'descripcion' && 

@@ -67,8 +67,17 @@ class UpdatePassForm extends Form {
            'type' => 'Submit',
             'attributes' => array(
                 'class' => 'btn btn-lg btn-success',
-                'value' => 'Actualizar',
+                'value' => 'Aceptar',
                 'id'    => 'submitbutton',
+            ),
+        ));
+        
+        $this->add(array(
+           'name' => 'submit',
+           'type' => 'Submit',
+            'attributes' => array(
+                'class' => 'btn btn-lg btn-danger',
+                'value' => 'Cancelar',
             ),
         ));
         

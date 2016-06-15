@@ -148,7 +148,10 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     
                     // menu mantenimiento
                     $output .= '<li>';
-                    $output .= '<a href="'.$url.'/version/add"><i class="fa fa-wrench fa-fw"></i> Mantenimiento</a>';
+                    $output .= '<a href="'.$url.'/version/listar"><i class="fa fa-wrench fa-fw"></i> Mantenimiento</a>';
+                    $output .= '<ul class="nav nav-second-level">';
+                    $output .= '<li><a href="'.$url.'/version/add">Crear Version</a></li>';
+                    $output .= '</ul>';
                     $output .= '</li>';
                     
                     // menu usuario

@@ -105,65 +105,50 @@ class UsuarioController extends AbstractActionController {
                         'action' => 'index'
             ));
         }
-        
+
         $config = $this->getConfig('encrypt');
         $utilUser = new UtilUsuario($config);
 
         $form = new UsuarioForm();
         $this->getCatalogoUsuarios($form);
-
-        //$usuario->password = $utilUser->decifrar($usuario->password);
-        
         $form->bind($usuario);
-        //$form->get('submit')->setAttribute('value', 'Edit');
-
+        
         $request = $this->getRequest();
         if ($request->isPost()) {
-
             $submit = $request->getPost('submit', 'Cancelar');
-            if($submit=='Aceptar'){
-                $form->setInputFilter($usuario->getInputFilter());
-                $form->setData($request->getPost());
-
+            if ($submit == 'Aceptar') {
                 $form->setInputFilter($usuario->getInputFilter());
                 $form->setValidationGroup('id', 'tipo', 'usuario', 'email', 'pais');
                 $form->setData($request->getPost());
 
+
                 if ($form->isValid()) {
-                    $usuario->password = $pass;
+                    $usuario->password = $utilUser->cifrar($usuario->password);
                     $this->getUsuarioTable()->save($usuario);
 
-
-                    if ($form->isValid()) {
-                        $usuario->password = $utilUser->cifrar($usuario->password);
-                        $this->getUsuarioTable()->save($usuario);
-
-                        // mensaje de la transaccion
-                        $this->flashMessenger()->addInfoMessage('Usuario editado satisfactoriamente');
-
-                    }
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Usuario editado satisfactoriamente');
                 }
+            }
             // Redirect to list of albums
             return $this->redirect()->toRoute('usuario');
-           
         }
-        
-        
+
+
         $centros = array();
         $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($id);
-            foreach($usuarioscentros as $usuariocentro){
+        foreach ($usuarioscentros as $usuariocentro) {
             $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
-                array_push($centros, $centro);
-            }
+            array_push($centros, $centro);
+        }
 
         return array(
             'id' => $id,
             'form' => $form,
-            'centros'=>$centros,
+            'centros' => $centros,
         );
     }
- }
-    
+
     public function editpassAction() {
         $id = (int) $this->params()->fromRoute('id', 0);
         if (!$id) {
@@ -184,21 +169,26 @@ class UsuarioController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($usuario->getInputFilter());
-            $form->setValidationGroup('password');
-            $form->setData($request->getPost());
-            
-            if ($form->isValid()) {
-                $newPassword = $form->get('password')->getValue();
-                $usuario->password = $utilUser->cifrar($newPassword);
-                
-                $this->getUsuarioTable()->save($usuario);
+            $submit = $request->getPost('submit', 'Cancelar');
+            if ($submit == 'Aceptar') {
+                $form->setInputFilter($usuario->getInputFilter());
+                $form->setValidationGroup('password');
+                $form->setData($request->getPost());
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Password de usuario editado satisfactoriamente');
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('usuario');
+                if ($form->isValid()) {
+                    $newPassword = $form->get('password')->getValue();
+                    $usuario->password = $utilUser->cifrar($newPassword);
+
+                    $this->getUsuarioTable()->save($usuario);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Password de usuario editado satisfactoriamente');
+                    return $this->redirect()->toRoute('centro');
+                }
             }
+            
+            // Redirigir a usuarios
+           return $this->redirect()->toRoute('usuario', array('action' => 'edit', 'id'=>$id));
         }
         
         return array(
@@ -258,28 +248,30 @@ class UsuarioController extends AbstractActionController {
         $form = new UsuarioForm();
         $this->getCatalogoUsuarios($form);
 
-        //$usuario->password = $utilUser->decifrar($usuario->password);
         
         $form->bind($usuario);
-        $form->get('submit')->setAttribute('value', 'Actualizar perfil');
-
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($usuario->getInputFilter());
-            $form->setValidationGroup('id', 'usuario', 'email', 'pais');
-            $form->setData($request->getPost());
-            
-            if ($form->isValid()) {
-                $usuario->password = $pass;
-                $usuario->tipo = $tipoId;
-                
-                $this->getUsuarioTable()->save($usuario);
+            $submit = $request->getPost('submit', 'Cancelar');
+            if ($submit == 'Aceptar') {
+                $form->setInputFilter($usuario->getInputFilter());
+                $form->setValidationGroup('id', 'usuario', 'email', 'pais');
+                $form->setData($request->getPost());
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Pefil de usuario actualizado satisfactoriamente');
-                // solo para visualizar el mensaje de la transaccion
-                return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
-            } 
+                if ($form->isValid()) {
+                    $usuario->password = $pass;
+                    $usuario->tipo = $tipoId;
+
+                    $this->getUsuarioTable()->save($usuario);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Pefil de usuario actualizado satisfactoriamente');
+                    // solo para visualizar el mensaje de la transaccion
+                } 
+            }
+          
+         //redirigir
+         return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
         }
         
         
@@ -319,31 +311,34 @@ class UsuarioController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setData($request->getPost());
-            
-            if ($form->isValid()) {
-                
-                $passActual = $form->get('pass_actual')->getValue();
-                $passNuevo = $form->get('pass_nuevo')->getValue();
-                
-                $passActual = $utilUser->cifrar($passActual);
-                
-                if($usuario->password != $passActual){
-                    $this->flashMessenger()->addErrorMessage('No pudo procesarse la operacion, verifique que haya ingresado correctamente sus datos');
-                    return $this->redirect()->toRoute('usuario', array('action' => 'cambiarpass', 'id' => $id));
-                }
-                
-                $usuario->password = $utilUser->cifrar($passNuevo);
-                
-                
-                $this->getUsuarioTable()->save($usuario);
+            $submit = $request->getPost('submit', 'Cancelar');
+            if ($submit == 'Aceptar') {
+                $form->setData($request->getPost());
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Password actualizado satisfactoriamente');
-                // solo para visualizar el mensaje de la transaccion
-                return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
+                if ($form->isValid()) {
+
+                    $passActual = $form->get('pass_actual')->getValue();
+                    $passNuevo = $form->get('pass_nuevo')->getValue();
+
+                    $passActual = $utilUser->cifrar($passActual);
+
+                    if($usuario->password != $passActual){
+                        $this->flashMessenger()->addErrorMessage('No pudo procesarse la operacion, verifique que haya ingresado correctamente sus datos');
+                        return $this->redirect()->toRoute('usuario', array('action' => 'cambiarpass', 'id' => $id));
+                    }
+
+                    $usuario->password = $utilUser->cifrar($passNuevo);
+
+
+                    $this->getUsuarioTable()->save($usuario);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Password actualizado satisfactoriamente');
+                }
             }
             
+            // solo para visualizar el mensaje de la transaccion
+            return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
         }
         
         return array(

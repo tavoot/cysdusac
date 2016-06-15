@@ -1,8 +1,12 @@
 <?php
-$title ='Añadir Nuevo Version';
+ 
+$title ='Añadir Nueva Version';
 $this->headTitle($title);
 ?>
-<div class='panel panel-info'>
+
+
+
+<div class='panel panel-primary'>
     <div class='panel-heading'>
         <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
@@ -14,10 +18,17 @@ $form->setAttribute('class', 'col-md-6');
 $form->prepare();
 
 ?>
-
+ <p>¿Desea generar una nueva version de los archivos?</p>
+ 
 <div class="row">
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
+    <?php
+        if ($element->getName() == 'submit') {
+            echo $this->formElement($element);
+            continue;
+        }
+    ?>
     
     <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>

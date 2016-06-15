@@ -1,0 +1,40 @@
+ <?php
+ use Zend\Mvc\Controller\Plugin\FlashMessenger;
+ 
+ $title ="Versiones del Sistema" ;
+ $this->headTitle($title);
+ ?>
+
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_WARNING, array('alert','alert-warning')); ?>
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert', 'alert-info'));?>
+
+<div class='panel panel-primary'>
+    <div class='panel-heading'>
+        <h1><?php echo $this->escapeHtml($title); ?></h1>
+    </div>
+</div>
+
+
+ <table class="table table-hover">
+     <thead>
+         <tr class="active">
+             <th>Version</th>
+             <th>Fecha</th>
+             <th>Accion</th>
+         </tr>
+     </thead>
+     <tbody>
+        <?php foreach ($versiones as $version): ?>
+        <tr>
+            <td><?php echo $this->escapeHtml($version->version);?></td>
+            <td><?php echo $this->escapeHtml($version->fecha);?></td>
+            <td>
+               <a class="btn btn-lg btn-warning" href="<?php echo $this->url('version',
+                   array('action'=>'ver', 'id' => $version->id));?>">Ver</a>
+                <a class="btn btn-lg btn-danger" href="<?php echo $this->url('version',
+                   array('action'=>'eliminar', 'id' => $version->id));?>">Eliminar</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+     </tbody>
+ </table>

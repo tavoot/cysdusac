@@ -6,7 +6,7 @@ $title = 'Perfil de Usuario';
 $this->headTitle($title);
 ?>
 
-<div class='panel panel-info'>
+<div class='panel panel-primary'>
     <div class='panel-heading'>
         <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
@@ -33,6 +33,16 @@ if($tipoUsuario == Catalogo::ESTANDAR) {
 <div class="row">
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
+    <?php
+        if ($element->getName() == 'submit') {
+            echo $this->formElement($element);
+            continue;
+            //echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cancelar</a>';
+    }
+        
+        
+        
+    ?>
     <?php 
         if($element->getName() == 'tipo'){
             $element->setAttributes(array('disabled' => 'disabled'));
@@ -62,6 +72,10 @@ if($tipoUsuario == Catalogo::ESTANDAR) {
                         ->setMessageSeparatorString('</p><p class="help-block">')
                         ->setMessageCloseString('</p>')
                         ->render($element);
+            }
+            
+            if ($element->getName() == 'usuario') {
+                echo ' <a class="btn btn-sm btn-warning" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cambiar Password</a>';
             }
         ?>
     </div>

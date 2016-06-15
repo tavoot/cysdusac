@@ -266,7 +266,7 @@ class CanalController extends AbstractActionController {
         );
     }
 
-    private function updateSecuencia($canal_actual) {
+    private function updateSecuencia($canal_actual){
         $listacanales = $this->getCanalTable()->getByCentroCanal($canal_actual->centro_id, Catalogo::EXTERNO);
         foreach ($listacanales as $canal) {
             if ($canal_actual->secuencia < $canal->secuencia) {

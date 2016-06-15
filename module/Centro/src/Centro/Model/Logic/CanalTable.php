@@ -12,7 +12,6 @@ use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\Canal;
 use \Zend\Db\Sql\Select;
 use Centro\Util\CatalogoTipo as Catalogo;
-use Centro\Util\UtilSistema as Log;
 
 class CanalTable{
     
