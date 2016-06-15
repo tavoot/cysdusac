@@ -58,7 +58,9 @@ return array(
                     'add'       => 'administrador',
                     'edit'      => 'administrador',
                     'delete'    => 'administrador',
+                    'editpass'  => 'administrador',
                     'perfil'    => 'usuario',
+                    'cambiarpass' => 'usuario',
                 ),
                 'Centro\Controller\Version' => array(
                     'create'     => 'administrador',
