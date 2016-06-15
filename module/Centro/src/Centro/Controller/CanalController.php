@@ -44,14 +44,14 @@ class CanalController extends AbstractActionController {
         }
         return $this->canalTable;
     }
-    
+
     public function getParametersUrl($request) {
         $data = array();
-        
+
         $data['protocolo'] = $request->getUri()->getScheme();
         $data['host'] = $request->getUri()->getHost();
         $data['basepath'] = $request->getBasePath();
-        
+
         return $data;
     }
 
@@ -92,43 +92,45 @@ class CanalController extends AbstractActionController {
         }
 
         $form = new CanalForm();
-        $form->get('submit')->setValue('Agregar');
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $canal = new Canal();
-            $form->setInputFilter($canal->getInputFilter());
-            $form->setData($request->getPost());
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $canal = new Canal();
+                $form->setInputFilter($canal->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                //si es valido el formulario, obtengo el numero de canales
-                $canales = $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
-                $secuencia = (int) sizeof($canales) + 1;
+                if ($form->isValid()) {
+                    //si es valido el formulario, obtengo el numero de canales
+                    $canales = $this->getCanalTable()->getByCentroCanal($centro_id, Catalogo::EXTERNO);
+                    $secuencia = (int) sizeof($canales) + 1;
 
-                $canal->exchangeArray($form->getData());
-                $canal->secuencia = $secuencia;
-                $canal->habilitado = 1;
-                $this->getCanalTable()->save($canal);
+                    $canal->exchangeArray($form->getData());
+                    $canal->secuencia = $secuencia;
+                    $canal->habilitado = 1;
+                    $this->getCanalTable()->save($canal);
 
-                // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
-                //registrar cambio en el sistema cuando se agrega un canal al centro
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro_id);
+                    // actualizacion del config centros.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
 
-                // crear el archivo estadistico del canal
-                FileManager::addCanalFile($centro_id, $secuencia);
+                    //registrar cambio en el sistema cuando se agrega un canal al centro
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro_id);
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Canal agregado satisfactoriamente');
-                // Redireccionar a la lista de canales
-                return $this->redirect()->toRoute('canal', array(
-                            'action' => 'listar',
-                            'id' => $centro_id,
-                ));
+                    // crear el archivo estadistico del canal
+                    FileManager::addCanalFile($centro_id, $secuencia);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Canal agregado satisfactoriamente');
+                }
             }
+            // Redireccionar a la lista de canales
+            return $this->redirect()->toRoute('canal', array(
+                'action' => 'listar',
+                'id' => $centro_id,    
+            ));
         }
 
 
@@ -138,6 +140,7 @@ class CanalController extends AbstractActionController {
             'form' => $form, 'centro' => $centro,
         );
     }
+
 
     public function editAction() {
         $canal_id = (int) $this->params()->fromRoute('id', 0);
@@ -156,50 +159,51 @@ class CanalController extends AbstractActionController {
                         'action' => 'listar'
             ));
         }
-
         $form = new CanalForm();
         $form->bind($canal);
-        //var_dump($canal);
-        $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($canal->getInputFilter());
-            $form->setData($request->getPost());
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $form->setInputFilter($canal->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                if($canal->tipo == Catalogo::EXTERNO) $canal->habilitado = 1;
-                $this->getCanalTable()->save($canal);
+                    if ($form->isValid()) {
+                        if ($canal->tipo == Catalogo::EXTERNO)
+                            $canal->habilitado = 1;
+                        $this->getCanalTable()->save($canal);
 
-                // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                        // actualizacion del config centros.xml
+                        $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                        $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
 
-                //registrar cambio en el sistema cuando se edita un canal al centro
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
+                        //registrar cambio en el sistema cuando se edita un canal al centro
+                        $log = new Log($this->getServiceLocator());
+                        $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Canal editado satisfactoriamente');
-
-
+                        // mensaje de la transaccion
+                        $this->flashMessenger()->addInfoMessage('Canal editado satisfactoriamente');
+                    }
+                }
+                
+                //redireccion de segun el tipo de canal
                 if ($canal->tipo == Catalogo::EXTERNO) {
                     //redirigir a la lista de canales del centro
                     return $this->redirect()->toRoute('canal', array(
                                 'action' => 'listar',
                                 'id' => $centro->id,
                     ));
-                } else if ($canal->tipo == Catalogo::INTERNO) {
+                } if ($canal->tipo == Catalogo::INTERNO) {
                     // actualizacion del archivo canalrss.xml
-                    $writer->writeXmlCentro($centro->id);
-                    
+                    //$writer->writeXmlCentro($centro->id);
+
                     //redirigir a la lista de items con el id del canal
                     return $this->redirect()->toRoute('item', array(
                                 'action' => 'listar',
                                 'id' => $canal->id,
                     ));
                 }
-            }
         }
 
         return array(

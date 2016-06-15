@@ -115,57 +115,59 @@ class CentroController extends AbstractActionController {
 
     public function addAction(){
         $form = new CentroForm();
-        $form->get('submit')->setValue('Agregar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $centro = new Centro();
-            $form->setInputFilter($centro->getInputFilter());
-            $form->setData($request->getPost());
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $centro = new Centro();
+                $form->setInputFilter($centro->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()){
-                $centro->exchangeArray($form->getData());
-                $id = $this->getCentroTable()->save($centro);
-                
-                // 1. creamos el directorio del nuevo centro
-                if(!isset($id)) {
+                if ($form->isValid()){
+                    $centro->exchangeArray($form->getData());
+                    $id = $this->getCentroTable()->save($centro);
+
+                    // 1. creamos el directorio del nuevo centro
+                    if(!isset($id)) {
+                        // mensaje de la transaccion
+                        $this->flashMessenger()->addInfoMessage('AVISO: No se pudo agregar el centro');
+                        // Redireccionar a la lista de centros
+                        return $this->redirect()->toRoute('centro');
+                    }
+                    FileManager::addCentroFolder($id);
+                    // 2. actualizamos el config centros.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+
+
+                    // 3. asociacion del centro con el usuario
+                    $datosUsuario = Session::getUsuario($this->getServiceLocator());
+                    $usuarioCentro = new UsuarioCentro();
+                    $usuarioCentro->exchangeArray(array('usuario_id' => $datosUsuario->id, 'centro_id' => $id));
+                    $this->getUsuarioCentroTable()->save($usuarioCentro);
+
+                    // 4.Al nuevo centro creado le agrego su respectivo canal interno
+                    $serverUrl = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getHost());
+                    $urlCanalInterno = $serverUrl.$request->getBasePath().'/'.FileManager::PUBLIC_PATH_CENTROS.$id.'/canal/canalrss.xml';
+                    $canal = new Canal();
+                    $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0, 'enlace'=> $urlCanalInterno));
+                    $this->getCanalTable()->save($canal);
+
+                    // 5. Agrego el nuevo cambio que sufre el sistema a la base de datos
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::AGREGAR_CENTRO, $id);
+
+                    // 6. crear el archivo de estadistico del canal interno
+                    FileManager::addCanalFile($id, 0);
+
                     // mensaje de la transaccion
-                    $this->flashMessenger()->addInfoMessage('AVISO: No se pudo agregar el centro');
-                    // Redireccionar a la lista de centros
-                    return $this->redirect()->toRoute('centro');
+                    $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
                 }
-                FileManager::addCentroFolder($id);
-                // 2. actualizamos el config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
-                
-                
-                // 3. asociacion del centro con el usuario
-                $datosUsuario = Session::getUsuario($this->getServiceLocator());
-                $usuarioCentro = new UsuarioCentro();
-                $usuarioCentro->exchangeArray(array('usuario_id' => $datosUsuario->id, 'centro_id' => $id));
-                $this->getUsuarioCentroTable()->save($usuarioCentro);
-                
-                // 4.Al nuevo centro creado le agrego su respectivo canal interno
-                $serverUrl = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getHost());
-                $urlCanalInterno = $serverUrl.$request->getBasePath().'/'.FileManager::PUBLIC_PATH_CENTROS.$id.'/canal/canalrss.xml';
-                $canal = new Canal();
-                $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0, 'enlace'=> $urlCanalInterno));
-                $this->getCanalTable()->save($canal);
-                
-                // 5. Agrego el nuevo cambio que sufre el sistema a la base de datos
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::AGREGAR_CENTRO, $id);
-                
-                // 6. crear el archivo de estadistico del canal interno
-                FileManager::addCanalFile($id, 0);
-                
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
-                // Redireccionar a la lista de centros
-                return $this->redirect()->toRoute('centro');
             }
+            // Redireccionar a la lista de centros
+            return $this->redirect()->toRoute('centro');
         }
         return array('form' => $form);
     }
@@ -191,40 +193,38 @@ class CentroController extends AbstractActionController {
 
         $form = new CentroForm();
         $form->bind($centro);
-        $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($centro->getInputFilter());
-            $form->setData($request->getPost());
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $form->setInputFilter($centro->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $centro->url_imagen = $urlImagen;
-                
-                $this->getCentroTable()->save($centro);
+                if ($form->isValid()) {
+                    $centro->url_imagen = $urlImagen;
 
-                // actualizamos el config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
-                // registro en el sistema que ha habido un cambio en la informacion general del centro
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $id);
-                 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Centro editado satisfactoriamente');
-                
-                // dependiendo del tipo de usuario redirige a distinta pagina
-                $datosUsuario = Session::getUsuario($this->getServiceLocator());
-                
-                //if($datosUsuario->tipo == Catalogo::ADMINISTRATIVO) {
-                    // Redirect to list of albums
-                //    return $this->redirect()->toRoute('centro');
-                //} else {
-                    // Redirect to info
-                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
-                //}
-            }
+                    $this->getCentroTable()->save($centro);
+
+                    // actualizamos el config centros.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+                    // registro en el sistema que ha habido un cambio en la informacion general del centro
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $id);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Centro editado satisfactoriamente');
+
+                    // dependiendo del tipo de usuario redirige a distinta pagina
+                    $datosUsuario = Session::getUsuario($this->getServiceLocator());
+                }
+             }
+             
+            // Redirect to info
+            return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+            
         }
 
         return array(
@@ -290,35 +290,35 @@ class CentroController extends AbstractActionController {
         
         $form = new CentroForm();
         $form->bind($centro);
-        $form->get('submit')->setValue('Guardar');
         
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($centro->getInputFilter());
-            $form->setValidationGroup('id', 'nombre', 'siglas', 'sitio_web', 'mision', 'vision', 'descripcion');
-            $form->setData($request->getPost());
-            
-            if ($form->isValid()) {
-                // actualizacion de los campos enviados
-                $relaciger->nombre = $centro->nombre;
-                $relaciger->siglas = $centro->siglas;
-                $relaciger->sitio_web = $centro->sitio_web;
-                $relaciger->mision = $centro->mision;
-                $relaciger->vision = $centro->vision;
-                $relaciger->descripcion = $centro->descripcion;
-                
-                // guardo los cambios
-                $this->getCentroTable()->save($relaciger);
-                // actualizamos el config relaciger.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general guardada satisfactoriamente');
-                // Redireccionar a la lista de centros
-                return $this->redirect()->toRoute('centro');
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $form->setInputFilter($centro->getInputFilter());
+                $form->setValidationGroup('id', 'nombre', 'siglas', 'sitio_web', 'mision', 'vision', 'descripcion');
+                $form->setData($request->getPost());
+
+                if ($form->isValid()) {
+                    // actualizacion de los campos enviados
+                    $relaciger->nombre = $centro->nombre;
+                    $relaciger->siglas = $centro->siglas;
+                    $relaciger->sitio_web = $centro->sitio_web;
+                    $relaciger->mision = $centro->mision;
+                    $relaciger->vision = $centro->vision;
+                    $relaciger->descripcion = $centro->descripcion;
+
+                    // guardo los cambios
+                    $this->getCentroTable()->save($relaciger);
+                    // actualizamos el config relaciger.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general guardada satisfactoriamente');
+                }
             }
-            //var_dump($form->getMessages());
-            //var_dump($form->getInputFilter()->getRawValues());
+            // Redireccionar a la lista de centros
+            return $this->redirect()->toRoute('centro');
         }
         
         return array('form' => $form);
@@ -346,64 +346,67 @@ class CentroController extends AbstractActionController {
         
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $data = array_merge_recursive(
-                    $request->getPost()->toArray(), 
-                    $request->getFiles()->toArray()
-            );
-            
-            $form->setData($data);
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $data = array_merge_recursive(
+                        $request->getPost()->toArray(), 
+                        $request->getFiles()->toArray()
+                );
 
-            if ($form->isValid()) {
-                // se carga el archivo seleccionado
-                $result = $form->getData(); 
-                
-                $validatorExtension = new Extension(array('png','jpg'));
-                $validatorDimension = new ImageDimension();
-                $validatorImageSize = new ImageSize(array('minWidth' => 500, 'minHeight' => 500));
-                
-                $httpAdapter = new Http();
-                $httpAdapter->setValidators(array($validatorExtension,$validatorDimension,$validatorImageSize), $result['input_carga']['name']);
-                
-                if(!$httpAdapter->isValid()){
-                    // mensaje de la transaccion
-                    $this->flashMessenger()->addErrorMessage('No pudo cargarse la imagen, verifique extension y dimensiones no menor a 500x500');
-                    // redireccion a info del centro
-                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
-                } else {
-                    // definimos path y cargamos la imagen
-                    $pathImageTarget = FileManager::PATH_CENTROS.$id."/img";
-                    $httpAdapter->setDestination($pathImageTarget);
-                    $httpAdapter->receive($result['input_carga']['name']);
-                    
-                    // renombramos la imagen cargada
-                    $extension = pathinfo($pathImageTarget."/".$result['input_carga']['name'], PATHINFO_EXTENSION);
-                    $newFileName = "imagen.".strtolower($extension);
-                    
-                    $filterRename = new Rename(array(
-                        'target' => $pathImageTarget."/".$newFileName,
-                        'overwrite' => true,
-                    ));
-                    $filterRename->filter($pathImageTarget."/".$result['input_carga']['name']);
-                    
-                    // definimos valor del path de la imagen
-                    $centro->url_imagen = FileManager::PUBLIC_PATH_CENTROS.$id."/img/".$newFileName;
-                    
-                    // se guarda la url de la imagen
-                    $this->getCentroTable()->save($centro);
-                    
-                    // actualizamos el config centros.xml
-                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                    
-                    // registro en el sistema, que ha habudo un cambio de imagen
-                    $log = new Log($this->getServiceLocator());
-                    $log->registrarCambio(Catalogo::CAMBIO_DE_IMAGEN_CENTRO, $id);
-                    
-                    // mensaje de la transaccion
-                    $this->flashMessenger()->addInfoMessage('Imagen de centro cargada con exito');
-                    // redireccion a info del centro
-                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+                $form->setData($data);
+
+                if ($form->isValid()) {
+                    // se carga el archivo seleccionado
+                    $result = $form->getData(); 
+
+                    $validatorExtension = new Extension(array('png','jpg'));
+                    $validatorDimension = new ImageDimension();
+                    $validatorImageSize = new ImageSize(array('minWidth' => 500, 'minHeight' => 500));
+
+                    $httpAdapter = new Http();
+                    $httpAdapter->setValidators(array($validatorExtension,$validatorDimension,$validatorImageSize), $result['input_carga']['name']);
+
+                    if(!$httpAdapter->isValid()){
+                        // mensaje de la transaccion
+                        $this->flashMessenger()->addErrorMessage('No pudo cargarse la imagen, verifique extension y dimensiones no menor a 500x500');
+                        // redireccion a info del centro
+                        return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+                    } else {
+                        // definimos path y cargamos la imagen
+                        $pathImageTarget = FileManager::PATH_CENTROS.$id."/img";
+                        $httpAdapter->setDestination($pathImageTarget);
+                        $httpAdapter->receive($result['input_carga']['name']);
+
+                        // renombramos la imagen cargada
+                        $extension = pathinfo($pathImageTarget."/".$result['input_carga']['name'], PATHINFO_EXTENSION);
+                        $newFileName = "imagen.".strtolower($extension);
+
+                        $filterRename = new Rename(array(
+                            'target' => $pathImageTarget."/".$newFileName,
+                            'overwrite' => true,
+                        ));
+                        $filterRename->filter($pathImageTarget."/".$result['input_carga']['name']);
+
+                        // definimos valor del path de la imagen
+                        $centro->url_imagen = FileManager::PUBLIC_PATH_CENTROS.$id."/img/".$newFileName;
+
+                        // se guarda la url de la imagen
+                        $this->getCentroTable()->save($centro);
+
+                        // actualizamos el config centros.xml
+                        $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                        $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+                        // registro en el sistema, que ha habudo un cambio de imagen
+                        $log = new Log($this->getServiceLocator());
+                        $log->registrarCambio(Catalogo::CAMBIO_DE_IMAGEN_CENTRO, $id);
+
+                        // mensaje de la transaccion
+                        $this->flashMessenger()->addInfoMessage('Imagen de centro cargada con exito');
+                    }
                 }
+                // redireccion a info del centro
+                return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
             }
         }
         

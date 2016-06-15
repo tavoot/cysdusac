@@ -89,34 +89,37 @@ class ContactoController extends AbstractActionController {
         }
 
         $form = new ContactoForm();
-        $form->get('submit')->setValue('Agregar');
         $request = $this->getRequest();
         
         if ($request->isPost()) {
-            $contacto= new Contacto();
-            $form->setInputFilter($contacto->getInputFilter());
-            $form->setData($request->getPost());
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $contacto= new Contacto();
+                $form->setInputFilter($contacto->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()){
-                $contacto->exchangeArray($form->getData());
-                $this->getContactoTable()->save($contacto);
+                if ($form->isValid()){
+                    $contacto->exchangeArray($form->getData());
+                    $this->getContactoTable()->save($contacto);
 
-                // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
-                // registro en el sistema que ha agregado un contacto para el centro
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro_id);
-                
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Contacto agregado satisfactoriamente');
-                // redireccion a lista de contactos del centro
-                return $this->redirect()->toRoute('contacto', array(
-                            'action' => 'listar',
-                            'id' => $centro_id,
-                ));
+                    // actualizacion del config centros.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+                    // registro en el sistema que ha agregado un contacto para el centro
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro_id);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Contacto agregado satisfactoriamente');
+                }
             }
+            // redireccion a lista de contactos del centro
+            return $this->redirect()->toRoute('contacto', array(
+            'action' => 'listar',
+            'id' => $centro_id,
+            ));
+            
         }
         
         $centro = $this->getCentroTable()->get($centro_id);
@@ -126,7 +129,7 @@ class ContactoController extends AbstractActionController {
     }
     
     
-    public function editAction() {
+    public function editAction(){
         $contacto_id = (int) $this->params()->fromRoute('id', 0);
         if (!$contacto_id) {
             return $this->redirect()->toRoute('contacto', array(
@@ -147,32 +150,35 @@ class ContactoController extends AbstractActionController {
 
         $form = new ContactoForm();
         $form->bind($contacto);
-        $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($contacto->getInputFilter());
-            $form->setData($request->getPost());
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $form->setInputFilter($contacto->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $this->getContactoTable()->save($contacto);
+                if ($form->isValid()) {
+                    $this->getContactoTable()->save($contacto);
 
-                // actualizacion del config centros.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
-                
-                // registro en el sistema que ha actualizado un contacto para el centro
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro->id);
-                
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Contacto editado satisfactoriamente');
-                // redireccion a lista de contactos del centro
-                return $this->redirect()->toRoute('contacto', array(
-                        'action' => 'listar',
-                        'id'=>$contacto->centro_id,
-                ));
-            }
+                    // actualizacion del config centros.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+
+                    // registro en el sistema que ha actualizado un contacto para el centro
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, $centro->id);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Contacto editado satisfactoriamente');
+                }
+            } 
+            // redireccion a lista de contactos del centro
+            return $this->redirect()->toRoute('contacto', array(
+                'action' => 'listar',
+                'id'=>$contacto->centro_id,
+            ));
+            
         }
 
         return array(

@@ -58,26 +58,27 @@ class UsuarioController extends AbstractActionController {
     public function addAction() {
         $form = new UsuarioForm();
         $this->getCatalogoUsuarios($form);
-        $form->get('submit')->setValue('Agregar');
-
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $usuario = new Usuario();
-            $form->setInputFilter($usuario->getInputFilter());
-            $form->setData($request->getPost());
+            if(!$request->getPost('Cancelar')){
+                $usuario = new Usuario();
+                $form->setInputFilter($usuario->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $config = $this->getConfig('encrypt');
-                $utilUser = new UtilUsuario($config);
-                                
-                $usuario->exchangeArray($form->getData());
-                // cifrado del password antes de almacenarlo
-                $usuario->password = $utilUser->cifrar($usuario->password);
-                
-                $this->getUsuarioTable()->save($usuario);
+                if ($form->isValid()) {
+                    $config = $this->getConfig('encrypt');
+                    $utilUser = new UtilUsuario($config);
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Usuario agregado satisfactoriamente');
+                    $usuario->exchangeArray($form->getData());
+                    // cifrado del password antes de almacenarlo
+                    $usuario->password = $utilUser->cifrar($usuario->password);
+
+                    $this->getUsuarioTable()->save($usuario);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Usuario agregado satisfactoriamente');
+
+                }
                 // Redireccionar a la lista de usuarios
                 return $this->redirect()->toRoute('usuario');
             }
@@ -115,18 +116,23 @@ class UsuarioController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($usuario->getInputFilter());
-            $form->setData($request->getPost());
-            
-            if ($form->isValid()) {
-                $usuario->password = $utilUser->cifrar($usuario->password);
-                $this->getUsuarioTable()->save($usuario);
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                $form->setInputFilter($usuario->getInputFilter());
+                $form->setData($request->getPost());
 
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Usuario editado satisfactoriamente');
-                // Redirect to list of albums
-                return $this->redirect()->toRoute('usuario');
+                if ($form->isValid()) {
+                    $usuario->password = $utilUser->cifrar($usuario->password);
+                    $this->getUsuarioTable()->save($usuario);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Usuario editado satisfactoriamente');
+
+                }
             }
+            // Redirect to list of albums
+            return $this->redirect()->toRoute('usuario');
+           
         }
         
         

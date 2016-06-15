@@ -66,15 +66,22 @@ use Zend\Form\Form;
              ),
          ));
          
-        
-         
          $this->add(array(
              'name' => 'submit',
              'type' => 'Submit',
              'attributes' => array(
                  'class' =>'btn btn-lg btn-success',
-                 'value' => 'Aplicar',
+                 'value' => 'Aceptar',
                  'id' => 'submitbutton',
+             ),
+         ));
+         
+          $this->add(array(
+             'name' => 'submit',
+             'type' => 'Submit',
+             'attributes' => array(
+                 'class' =>'btn btn-lg btn-danger',
+                 'value' => 'Cancelar',
              ),
          ));
      }
