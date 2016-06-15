@@ -34,6 +34,7 @@ use Centro\Util\CatalogoValor as Catalogo;
                 $usuarioestandar = true;
             }
             
+            if($element->getName() == 'password') continue;
     ?>
     <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
@@ -45,6 +46,10 @@ use Centro\Util\CatalogoValor as Catalogo;
                         ->setMessageSeparatorString('</p><p class="help-block">')
                         ->setMessageCloseString('</p>')
                         ->render($element);
+            }
+            
+            if($element->getName() == 'submit') {
+                echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Password</a>';
             }
         ?>
     </div>
