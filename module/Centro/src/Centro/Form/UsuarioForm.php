@@ -51,7 +51,7 @@ use Zend\Form\Element;
          ));
          $this->add(array(
              'name' => 'password',
-             'type' => 'Text',
+             'type' => 'Password',
              'options' => array(
                  'label' => 'Password',
              ),

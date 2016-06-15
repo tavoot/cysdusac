@@ -1,12 +1,15 @@
 <?php
-// module/Album/view/album/album/edit.phtml:
-use Centro\Util\CatalogoValor as Catalogo;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
-$title = 'Perfil de Usuario';
+$title = 'Actualizar Password';
 $this->headTitle($title);
+
 ?>
 
-<div class='panel panel-info'>
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); ?>
+<?php echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('alert','alert-danger')); ?>
+
+<div class='panel panel-primary'>
     <div class='panel-heading'>
         <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
@@ -17,41 +20,17 @@ $form = $this->form;
 $form->setAttribute('action', $this->url(
     'usuario',
     array(
-        'action' => 'perfil',
+        'action' => 'cambiarpass',
         'id'     => $this->id,
     )
 ));
+
 $form->prepare();
-
-$usuarioestandar = false;
-if($tipoUsuario == Catalogo::ESTANDAR) {
-    $usuarioestandar = true;
-}
-
 ?>
 
 <div class="row">
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
-    <?php 
-        if($element->getName() == 'tipo'){
-            $element->setAttributes(array('disabled' => 'disabled'));
-        }
-        
-        if($usuarioestandar){
-            switch ($element->getName()){
-                case "usuario":
-                $element->setAttributes(array('readonly' => 'true'));
-                break;
-                case "pais":
-                $element->setAttributes(array('readonly' => 'true'));
-                break;
-            }
-        }
-        
-        if($element->getName() == 'password') continue;
-            
-    ?>
     <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>
         <?php
