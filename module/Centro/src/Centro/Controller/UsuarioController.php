@@ -266,27 +266,21 @@ class UsuarioController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Pefil de usuario actualizado satisfactoriamente');
-                    // solo para visualizar el mensaje de la transaccion
+                    // se realiza redireccion para que visualizar mensaje de la transaccion
+                    return $this->redirect()->toRoute('usuario', array('action' => 'perfil', 'id' => $id));
                 } 
+            } else {
+                // redirigir al inicio en caso de cancelar
+                return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
             }
-          
-         //redirigir
-         return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
+         
         }
-        
-        
-        $centros = array();
-        $usuarioscentros = $this->getUsuarioCentroTable()->getByUsuario($id);
-        foreach($usuarioscentros as $usuariocentro){
-            $centro = $this->getCentroTable()->get($usuariocentro->centro_id);
-                array_push($centros, $centro);
-        }
+
         $tipoUsuario = Session::getUsuario($this->getServiceLocator())->tipo;
         
         return array(
             'id' => $id,
             'form' => $form,
-            'centros'=>$centros,
             'tipoUsuario' => $tipoUsuario,
         );
     }
@@ -334,11 +328,14 @@ class UsuarioController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Password actualizado satisfactoriamente');
+                    // se redirije al perfil de usuario
+                    return $this->redirect()->toRoute('usuario', array('action' => 'cambiarpass', 'id' => $id));
                 }
+            } else {
+                // solo para visualizar el mensaje de la transaccion
+                return $this->redirect()->toRoute('usuario', array('action' => 'perfil', 'id' => $id));
             }
             
-            // solo para visualizar el mensaje de la transaccion
-            return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
         }
         
         return array(

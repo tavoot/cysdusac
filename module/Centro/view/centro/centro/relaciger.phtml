@@ -1,7 +1,14 @@
  <?php
+ use Zend\Mvc\Controller\Plugin\FlashMessenger;
+ 
  $title = "RELACIGER - Informacion General";
  $this->headTitle($title);
  ?>
+
+<?php 
+echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); 
+echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('alert','alert-danger')); 
+?>
 
 <div class='panel panel-primary'>
     <div class='panel-heading'>

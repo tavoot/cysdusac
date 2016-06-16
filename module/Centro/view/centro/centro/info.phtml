@@ -2,7 +2,7 @@
 // module/Album/view/album/album/edit.phtml:
 use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
-$title = 'Informacion General Centro';
+$title = $centro->siglas . ' - Información General';
 $this->headTitle($title);
 
 $form = $this->form;
@@ -22,6 +22,14 @@ echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('aler
 echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('alert','alert-danger')); 
 ?>
 
+<div class="row">
+    <div class='panel panel-primary'>
+        <div class='panel-heading'>
+            <h1><?php echo $this->escapeHtml($title); ?></h1>
+        </div>
+    </div>
+</div>
+    
 <div class="row">
     <div class='panel panel-primary'>
         <div class='panel-heading'>
