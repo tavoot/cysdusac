@@ -64,8 +64,8 @@ class XmlGenerator {
         
         switch ($tipo_archivo){
             case self::CONFIG_RELACIGER:
-                $xmlReservado = array("<", ">", "&#39;");
-                $xmlReemplazo = array("&lt;", "&gt;", "&apos;");
+                $xmlReservado = array("<", ">", "&#39;", "&aacute;", "&Aacute;", "&eacute;", "&Eacute;", "&iacute;", "&Iacute;", "&oacute;", "&Oacute;", "&uacute;", "&Uacute;", "&ntilde;", "&Ntilde;");
+                $xmlReemplazo = array("&lt;", "&gt;", "&apos;", "á", "Á", "é", "É", "í", "Í", "ó", "Ó", "ú", "Ú", "ñ", "Ñ");
                 
                 $writer->openURI($this->pathConfig.'relaciger.xml');
                 $writer->startDocument('1.0','UTF-8');
