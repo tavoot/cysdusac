@@ -315,10 +315,13 @@ class CentroController extends AbstractActionController {
                     $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general guardada satisfactoriamente');
+                    // ser redirecciona a relaciger para visualizar el mensaje de la transaccion
+                    return $this->redirect()->toRoute('centro', array('action' => 'relaciger'));
                 }
+            } else {
+                // Redireccionar a la lista de centros
+                return $this->redirect()->toRoute('centro', array('action' => 'inicio'));
             }
-            // Redireccionar a la lista de centros
-            return $this->redirect()->toRoute('centro');
         }
         
         return array('form' => $form);

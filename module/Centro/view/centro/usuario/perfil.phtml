@@ -1,9 +1,15 @@
 <?php
 // module/Album/view/album/album/edit.phtml:
 use Centro\Util\CatalogoValor as Catalogo;
+use Zend\Mvc\Controller\Plugin\FlashMessenger;
 
 $title = 'Perfil de Usuario';
 $this->headTitle($title);
+?>
+
+<?php 
+echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_INFO, array('alert','alert-info')); 
+echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('alert','alert-danger')); 
 ?>
 
 <div class='panel panel-primary'>
@@ -74,9 +80,6 @@ if($tipoUsuario == Catalogo::ESTANDAR) {
                         ->render($element);
             }
             
-            if ($element->getName() == 'usuario') {
-                echo ' <a class="btn btn-sm btn-warning" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cambiar Password</a>';
-            }
         ?>
     </div>
 <?php endforeach; ?>
