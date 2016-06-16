@@ -10,7 +10,7 @@ namespace Centro\Model\Logic;
 
 use Zend\Db\TableGateway\TableGateway;
 use Centro\Model\Data\Version;
-
+use \Zend\Db\Sql\Select;
 
 class VersionTable{
     
@@ -23,7 +23,11 @@ class VersionTable{
      
      public function fetchAll()
      {
-         $resultSet = $this->tableGateway->select();
+         $select = new Select();
+         $select->from('version');
+         $select->order('version DESC');
+         
+         $resultSet = $this->tableGateway->selectWith($select);
          return $resultSet;
      }
      

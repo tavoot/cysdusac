@@ -1,5 +1,5 @@
 <?php
-$title ="Edicion de Contacto". " - " . $centro->siglas ;
+$title = $centro->siglas . " - Edicion de Contacto";
 $this->headTitle($title);
 ?>
 
@@ -20,6 +20,13 @@ $form->prepare();
 <div class="row">
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
+    <?php
+        if ($element->getName() == 'submit') {
+            echo $this->formElement($element);
+            continue;
+            //echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cancelar</a>';
+        }
+        ?>
     
     <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
         <label class="control-label"><?php echo $element->getLabel() ?></label>

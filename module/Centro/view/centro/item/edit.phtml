@@ -1,6 +1,6 @@
  <?php
 
-$title ="Editar Item (Canal Interno) - ". $centro->siglas ;
+$title = $centro->siglas . " - Editar Item (Canal Interno)";
  $this->headTitle($title);
  ?>
  <div class='panel panel-warning'>
@@ -26,6 +26,13 @@ $title ="Editar Item (Canal Interno) - ". $centro->siglas ;
 <?php echo $this->form()->openTag($form); ?>
     <br>
     <?php foreach($form as $element): ?>
+     <?php
+        if ($element->getName() == 'submit') {
+            echo $this->formElement($element);
+            continue;
+            //echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cancelar</a>';
+        }
+    ?>
     <?php if($element->getName() == 'id' || $element->getName() == 'canal_id') {
         echo $this->formElement($element);
     } else {

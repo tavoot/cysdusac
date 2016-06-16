@@ -1,66 +1,68 @@
- <?php
- // module/Album/view/album/album/edit.phtml:
+<?php
+
+// module/Album/view/album/album/edit.phtml:
 use Centro\Util\CatalogoValor as Catalogo;
 
-
- $title = 'Editar Usuario';
- $this->headTitle($title);
- ?>
- <div class='panel panel-warning'>
+$title = 'Editar Usuario';
+$this->headTitle($title);
+?>
+<div class='panel panel-warning'>
     <div class='panel-heading'>
         <h3><?php echo $this->escapeHtml($title); ?></h3>
     </div>
- </div>
+</div>
 
- <?php
- $form = $this->form;
- $form->setAttribute('action', $this->url(
-     'usuario',
-     array(
-         'action' => 'edit',
-         'id'     => $this->id,
-     )
- ));
- $form->prepare();
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('usuario', array('action' => 'edit', 'id' => $this->id)));
+$form->prepare();
 
- $usuarioestandar = false;
+$usuarioestandar = false;
 ?>
 
 <div class="row">
-<?php echo $this->form()->openTag($form); ?>
-<?php foreach($form as $element): ?>
-    <?php 
-            if($element->getValue() == Catalogo::ESTANDAR){
-                $usuarioestandar = true;
-            }
-            
-            if($element->getName() == 'password') continue;
-    ?>
-    <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
-        <label class="control-label"><?php echo $element->getLabel() ?></label>
+    <?php echo $this->form()->openTag($form); ?>
+    <?php foreach ($form as $element): ?>
         <?php
-            echo $this->formElement($element);  
-            if($this->formElementErrors($element)){
+        if ($element->getName() == 'submit') {
+            echo $this->formElement($element);
+            continue;
+        }
+        ?>
+        <?php
+        if ($element->getValue() == Catalogo::ESTANDAR) {
+            $usuarioestandar = true;
+        }
+
+
+        if ($element->getName() == 'password')
+            continue;
+        ?>
+        <div class="form-group <?php if ($this->formElementErrors($element)) echo "has-error" ?>">
+            <label class="control-label"><?php echo $element->getLabel() ?></label>
+            <?php
+            echo $this->formElement($element);
+            if ($this->formElementErrors($element)) {
                 echo $this->formElementErrors()
                         ->setMessageOpenFormat('<p class="help-block">')
                         ->setMessageSeparatorString('</p><p class="help-block">')
                         ->setMessageCloseString('</p>')
                         ->render($element);
             }
-            
-            if($element->getName() == 'submit') {
-                echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Password</a>';
+
+            if ($element->getName() == 'usuario') {
+                echo ' <a class="btn btn-sm btn-warning" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cambiar Password</a>';
             }
-        ?>
-    </div>
-<?php endforeach; ?>
-<?php echo $this->form()->closeTag(); ?>
+            ?>
+        </div>
+    <?php endforeach; ?>
+    <?php echo $this->form()->closeTag(); ?>
 </div>
 
 <div>
     <?php
-        if($usuarioestandar){
-            echo $this->partial("centro/usuario/partial/edit/centros.phtml", array('centros'=>$this->centros));
-        }
+    if ($usuarioestandar) {
+        echo $this->partial("centro/usuario/partial/edit/centros.phtml", array('centros' => $this->centros));
+    }
     ?>
 </div>

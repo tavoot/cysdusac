@@ -40,27 +40,71 @@ class VersionController extends AbstractActionController {
         return $this->cambioTable;
     }
     
+    public function listarAction(){
+        
+        try { 
+            //variable global
+            $versiones= $this->getVersionTable()->fetchAll();
+            
+            return array(
+                'versiones'=>$versiones
+            );
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id'=>$centro_id,
+            ));
+        }
+    }
+    
     public function addAction(){
         $form = new VersionForm();
-        $form->get('submit')->setValue('Generar Nueva Version');
         $request = $this->getRequest();
         
         if ($request->isPost()){
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Revision creada satisfactoriamente');
-                // redireccion a lista de contactos del centro
+            $submit = $request->getPost('submit', 'Cancelar');
+            if($submit=='Aceptar'){
+                
+                //$data = $this->createAction();
+                $this->build();
+                
+                
                 
                 return $this->redirect()->toRoute('version', array(
-                            'action' => 'create',
+                            'action' => 'listar',
                 ));
+            }
+            
+            // redireccion a lista de contactos del centro
+            return $this->redirect()->toRoute('version', array(
+                            'action' => 'listar',
+            ));
+                
         }
-        
         return array(
             'form' => $form
         );
     }
+    
+     public function build(){
+        $request = $this->getRequest();
+        if ($request instanceof HttpRequest) {
+            $this->procesar();
+                //MENSAJE DE LA TRANSACCION
+                if($this->getTipo()==Catalogo::OLDVERSION){
+                    $this->flashMessenger()->addWarningMessage($this->getMessage());
+                }else if ($this->getTipo()==Catalogo::NEWVERSION){
+                    $this->flashMessenger()->addInfoMessage($this->getMessage());
+                }
+            
+        
+        } else {
+            throw new RuntimeException('No se puede gestionar el tipo de solicitud  ' . get_class($request));
+        }
+    }
 
-    public function createAction() {
+    public function createAction(){
         $request = $this->getRequest();
         if ($request instanceof HttpRequest) {
             $this->procesar();

@@ -99,34 +99,32 @@ class ItemController extends AbstractActionController {
         }
 
         $form = new ItemForm();
-        $form->get('submit')->setValue('Agregar');
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $item = new Item();
-            $form->setInputFilter($item->getInputFilter());
-            $form->setData($request->getPost());
+            if(!$request->getPost('Cancelar')){
+                $item = new Item();
+                $form->setInputFilter($item->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $item->exchangeArray($form->getData());
-                $this->getItemTable()->save($item);
+                if ($form->isValid()) {
+                    $item->exchangeArray($form->getData());
+                    $this->getItemTable()->save($item);
 
+                    //registrar cambio en el sistema cuando se agrega un item de un canal al centro
+                    $canal = $this->getCanalTable()->get($canal_id);
+                    $centro = $this->getCentroTable()->get($canal->centro_id);
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
+                    // actualizacion del archivo canalrss.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlCentro($centro->id);
 
-
-                //registrar cambio en el sistema cuando se agrega un item de un canal al centro
-                $canal = $this->getCanalTable()->get($canal_id);
-                $centro = $this->getCentroTable()->get($canal->centro_id);
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
-
-                // actualizacion del archivo canalrss.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlCentro($centro->id);
-                
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Nuevo item de noticia agregado satisfactoriamente');
-                
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Nuevo item de noticia agregado satisfactoriamente');
+                }
+            
                 // Redireccionar a la lista de canales
                 return $this->redirect()->toRoute('item', array(
                             'action' => 'listar',
@@ -164,33 +162,34 @@ class ItemController extends AbstractActionController {
 
         $form = new ItemForm();
         $form->bind($item);
-        $form->get('submit')->setAttribute('value', 'Aplicar');
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $form->setInputFilter($item->getInputFilter());
-            $form->setData($request->getPost());
+            $cancelar = $request->getPost('submit', 'Cancelar');
+            if($cancelar=='Aceptar'){
+                $form->setInputFilter($item->getInputFilter());
+                $form->setData($request->getPost());
 
-            if ($form->isValid()) {
-                $this->getItemTable()->save($item);
+                if ($form->isValid()) {
+                    $this->getItemTable()->save($item);
 
 
-                //registrar cambio en el sistema cuando se eidta un item de un canal al centro
-                $log = new Log($this->getServiceLocator());
-                $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
+                    //registrar cambio en el sistema cuando se eidta un item de un canal al centro
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_CANALES_DE_CENTRO, $centro->id);
 
-                // actualizacion del archivo canalrss.xml
-                $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                $writer->writeXmlCentro($centro->id);
-                
-                // mensaje de la transaccion
-                $this->flashMessenger()->addInfoMessage('Item de noticia editado satisfactoriamente');
-                
-                return $this->redirect()->toRoute('item', array(
-                            'action' => 'listar',
-                            'id' => $item->canal_id,
-                ));
-            }
+                    // actualizacion del archivo canalrss.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlCentro($centro->id);
+
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Item de noticia editado satisfactoriamente');
+                }
+            }   
+            return $this->redirect()->toRoute('item', array(
+                'action' => 'listar',
+                'id' => $item->canal_id,
+            ));
         }
 
         return array(
@@ -224,8 +223,7 @@ class ItemController extends AbstractActionController {
 
             if ($del == 'Si') {
                 $id = (int) $request->getPost('id');
-
-
+                
                 //elimina un canal de la base de datos
                 $this->getItemTable()->delete($id);
 
