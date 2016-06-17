@@ -40,7 +40,7 @@ if($tipoUsuario == Catalogo::ESTANDAR) {
 <?php echo $this->form()->openTag($form); ?>
 <?php foreach($form as $element): ?>
     <?php
-        if ($element->getName() == 'submit') {
+        if ($element->getName() == 'submit' || $element->getName()=='sbtcancelar') {
             echo $this->formElement($element);
             continue;
             //echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cancelar</a>';
@@ -80,6 +80,9 @@ if($tipoUsuario == Catalogo::ESTANDAR) {
                         ->render($element);
             }
             
+            if ($element->getName() == 'usuario') {
+                echo '<a class="btn btn-sm btn-warning" href="' . $this->url('usuario', array('action' => 'cambiarpass', 'id' => $this->id)) . '">Actualizar Password</a>';
+            }
         ?>
     </div>
 <?php endforeach; ?>

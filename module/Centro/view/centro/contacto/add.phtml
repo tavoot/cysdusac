@@ -18,7 +18,7 @@ $form->prepare();
     <?php echo $this->form()->openTag($form); ?>
     <?php foreach ($form as $element): ?>
         <?php
-        if ($element->getName() == 'submit') {
+        if ($element->getName() == 'submit' || $element->getName()=='sbtcancelar'){
             echo $this->formElement($element);
             continue;
             //echo ' <a class="btn btn-lg btn-info" href="' . $this->url('usuario', array('action' => 'editpass', 'id' => $this->id)) . '">Cancelar</a>';

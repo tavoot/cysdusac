@@ -65,12 +65,7 @@ class VersionController extends AbstractActionController {
         if ($request->isPost()){
             $submit = $request->getPost('submit', 'Cancelar');
             if($submit=='Aceptar'){
-                
-                //$data = $this->createAction();
                 $this->build();
-                
-                
-                
                 return $this->redirect()->toRoute('version', array(
                             'action' => 'listar',
                 ));
@@ -148,7 +143,7 @@ class VersionController extends AbstractActionController {
 
                 // Escribo en el archivo control
                 $writer = new XmlGenerator($this->getServiceLocator());
-                $writer->writeXmlConfig(XmlGenerator::CONFIG_CONTROL);
+                $writer->writeXmlConfig(XmlGenerator::CONFIG_CONTROL, $newversion);
                 $this->setTipo(Catalogo::NEWVERSION);
                 $this->setMessage("Se ha creado la version $newversion del fichero control".PHP_EOL);
 
@@ -157,6 +152,32 @@ class VersionController extends AbstractActionController {
                 $this->setMessage("No se han registrado cambios en el sistema".PHP_EOL);
             }
         }
+    }
+    
+    public function viewAction(){
+        $id = (int) $this->params()->fromRoute('id', 0);
+        if (!$id) {
+            return $this->redirect()->toRoute('version', array(
+                        'action' => 'listar'
+            ));
+        }
+
+        try {
+             // Escribo en el archivo control
+            $writer = new XmlGenerator($this->getServiceLocator());
+            $writer->writeXmlConfig(XmlGenerator::CONFIG_CONTROL, $id);
+        
+             //redireccion a lista de contactos del centro
+            return $this->redirect()->toUrl('/data-app-relaciger/config/control.xml');
+            
+            
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('version', array(
+                        'action' => 'listar'
+            ));
+        }
+       
+       
     }
     
     

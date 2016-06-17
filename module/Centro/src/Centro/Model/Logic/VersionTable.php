@@ -26,6 +26,7 @@ class VersionTable{
          $select = new Select();
          $select->from('version');
          $select->order('version DESC');
+         $select->limit(10);
          
          $resultSet = $this->tableGateway->selectWith($select);
          return $resultSet;

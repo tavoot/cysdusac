@@ -118,7 +118,7 @@ class CentroController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $centro = new Centro();
                 $form->setInputFilter($centro->getInputFilter());
@@ -196,7 +196,7 @@ class CentroController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $form->setInputFilter($centro->getInputFilter());
                 $form->setData($request->getPost());
@@ -219,11 +219,14 @@ class CentroController extends AbstractActionController {
 
                     // dependiendo del tipo de usuario redirige a distinta pagina
                     $datosUsuario = Session::getUsuario($this->getServiceLocator());
+                    // Redirect to info
+                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
                 }
              }
-             
-            // Redirect to info
-            return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+             else{
+                // Redirect to info
+                return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+            }
             
         }
 
@@ -293,7 +296,7 @@ class CentroController extends AbstractActionController {
         
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $form->setInputFilter($centro->getInputFilter());
                 $form->setValidationGroup('id', 'nombre', 'siglas', 'sitio_web', 'mision', 'vision', 'descripcion');
@@ -313,6 +316,11 @@ class CentroController extends AbstractActionController {
                     // actualizamos el config relaciger.xml
                     $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
                     $writer->writeXmlConfig(XmlGenerator::CONFIG_RELACIGER);
+                    
+                    // agregamos un registro de cambios al sistema con la opcion de eliminar
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_INFORMACION_GENERAL, self::RELACIGER);
+                    
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('RELACIGER - Informacion general guardada satisfactoriamente');
                     // ser redirecciona a relaciger para visualizar el mensaje de la transaccion

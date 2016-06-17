@@ -63,7 +63,7 @@ return array(
                     'cambiarpass' => 'usuario',
                 ),
                 'Centro\Controller\Version' => array(
-                    'create'     => 'administrador',
+                    'view'     => 'administrador',
                     'add'       =>  'administrador',
                     'listar'    =>  'administrador',
                 ),

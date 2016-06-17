@@ -45,7 +45,7 @@ class XmlGenerator {
         $this->pathCentrosStat = FileManager::PUBLIC_PATH_CENTROS;
         $this->serverUrl = sprintf('%s://%s%s/', $protocolo, $host, $basepath);
     }
-
+    
     
     /**
      * Genera el archivo xml de configuracion segun el parametro indicado
@@ -54,7 +54,7 @@ class XmlGenerator {
      * @param type $tipo_archivo
      * @return boolean
      */
-    public function writeXmlConfig($tipo_archivo) {
+    public function writeXmlConfig($tipo_archivo, $version_id='') {
         $writer = new \XMLWriter();
         
         // Ya que existe actualizacion sobre relaciger y se necesita actualizar
@@ -136,7 +136,7 @@ class XmlGenerator {
                   
                   // obtengo la clase para setear la version
                 $versionTable = $this->serviceManager->get('Centro\Model\Logic\VersionTable');
-                $version = $versionTable->get($versionTable->getLastValue());
+                $version = $versionTable->get($version_id);
                 
                 $writer->startElement('control'); //<principal>
                 $writer->writeElement('version', $version->version);

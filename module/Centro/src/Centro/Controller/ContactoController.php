@@ -92,7 +92,7 @@ class ContactoController extends AbstractActionController {
         $request = $this->getRequest();
         
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $contacto= new Contacto();
                 $form->setInputFilter($contacto->getInputFilter());
@@ -112,13 +112,18 @@ class ContactoController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Contacto agregado satisfactoriamente');
+                    return $this->redirect()->toRoute('contacto', array(
+                    'action' => 'listar',
+                    'id' => $centro_id,
+                     ));
                 }
+            } else{
+                // redireccion a lista de contactos del centro
+                return $this->redirect()->toRoute('contacto', array(
+                'action' => 'listar',
+                'id' => $centro_id,
+                ));
             }
-            // redireccion a lista de contactos del centro
-            return $this->redirect()->toRoute('contacto', array(
-            'action' => 'listar',
-            'id' => $centro_id,
-            ));
             
         }
         
@@ -153,7 +158,7 @@ class ContactoController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $form->setInputFilter($contacto->getInputFilter());
                 $form->setData($request->getPost());
@@ -171,13 +176,20 @@ class ContactoController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Contacto editado satisfactoriamente');
+                    // redireccion a lista de contactos del centro
+                    return $this->redirect()->toRoute('contacto', array(
+                        'action' => 'listar',
+                        'id'=>$contacto->centro_id,
+                    ));
+                    
                 }
-            } 
-            // redireccion a lista de contactos del centro
-            return $this->redirect()->toRoute('contacto', array(
-                'action' => 'listar',
-                'id'=>$contacto->centro_id,
-            ));
+            }else{
+                // redireccion a lista de contactos del centro
+                return $this->redirect()->toRoute('contacto', array(
+                    'action' => 'listar',
+                    'id'=>$contacto->centro_id,
+                ));
+            }
             
         }
 

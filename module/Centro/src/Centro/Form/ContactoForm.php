@@ -86,7 +86,7 @@ use Zend\Form\Form;
          ));
          
           $this->add(array(
-             'name' => 'submit',
+             'name' => 'sbtcancelar',
              'type' => 'Submit',
              'attributes' => array(
                  'class' =>'btn btn-lg btn-danger',

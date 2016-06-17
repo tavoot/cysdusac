@@ -62,7 +62,8 @@ class UsuarioController extends AbstractActionController {
         $this->getCatalogoUsuarios($form);
         $request = $this->getRequest();
         if ($request->isPost()) {
-            if(!$request->getPost('Cancelar')){
+            $submit = $request->getPost('submit');
+            if($submit=='Aceptar'){
                 $usuario = new Usuario();
                 $form->setInputFilter($usuario->getInputFilter());
                 $form->setData($request->getPost());
@@ -79,10 +80,14 @@ class UsuarioController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Usuario agregado satisfactoriamente');
-
+                    
+                    // Redireccionar a la lista de usuarios
+                    return $this->redirect()->toRoute('usuario');
                 }
+            }else{
                 // Redireccionar a la lista de usuarios
                 return $this->redirect()->toRoute('usuario');
+            
             }
         }
         
@@ -115,8 +120,8 @@ class UsuarioController extends AbstractActionController {
         
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
-            if ($submit == 'Aceptar') {
+            $submit = $request->getPost('submit');
+            if($submit=='Aceptar'){
                 $form->setInputFilter($usuario->getInputFilter());
                 $form->setValidationGroup('id', 'tipo', 'usuario', 'email', 'pais');
                 $form->setData($request->getPost());
@@ -128,10 +133,14 @@ class UsuarioController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Usuario editado satisfactoriamente');
+                    // Redirect to list of albums
+                    return $this->redirect()->toRoute('usuario');
                 }
+            }else{
+                // Redirect to list of albums
+                return $this->redirect()->toRoute('usuario');
             }
-            // Redirect to list of albums
-            return $this->redirect()->toRoute('usuario');
+            
         }
 
 
@@ -252,7 +261,7 @@ class UsuarioController extends AbstractActionController {
         $form->bind($usuario);
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if ($submit == 'Aceptar') {
                 $form->setInputFilter($usuario->getInputFilter());
                 $form->setValidationGroup('id', 'usuario', 'email', 'pais');
@@ -268,6 +277,7 @@ class UsuarioController extends AbstractActionController {
                     $this->flashMessenger()->addInfoMessage('Pefil de usuario actualizado satisfactoriamente');
                     // se realiza redireccion para que visualizar mensaje de la transaccion
                     return $this->redirect()->toRoute('usuario', array('action' => 'perfil', 'id' => $id));
+                    
                 } 
             } else {
                 // redirigir al inicio en caso de cancelar
@@ -305,7 +315,7 @@ class UsuarioController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if ($submit == 'Aceptar') {
                 $form->setData($request->getPost());
 
@@ -329,7 +339,7 @@ class UsuarioController extends AbstractActionController {
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Password actualizado satisfactoriamente');
                     // se redirije al perfil de usuario
-                    return $this->redirect()->toRoute('usuario', array('action' => 'cambiarpass', 'id' => $id));
+                    return $this->redirect()->toRoute('usuario', array('action' => 'perfil', 'id' => $id));
                 }
             } else {
                 // solo para visualizar el mensaje de la transaccion

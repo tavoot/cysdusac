@@ -102,7 +102,8 @@ class ItemController extends AbstractActionController {
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            if(!$request->getPost('Cancelar')){
+            $submit = $request->getPost('submit');
+            if($submit=='Aceptar'){
                 $item = new Item();
                 $form->setInputFilter($item->getInputFilter());
                 $form->setData($request->getPost());
@@ -123,15 +124,19 @@ class ItemController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Nuevo item de noticia agregado satisfactoriamente');
+                    return $this->redirect()->toRoute('item', array(
+                                'action' => 'listar',
+                                'id' => $canal_id,
+                    ));
                 }
-            
-                // Redireccionar a la lista de canales
-                return $this->redirect()->toRoute('item', array(
-                            'action' => 'listar',
-                            'id' => $canal_id,
-                ));
+            }else{
+                    // Redireccionar a la lista de canales
+                    return $this->redirect()->toRoute('item', array(
+                                'action' => 'listar',
+                                'id' => $canal_id,
+                    ));
+                }
             }
-        }
 
         $this->canal = $this->getCanalTable()->get($canal_id);
         if ($this->canal) {
@@ -165,8 +170,8 @@ class ItemController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $cancelar = $request->getPost('submit', 'Cancelar');
-            if($cancelar=='Aceptar'){
+            $submit = $request->getPost('submit');
+            if($submit=='Aceptar'){
                 $form->setInputFilter($item->getInputFilter());
                 $form->setData($request->getPost());
 
@@ -184,12 +189,17 @@ class ItemController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Item de noticia editado satisfactoriamente');
+                    return $this->redirect()->toRoute('item', array(
+                        'action' => 'listar',
+                        'id' => $item->canal_id,
+                    ));
                 }
-            }   
-            return $this->redirect()->toRoute('item', array(
-                'action' => 'listar',
-                'id' => $item->canal_id,
-            ));
+            }else{   
+                return $this->redirect()->toRoute('item', array(
+                    'action' => 'listar',
+                    'id' => $item->canal_id,
+                ));
+            }
         }
 
         return array(

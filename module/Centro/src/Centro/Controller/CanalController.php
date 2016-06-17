@@ -95,7 +95,7 @@ class CanalController extends AbstractActionController {
         $request = $this->getRequest();
 
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $canal = new Canal();
                 $form->setInputFilter($canal->getInputFilter());
@@ -124,13 +124,19 @@ class CanalController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Canal agregado satisfactoriamente');
+                    // Redireccionar a la lista de canales
+                    return $this->redirect()->toRoute('canal', array(
+                        'action' => 'listar',
+                        'id' => $centro_id,    
+                    ));
                 }
+            }else{
+                // Redireccionar a la lista de canales
+                return $this->redirect()->toRoute('canal', array(
+                    'action' => 'listar',
+                    'id' => $centro_id,    
+                ));
             }
-            // Redireccionar a la lista de canales
-            return $this->redirect()->toRoute('canal', array(
-                'action' => 'listar',
-                'id' => $centro_id,    
-            ));
         }
 
 
@@ -140,9 +146,31 @@ class CanalController extends AbstractActionController {
             'form' => $form, 'centro' => $centro,
         );
     }
+    
+
+public function redirecionarCanal($canal, $centro) {
+    if ($canal->tipo == Catalogo::EXTERNO) {
+            
+    //redirigir a la lista de canales del centro
+    return $this->redirect()->toRoute('canal', array(
+        'action' => 'listar',
+        'id' => $centro->id,
+    ));
+   
+    
+    } if ($canal->tipo == Catalogo::INTERNO) {
+        
+    //redirigir a la lista de items con el id del canal
+    return $this->redirect()->toRoute('item', array(
+        'action' => 'listar',
+        'id' => $canal->id,
+         ));
+    }
+}
 
 
-    public function editAction() {
+
+public function editAction() {
         $canal_id = (int) $this->params()->fromRoute('id', 0);
         if (!$canal_id) {
             return $this->redirect()->toRoute('canal', array(
@@ -164,7 +192,7 @@ class CanalController extends AbstractActionController {
 
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
+            $submit = $request->getPost('submit');
             if($submit=='Aceptar'){
                 $form->setInputFilter($canal->getInputFilter());
                 $form->setData($request->getPost());
@@ -184,27 +212,16 @@ class CanalController extends AbstractActionController {
 
                         // mensaje de la transaccion
                         $this->flashMessenger()->addInfoMessage('Canal editado satisfactoriamente');
+                        //redireccion de segun el tipo de canal
+                        $this->redirecionarCanal($canal, $centro);
                     }
                 }
-                
-                //redireccion de segun el tipo de canal
-                if ($canal->tipo == Catalogo::EXTERNO) {
-                    //redirigir a la lista de canales del centro
-                    return $this->redirect()->toRoute('canal', array(
-                                'action' => 'listar',
-                                'id' => $centro->id,
-                    ));
-                } if ($canal->tipo == Catalogo::INTERNO) {
-                    // actualizacion del archivo canalrss.xml
-                    //$writer->writeXmlCentro($centro->id);
-
-                    //redirigir a la lista de items con el id del canal
-                    return $this->redirect()->toRoute('item', array(
-                                'action' => 'listar',
-                                'id' => $canal->id,
-                    ));
+                else{
+                    //redireccion de segun el tipo de canal
+                    $this->redirecionarCanal($canal, $centro);
                 }
         }
+
 
         return array(
             'form' => $form, 'canal' => $canal, 'centro' => $centro

@@ -14,6 +14,9 @@
     </div>
 </div>
 
+ <p>
+     <a class="btn btn-primary" href="<?php echo $this->url('version', array('action'=>'add'));?>">Agregar Nueva Version</a>
+ </p>
 
  <table class="table table-hover">
      <thead>
@@ -29,10 +32,8 @@
             <td><?php echo $this->escapeHtml($version->version);?></td>
             <td><?php echo $this->escapeHtml($version->fecha);?></td>
             <td>
-               <a class="btn btn-lg btn-warning" href="<?php echo $this->url('version',
-                   array('action'=>'ver', 'id' => $version->id));?>">Ver</a>
-                <a class="btn btn-lg btn-danger" href="<?php echo $this->url('version',
-                   array('action'=>'eliminar', 'id' => $version->id));?>">Eliminar</a>
+               <a class="btn btn-lg btn-warning" target="_blank" href="<?php echo $this->url('version',
+                   array('action'=>'view', 'id' => $version->id));?>">Descagar Fichero</a>
             </td>
         </tr>
         <?php endforeach; ?>
