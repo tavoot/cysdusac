@@ -164,10 +164,13 @@ class CentroController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Centro agregado satisfactoriamente');
+                    // Redireccionar a la lista de centros
+                    return $this->redirect()->toRoute('centro');
                 }
+            } else { 
+                // Redireccionar a la lista de centros
+                return $this->redirect()->toRoute('centro');
             }
-            // Redireccionar a la lista de centros
-            return $this->redirect()->toRoute('centro');
         }
         return array('form' => $form);
     }
