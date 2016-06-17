@@ -200,6 +200,11 @@ public function editAction() {
                     if ($form->isValid()) {
                         if ($canal->tipo == Catalogo::EXTERNO)
                             $canal->habilitado = 1;
+                        else {
+                            $serverUrl = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getHost());
+                            $urlCanalInterno = $serverUrl.$request->getBasePath().'/'.FileManager::PUBLIC_PATH_CENTROS.$centro->id.'/canal/canalrss.xml';
+                            $canal->enlace = $urlCanalInterno;
+                        }
                         $this->getCanalTable()->save($canal);
 
                         // actualizacion del config centros.xml
