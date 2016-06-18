@@ -360,67 +360,64 @@ class CentroController extends AbstractActionController {
         
         $request = $this->getRequest();
         if ($request->isPost()) {
-            $submit = $request->getPost('submit', 'Cancelar');
-            if($submit=='Aceptar'){
-                $data = array_merge_recursive(
-                        $request->getPost()->toArray(), 
-                        $request->getFiles()->toArray()
-                );
+            $data = array_merge_recursive(
+                    $request->getPost()->toArray(), 
+                    $request->getFiles()->toArray()
+            );
 
-                $form->setData($data);
+            $form->setData($data);
 
-                if ($form->isValid()) {
-                    // se carga el archivo seleccionado
-                    $result = $form->getData(); 
+            if ($form->isValid()) {
+                // se carga el archivo seleccionado
+                $result = $form->getData(); 
 
-                    $validatorExtension = new Extension(array('png','jpg'));
-                    $validatorDimension = new ImageDimension();
-                    $validatorImageSize = new ImageSize(array('minWidth' => 500, 'minHeight' => 500));
+                $validatorExtension = new Extension(array('png','jpg'));
+                $validatorDimension = new ImageDimension();
+                $validatorImageSize = new ImageSize(array('minWidth' => 500, 'minHeight' => 500));
 
-                    $httpAdapter = new Http();
-                    $httpAdapter->setValidators(array($validatorExtension,$validatorDimension,$validatorImageSize), $result['input_carga']['name']);
+                $httpAdapter = new Http();
+                $httpAdapter->setValidators(array($validatorExtension,$validatorDimension,$validatorImageSize), $result['input_carga']['name']);
 
-                    if(!$httpAdapter->isValid()){
-                        // mensaje de la transaccion
-                        $this->flashMessenger()->addErrorMessage('No pudo cargarse la imagen, verifique extension y dimensiones no menor a 500x500');
-                        // redireccion a info del centro
-                        return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
-                    } else {
-                        // definimos path y cargamos la imagen
-                        $pathImageTarget = FileManager::PATH_CENTROS.$id."/img";
-                        $httpAdapter->setDestination($pathImageTarget);
-                        $httpAdapter->receive($result['input_carga']['name']);
+                if(!$httpAdapter->isValid()){
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addErrorMessage('No pudo cargarse la imagen, verifique extension y dimensiones no menor a 500x500');
+                    // redireccion a info del centro
+                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
+                } else {
+                    // definimos path y cargamos la imagen
+                    $pathImageTarget = FileManager::PATH_CENTROS.$id."/img";
+                    $httpAdapter->setDestination($pathImageTarget);
+                    $httpAdapter->receive($result['input_carga']['name']);
 
-                        // renombramos la imagen cargada
-                        $extension = pathinfo($pathImageTarget."/".$result['input_carga']['name'], PATHINFO_EXTENSION);
-                        $newFileName = "imagen.".strtolower($extension);
+                    // renombramos la imagen cargada
+                    $extension = pathinfo($pathImageTarget."/".$result['input_carga']['name'], PATHINFO_EXTENSION);
+                    $newFileName = "imagen.".strtolower($extension);
 
-                        $filterRename = new Rename(array(
-                            'target' => $pathImageTarget."/".$newFileName,
-                            'overwrite' => true,
-                        ));
-                        $filterRename->filter($pathImageTarget."/".$result['input_carga']['name']);
+                    $filterRename = new Rename(array(
+                        'target' => $pathImageTarget."/".$newFileName,
+                        'overwrite' => true,
+                    ));
+                    $filterRename->filter($pathImageTarget."/".$result['input_carga']['name']);
 
-                        // definimos valor del path de la imagen
-                        $centro->url_imagen = FileManager::PUBLIC_PATH_CENTROS.$id."/img/".$newFileName;
+                    // definimos valor del path de la imagen
+                    $centro->url_imagen = FileManager::PUBLIC_PATH_CENTROS.$id."/img/".$newFileName;
 
-                        // se guarda la url de la imagen
-                        $this->getCentroTable()->save($centro);
+                    // se guarda la url de la imagen
+                    $this->getCentroTable()->save($centro);
 
-                        // actualizamos el config centros.xml
-                        $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
-                        $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
+                    // actualizamos el config centros.xml
+                    $writer = new XmlGenerator($this->getServiceLocator(), $this->getParametersUrl($request));
+                    $writer->writeXmlConfig(XmlGenerator::CONFIG_CENTROS);
 
-                        // registro en el sistema, que ha habudo un cambio de imagen
-                        $log = new Log($this->getServiceLocator());
-                        $log->registrarCambio(Catalogo::CAMBIO_DE_IMAGEN_CENTRO, $id);
+                    // registro en el sistema, que ha habudo un cambio de imagen
+                    $log = new Log($this->getServiceLocator());
+                    $log->registrarCambio(Catalogo::CAMBIO_DE_IMAGEN_CENTRO, $id);
 
-                        // mensaje de la transaccion
-                        $this->flashMessenger()->addInfoMessage('Imagen de centro cargada con exito');
-                    }
+                    // mensaje de la transaccion
+                    $this->flashMessenger()->addInfoMessage('Imagen de centro cargada con exito');
+                    // redireccion a info del centro
+                    return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
                 }
-                // redireccion a info del centro
-                return $this->redirect()->toRoute('centro', array('action' => 'info', 'id' => $id));
             }
         }
         

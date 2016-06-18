@@ -128,7 +128,7 @@ class UsuarioController extends AbstractActionController {
 
 
                 if ($form->isValid()) {
-                    $usuario->password = $utilUser->cifrar($usuario->password);
+                    $usuario->password = $pass;
                     $this->getUsuarioTable()->save($usuario);
 
                     // mensaje de la transaccion
@@ -192,7 +192,7 @@ class UsuarioController extends AbstractActionController {
 
                     // mensaje de la transaccion
                     $this->flashMessenger()->addInfoMessage('Password de usuario editado satisfactoriamente');
-                    return $this->redirect()->toRoute('centro');
+                    return $this->redirect()->toRoute('usuario');
                 }
             }
             
