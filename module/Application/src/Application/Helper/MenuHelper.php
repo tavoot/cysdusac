@@ -71,10 +71,9 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     
                     // menu usuario
                     $output .= '<li>';
-                    $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuarios<span class="fa arrow"></span></a>';
+                    $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuario<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
                     $output .= '<li><a href="'.$url.'/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
-                    $output .= '<li><a href="'.$url.'/usuario/cambiarpass/'.$this->usuario->id.'">Actualizar password</a></li>';
                     $output .= '<li><a href="'.$url.'/acceso/logout">Logout</a></li>';
                     $output .= '</ul>';
                     $output .= '</li>';
@@ -148,7 +147,7 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     
                     // menu mantenimiento
                     $output .= '<li>';
-                    $output .= '<a href="'.$url.'/version/listar"><i class="fa fa-wrench fa-fw"></i>Soporte & Mantenimiento<span class="fa arrow"></span></a>';
+                    $output .= '<a href="#"><i class="fa fa-wrench fa-fw"></i> Mantenimiento<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
                     $output .= '<li><a href="'.$url.'/version/listar">Versiones</a></li>';
                     $output .= '</ul>';
@@ -156,9 +155,9 @@ class MenuHelper extends AbstractHelper implements ServiceLocatorAwareInterface 
                     
                     // menu usuario
                     $output .= '<li>';
-                    $output .= '<a href="#"><i class="fa fa-user fa-fw"></i>Perfil<span class="fa arrow"></span></a>';
+                    $output .= '<a href="#"><i class="fa fa-user fa-fw"></i> Usuario<span class="fa arrow"></span></a>';
                     $output .= '<ul class="nav nav-second-level">';
-                    $output .= '<li><a href="'.$url.'/usuario/perfil/'.$this->usuario->id.'">Actualizar Perfil</a></li>';
+                    $output .= '<li><a href="'.$url.'/usuario/perfil/'.$this->usuario->id.'">Perfil</a></li>';
                     $output .= '<li><a href="'.$url.'/acceso/logout">Logout</a></li>';
                     $output .= '</ul>';
                     $output .= '</li>';
