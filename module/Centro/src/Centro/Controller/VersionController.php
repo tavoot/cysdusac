@@ -166,9 +166,11 @@ class VersionController extends AbstractActionController {
              // Escribo en el archivo control
             $writer = new XmlGenerator($this->getServiceLocator());
             $writer->writeXmlConfig(XmlGenerator::CONFIG_CONTROL, $id);
+            
+            $basepath = $this->getRequest()->getBasePath(); 
         
              //redireccion a lista de contactos del centro
-            return $this->redirect()->toUrl('/data-app-relaciger/config/control.xml');
+            return $this->redirect()->toUrl($basepath . '/data-app-relaciger/config/control.xml');
             
             
         } catch (\Exception $ex) {
