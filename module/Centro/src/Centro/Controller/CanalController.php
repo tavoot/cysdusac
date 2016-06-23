@@ -148,7 +148,7 @@ class CanalController extends AbstractActionController {
     }
     
 
-public function redirecionarCanal($canal, $centro) {
+public function redirecionarCanal($canal, $centro, $writer = null) {
     if ($canal->tipo == Catalogo::EXTERNO) {
             
     //redirigir a la lista de canales del centro
@@ -159,7 +159,7 @@ public function redirecionarCanal($canal, $centro) {
    
     
     } if ($canal->tipo == Catalogo::INTERNO) {
-        
+    if($writer != null) $writer->writeXmlCentro($centro->id);    
     //redirigir a la lista de items con el id del canal
     return $this->redirect()->toRoute('item', array(
         'action' => 'listar',
@@ -218,7 +218,7 @@ public function editAction() {
                         // mensaje de la transaccion
                         $this->flashMessenger()->addInfoMessage('Canal editado satisfactoriamente');
                         //redireccion de segun el tipo de canal
-                        $this->redirecionarCanal($canal, $centro);
+                        $this->redirecionarCanal($canal, $centro, $writer);
                     }
                 }
                 else{
