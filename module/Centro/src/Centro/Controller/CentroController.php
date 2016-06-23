@@ -150,7 +150,7 @@ class CentroController extends AbstractActionController {
 
                     // 4.Al nuevo centro creado le agrego su respectivo canal interno
                     $serverUrl = sprintf('%s://%s', $request->getUri()->getScheme(), $request->getUri()->getHost());
-                    $urlCanalInterno = $serverUrl.$request->getBasePath().'/'.FileManager::PUBLIC_PATH_CENTROS.$id.'/canal/canalrss.xml';
+                    $urlCanalInterno = $serverUrl;
                     $canal = new Canal();
                     $canal->exchangeArray(array('tipo'=> Catalogo::INTERNO,  'centro_id'=>$id, 'secuencia'=>0, 'enlace'=> $urlCanalInterno));
                     $this->getCanalTable()->save($canal);
