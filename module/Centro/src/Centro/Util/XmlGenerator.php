@@ -204,7 +204,11 @@ class XmlGenerator {
                                 if($canal->habilitado==TRUE){
                                     $writer->startElement('canal');
                                         $writer->writeElement('id', $canal->secuencia);
-                                        $writer->writeElement('link', $canal->enlace);
+                                        if($canal->secuencia == 0){
+                                            $writer->writeElement('link', $this->serverUrl.$this->pathCentrosStat.$canal->centro_id.'/canal/canalrss.xml');
+                                        } else {
+                                            $writer->writeElement('link', $canal->enlace);
+                                        }
                                         $writer->writeElement('stat', $this->serverUrl.$this->pathCentrosStat.$centro->id.'/estadistica/canales/canal_'.$canal->secuencia.'.php');
                                     $writer->endElement();
                                 }
