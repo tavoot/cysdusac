@@ -232,6 +232,9 @@ class XmlGenerator {
     public function writeXmlCentro($centro_id) {
         $writer = new \XMLWriter();
         
+        $xmlReservado = array("<", ">", "&#39;", "&aacute;", "&Aacute;", "&eacute;", "&Eacute;", "&iacute;", "&Iacute;", "&oacute;", "&Oacute;", "&uacute;", "&Uacute;", "&ntilde;", "&Ntilde;");
+        $xmlReemplazo = array("&lt;", "&gt;", "&apos;", "á", "Á", "é", "É", "í", "Í", "ó", "Ó", "ú", "Ú", "ñ", "Ñ");
+        
         $writer->openURI($this->pathCentros."$centro_id/canal/canalrss.xml");
         $writer->startDocument('1.0','UTF-8');
         $writer->setIndent(true);
@@ -248,7 +251,11 @@ class XmlGenerator {
         $writer->startElement('rss');
             $writer->startElement('channel');
                 $writer->writeElement('title', $canalInterno->titulo);
-                $writer->writeElement('description', $canalInterno->descripcion);
+                $writer->startElement('description');
+                    //$writer->writeElement('description', $canalInterno->descripcion);
+                    $descripcionCanal = str_replace($xmlReservado, $xmlReemplazo, $canalInterno->descripcion);
+                    $writer->writeRaw($descripcionCanal);
+                $writer->endElement();
                 $writer->writeElement('link', $canalInterno->enlace);
                 $writer->writeElement('lenguage', $canalInterno->lenguaje);
                 
@@ -256,7 +263,11 @@ class XmlGenerator {
                     $writer->startElement('item');
                         $writer->writeElement('title', $item->titulo);
                         $writer->writeElement('link', $item->enlace);
-                        $writer->writeElement('description', $item->descripcion);
+                        $writer->startElement('description');
+                            //$writer->writeElement('description', $item->descripcion);
+                            $descripcionItem = str_replace($xmlReservado, $xmlReemplazo, $item->descripcion);
+                            $writer->writeRaw($descripcionItem);
+                        $writer->endElement();
                         $writer->writeElement('pubDate', $item->fecha_publicacion);
                     $writer->endElement();
                 }        
