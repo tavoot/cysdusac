@@ -40,6 +40,7 @@ echo $this->flashMessenger()->render(FlashMessenger::NAMESPACE_ERROR, array('ale
 
 <div class="row">
     <div class="col-md-6">
+        <h5 class="text-warning">Dimensiones de imagen no menor a 500x500 pixeles</h5>
         <?php echo $this->form()->openTag($form); ?>
 
         <?php foreach($form as $element): ?>

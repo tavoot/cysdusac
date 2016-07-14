@@ -81,6 +81,10 @@ $form->prepare();
                                 ->setMessageCloseString('</p>')
                                 ->render($element);
                     }
+                    
+                    if($element->getName() == 'enlace') {
+                        echo '<br><a class="btn btn-sm btn-info" href="' . $this->basePath() . '/data-app-relaciger/centros/' . $centro->id . '/canal/canalrss.xml" target="_blank">Archivo de canal</a>';
+                    }
                     ?>
                 </div>
             <?php } ?>
